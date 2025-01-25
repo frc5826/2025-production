@@ -5,6 +5,8 @@
 
 package frc.robot;
 
+import edu.wpi.first.wpilibj.Joystick;
+
 /**
  * The Constants class provides a convenient place for teams to hold robot-wide numerical or boolean
  * constants. This class should not be used for any other purpose. All constants should be declared
@@ -15,8 +17,33 @@ package frc.robot;
  */
 public final class Constants
 {
-    public static class OperatorConstants
-    {
-        public static final int DRIVER_CONTROLLER_PORT = 0;
+
+    public static final Joystick cJoystick= new Joystick(0);
+    
+    public static class Elevator {
+        public static final int cElevatorMotor1ID = 1;
+        public static final int cElevatorMotor2ID = 2;
+
+        //TODO Real values
+        public static final int cElevatorEncoder1IDA = 1;
+        public static final int cElevatorEncoder1IDB = 0;
+        public static final int cElevatorEncoder2IDA = -1;
+        public static final int cElevatorEncoder2IDB = -1;
+
+        public static final double cElevatorP = 1;
+        public static final double cElevatorI = 0;
+        public static final double cElevatorD = 0;
+        public static final double cElevatorMinOutput = -0.2;
+        public static final double cElevatorMaxOutput = 0.2;
+        public static final double cElevatorV = 1;
+        public static final double cElevatorG = 1;
+        public static final double cElevatorMaxAcceleration = 1;
+        public static final double cElevatorMaxVelocity = 1;
+        public static final double cElevatorHeightMin = 0;//TODO
+        public static final double cElevatorHeightMax = 2;//TODO
+        public static final double cElevatorClicksPerMeter = 17777;//TODO find actual value
+        public static final double cElevatorRPMtoMPS = 0.9753;//TODO find actual value
+        public static final double cElevatorDeadband = 0.01;
+
     }
 }
