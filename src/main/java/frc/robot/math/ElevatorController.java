@@ -35,7 +35,6 @@ public class ElevatorController implements NTSendable {
         goal = new TrapezoidProfile.State(endPosition, 0);
         setPoint = new TrapezoidProfile.State(startPosition, startVelocity);
 
-
     }
 
     public double calculate(double deltaTime){
@@ -44,7 +43,7 @@ public class ElevatorController implements NTSendable {
         setPoint = profile.calculate(deltaTime, setPoint, goal);
         pid.setGoal(setPoint.position);
         output = setPoint.velocity * V + G + pid.calculate();
-        return Math.clamp(output, min, max);
+        return HelperMath.clamp(output, min, max);
 
     }
 

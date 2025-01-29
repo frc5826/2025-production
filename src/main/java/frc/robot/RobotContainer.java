@@ -5,12 +5,10 @@
 
 package frc.robot;
 
-import frc.robot.Constants.OperatorConstants;
-import frc.robot.commands.Autos;
-import frc.robot.commands.ExampleCommand;
+
 import frc.robot.commands.elevator.ElevatorPositionCommand;
+import frc.robot.commands.elevator.ElevatorRepositionCommand;
 import frc.robot.subsystems.ElevatorSubsystem;
-import frc.robot.subsystems.ExampleSubsystem;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
@@ -29,9 +27,13 @@ public class RobotContainer
 
     public final ElevatorSubsystem elevatorSubsystem = new ElevatorSubsystem();
 
-    public final ElevatorPositionCommand elevatorPositionCommand1 = new ElevatorPositionCommand(elevatorSubsystem, 0.01);
-    public final ElevatorPositionCommand elevatorPositionCommand2 = new ElevatorPositionCommand(elevatorSubsystem, 0.5);
-    
+    public final ElevatorPositionCommand elevatorHomeCommand = new ElevatorPositionCommand(elevatorSubsystem, 0);
+
+    public final ElevatorRepositionCommand elevatorRepositionCommandDown = new ElevatorRepositionCommand(elevatorSubsystem, -0.1);
+    public final ElevatorRepositionCommand elevatorRepositionCommandUp = new ElevatorRepositionCommand(elevatorSubsystem, 0.1);
+    public final ElevatorRepositionCommand elevatorRepositionCommandBigDown = new ElevatorRepositionCommand(elevatorSubsystem, -0.5);
+    public final ElevatorRepositionCommand elevatorRepositionCommandBigUp = new ElevatorRepositionCommand(elevatorSubsystem, 0.5);
+
     
     /** The container for the robot. Contains subsystems, OI devices, and commands. */
     public RobotContainer()
@@ -52,8 +54,12 @@ public class RobotContainer
      */
     private void configureBindings()
     {
-        new Trigger(() -> cJoystick.getRawButton(3)).onTrue(elevatorPositionCommand1);
-        new Trigger(() -> cJoystick.getRawButton(4)).onTrue(elevatorPositionCommand2);
+        new Trigger(() -> cJoystick.getRawButton(2)).onTrue(elevatorHomeCommand);
+
+        new Trigger(() -> cJoystick.getRawButton(3)).onTrue(elevatorRepositionCommandDown);
+        new Trigger(() -> cJoystick.getRawButton(5)).onTrue(elevatorRepositionCommandUp);
+        new Trigger(() -> cJoystick.getRawButton(4)).onTrue(elevatorRepositionCommandBigDown);
+        new Trigger(() -> cJoystick.getRawButton(6)).onTrue(elevatorRepositionCommandBigUp);
     }
     
     
