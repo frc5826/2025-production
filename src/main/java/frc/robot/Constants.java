@@ -30,22 +30,24 @@ public final class Constants
         public static final int cElevatorEncoder2IDA = -1;
         public static final int cElevatorEncoder2IDB = -1;
 
-        public static final double cElevatorP = 0;
+        public static final double cElevatorP = 2;
         public static final double cElevatorI = 0;
-        public static final double cElevatorD = 0;
+        public static final double cElevatorD = 0.01;
         public static final double cElevatorMinOutput = -1;
         public static final double cElevatorMaxOutput = 1;
         public static final double cElevatorVUp = 1;
-        public static final double cElevatorVDown = 1;
-        public static final double cElevatorG = 0.01;
+        public static final double cElevatorVDown = 0.6;
+        public static final double cElevatorG = 0.06;
         public static final double cElevatorMaxAcceleration = 1;
-        public static final double cElevatorMaxVelocity = 0.5;
-        public static final double cElevatorHeightMin = 0;//TODO
+        public static final double cElevatorMaxVelocity = 1.67;
+        public static final double cElevatorHeightMin = 0;
         public static final double cElevatorHeightMax = 1.4;//TODO
         public static final double cElevatorDeadband = 0.01;
 
         public static class ConversionFactor{
-            public static final double cElevatorClicksPerMeter = 17777;//TODO find actual value
+            public static final double cElevatorClicksPerMeter = 17777;
+            public static final double cElevatorOverlapPosition = 0.877;
+            public static final double cElevatorOverlapConversion = 1.18;
             public static final double cElevatorGearboxRatio = 0.2;
             public static final double cElevatorPulleyRatio = 1.5;
             public static final double cElevatorPulleyRadius = 1.375*0.0254*Math.PI;

@@ -34,7 +34,7 @@ public class ElevatorSubsystem extends LoggedSubsystem {
         SmartDashboard.putNumber("elevator/Encoder", 0.0);
         SmartDashboard.putNumber("elevator/Goal", 0.0);
         SmartDashboard.putNumber("elevator/Velocity", 0.0);
-        SmartDashboard.putString("elevator/CurrentFF", "None");
+        SmartDashboard.putString("elevator/CurrentFF", "Up");
         SparkMaxConfig config = new SparkMaxConfig();
         config.inverted(false);
         SparkMaxConfig configFollower = new SparkMaxConfig();
@@ -86,7 +86,13 @@ public class ElevatorSubsystem extends LoggedSubsystem {
 
     public double getPos(){
 
-        return encoder.get()/ cElevatorClicksPerMeter;
+        double pos = encoder.get() / cElevatorClicksPerMeter;
+
+        if(pos >= cElevatorOverlapPosition){
+            pos = cElevatorOverlapPosition + ((pos - cElevatorOverlapPosition) * cElevatorOverlapConversion);
+        }
+
+        return pos;
 
     }
 
