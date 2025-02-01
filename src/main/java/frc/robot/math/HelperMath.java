@@ -2,6 +2,7 @@ package frc.robot.math;
 
 public class HelperMath {
 
+    // Yoink
     public static double clamp(double value, double min, double max) {
         // This unusual condition allows keeping only one branch
         // on common path when min < max and neither of them is NaN.

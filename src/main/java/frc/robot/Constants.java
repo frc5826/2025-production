@@ -55,4 +55,17 @@ public final class Constants
         }
 
     }
+
+    public static class Coralizer{
+        public static final double cCoralizerP = 0.1;
+        public static final double cCoralizerI = 0;
+        public static final double cCoralizerD = 0;
+        public static final double cCoralizerMin = -1;
+        public static final double cCoralizerMax = 1;
+        public static final double cCoralizerDeadband = 0;
+
+        public static final double cCoralizerMinRotation = -90;
+        public static final double cCoralizerMaxRotation = 90;
+    }
+
 }

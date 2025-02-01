@@ -6,8 +6,11 @@
 package frc.robot;
 
 
+import frc.robot.commands.coralizer.CoralizerIntakeCommand;
+import frc.robot.commands.coralizer.CoralizerWristCommand;
 import frc.robot.commands.elevator.ElevatorPositionCommand;
 import frc.robot.commands.elevator.ElevatorRepositionCommand;
+import frc.robot.subsystems.CoralizerSubsystem;
 import frc.robot.subsystems.ElevatorSubsystem;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
@@ -34,7 +37,14 @@ public class RobotContainer
     public final ElevatorRepositionCommand elevatorRepositionCommandBigDown = new ElevatorRepositionCommand(elevatorSubsystem, -0.5);
     public final ElevatorRepositionCommand elevatorRepositionCommandBigUp = new ElevatorRepositionCommand(elevatorSubsystem, 0.5);
 
-    
+    public final CoralizerSubsystem coralizerSubsystem = new CoralizerSubsystem();
+
+    public final CoralizerIntakeCommand coralizerInCommand = new CoralizerIntakeCommand(coralizerSubsystem, 0.75);
+    public final CoralizerIntakeCommand coralizerOutCommand = new CoralizerIntakeCommand(coralizerSubsystem, -1);
+    public final CoralizerWristCommand coralizerWristCommandUp = new CoralizerWristCommand(coralizerSubsystem, 45);
+    public final CoralizerWristCommand coralizerWristCommandDown = new CoralizerWristCommand(coralizerSubsystem, 0);
+
+
     /** The container for the robot. Contains subsystems, OI devices, and commands. */
     public RobotContainer()
     {
@@ -54,12 +64,14 @@ public class RobotContainer
      */
     private void configureBindings()
     {
-        new Trigger(() -> cJoystick.getRawButton(2)).onTrue(elevatorHomeCommand);
+        new Trigger(cJoystick::getTrigger).whileTrue(coralizerInCommand);
 
-        new Trigger(() -> cJoystick.getRawButton(3)).onTrue(elevatorRepositionCommandDown);
-        new Trigger(() -> cJoystick.getRawButton(5)).onTrue(elevatorRepositionCommandUp);
-        new Trigger(() -> cJoystick.getRawButton(4)).onTrue(elevatorRepositionCommandBigDown);
-        new Trigger(() -> cJoystick.getRawButton(6)).onTrue(elevatorRepositionCommandBigUp);
+        new Trigger(() -> cJoystick.getRawButton(2)).whileTrue(coralizerOutCommand);
+
+        new Trigger(() -> cJoystick.getRawButton(3)).onTrue(coralizerWristCommandDown);
+        new Trigger(() -> cJoystick.getRawButton(5)).onTrue(coralizerWristCommandUp);
+//        new Trigger(() -> cJoystick.getRawButton(4)).onTrue(elevatorRepositionCommandBigDown);
+//        new Trigger(() -> cJoystick.getRawButton(6)).onTrue(elevatorRepositionCommandBigUp);
     }
     
     
