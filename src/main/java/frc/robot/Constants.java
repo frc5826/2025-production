@@ -5,6 +5,9 @@
 
 package frc.robot;
 
+import com.pathplanner.lib.config.PIDConstants;
+import edu.wpi.first.wpilibj.XboxController;
+
 /**
  * The Constants class provides a convenient place for teams to hold robot-wide numerical or boolean
  * constants. This class should not be used for any other purpose. All constants should be declared
@@ -15,8 +18,20 @@ package frc.robot;
  */
 public final class Constants
 {
-    public static class OperatorConstants
-    {
-        public static final int DRIVER_CONTROLLER_PORT = 0;
+    public static final XboxController cXbox = new XboxController(1);
+
+    public static final double cTeleDriveDeadband = 0.2;
+    public static final double cTurnDeadband = 0.8;
+
+    public static class  Swerve {
+        public static final double cMaxVelocity = 5.05968; //DON'T CHANGE!!!!!!!!!!!!!!!!!!!!!!!
+        public static final double cMaxAngularVelocity = 5;
+
+        public static final PIDConstants cDrivePID = new PIDConstants(1, 0, 0);
+        public static final PIDConstants cTurnPID = new PIDConstants(4, 0, 0);
     }
+
+    public static final double cLOFRejectionValue = 1;
+    public static final int cLOFk = 2;
+    public static final int cLOFTagLimit = 20;
 }
