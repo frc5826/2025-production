@@ -105,6 +105,19 @@ public class Localization {
         return pose;
     }
 
+    private static double[][] initCovar() {
+        return new double[][]{
+                {0.1, 0, 0, 0, 0, 0, 0, 0, 0},
+                {0, 0.1, 0, 0, 0, 0, 0, 0, 0},
+                {0, 0, 0.1, 0, 0, 0, 0, 0, 0},
+                {0, 0, 0, 0.1, 0, 0, 0, 0, 0},
+                {0, 0, 0, 0, 0.1, 0, 0, 0, 0},
+                {0, 0, 0, 0, 0, 0.1, 0, 0, 0},
+                {0, 0, 0, 0, 0, 0, 0.1, 0, 0},
+                {0, 0, 0, 0, 0, 0, 0, 0.1, 0},
+                {0, 0, 0, 0, 0, 0, 0, 0, 0.1}};
+    }
+
     public void updateField() {
         field.setRobotPose(getPose());
     }

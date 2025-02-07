@@ -3,8 +3,9 @@ package frc.robot.positioning;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 
-//TODO - Switch extending BlueOrientation to implementing Orientation and fill in details
 public class RedOrientation implements Orientation {
+
+    //TODO 
 
     protected RedOrientation() {}
 

@@ -44,7 +44,7 @@ public class TeleopDriveCommand extends LoggedCommand {
         }
 
         ChassisSpeeds speeds = new ChassisSpeeds(
-                x * cMaxVelocity, y * cMaxVelocity, -turnPID.calculate());
+                x * cMaxVelocity * .5, y * cMaxVelocity * .5, -turnPID.calculate());
 
         swerveSubsystem.driveFieldOriented(ChassisSpeeds.fromFieldRelativeSpeeds(speeds, Rotation2d.fromRadians(speeds.omegaRadiansPerSecond)));
     }

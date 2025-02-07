@@ -36,7 +36,7 @@ public class CameraSystem {
     public CameraSystem() {
 
         try {
-            fieldLayout = new AprilTagFieldLayout(AprilTagFields.k2025Reefscape.m_resourceFile);
+            fieldLayout = AprilTagFieldLayout.loadFromResource(AprilTagFields.k2025Reefscape.m_resourceFile);
             fieldLayout.setOrigin(AprilTagFieldLayout.OriginPosition.kBlueAllianceWallRightSide);
         } catch (IOException e) {
             fieldLayout = null;
@@ -45,18 +45,18 @@ public class CameraSystem {
         }
 
         cameras = List.of(
-                new Camera(new Translation3d(inToM(-3), inToM(8.5), inToM(16.125)),
-                        new Rotation3d(Math.PI, Math.PI / 4, 0),
-                        "45L"),
                 new Camera(new Translation3d(inToM(-3), inToM(8.5), inToM(12.125)),
-                        new Rotation3d(Math.PI, 0, 0),
-                        "0L"),
-                new Camera(new Translation3d(inToM(-3), inToM(-8.5), inToM(16.125)),
-                        new Rotation3d(Math.PI, Math.PI / 4, 0),
-                        "45R"),
+                        new Rotation3d(0, Math.PI / 4, 0),
+                        "L45"),
+                new Camera(new Translation3d(inToM(-3), inToM(8.5), inToM(16.125)),
+                        new Rotation3d(0, 0, 0),
+                        "L0"),
                 new Camera(new Translation3d(inToM(-3), inToM(-8.5), inToM(12.125)),
+                        new Rotation3d(Math.PI, Math.PI / 4, 0),
+                        "R45"),
+                new Camera(new Translation3d(inToM(-3), inToM(-8.5), inToM(16.125)),
                         new Rotation3d(Math.PI, 0,0),
-                        "0R")
+                        "R0")
         );
 
         DataLog log = DataLogManager.getLog();
