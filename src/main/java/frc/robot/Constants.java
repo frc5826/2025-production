@@ -7,6 +7,7 @@ package frc.robot;
 
 import com.pathplanner.lib.config.PIDConstants;
 import edu.wpi.first.wpilibj.XboxController;
+import frc.robot.subsystems.ButtonBoard;
 
 /**
  * The Constants class provides a convenient place for teams to hold robot-wide numerical or boolean
@@ -18,6 +19,8 @@ import edu.wpi.first.wpilibj.XboxController;
  */
 public final class Constants
 {
+
+    public static final ButtonBoard cButtonBoard = new ButtonBoard(25);
     public static final XboxController cXbox = new XboxController(1);
 
     public static final double cTeleDriveDeadband = 0.2;
