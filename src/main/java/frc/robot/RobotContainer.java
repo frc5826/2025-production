@@ -8,12 +8,10 @@ package frc.robot;
 import frc.robot.commands.commandgroups.*;
 import frc.robot.commands.coralizer.CoralizerIntakeCommand;
 import frc.robot.commands.coralizer.CoralizerReWristCommand;
-import frc.robot.commands.coralizer.CoralizerWristCommand;
 import frc.robot.commands.elevator.ElevatorPositionCommand;
 import frc.robot.commands.elevator.ElevatorRepositionCommand;
 import frc.robot.subsystems.CoralizerSubsystem;
 import frc.robot.subsystems.ElevatorSubsystem;
-import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import com.pathplanner.lib.path.PathConstraints;
 import edu.wpi.first.wpilibj.DataLogManager;
@@ -54,7 +52,7 @@ public class RobotContainer
     public final L2CommandGroup l2CommandGroup = new L2CommandGroup(elevatorSubsystem, coralizerSubsystem);
     public final L3CommandGroup l3CommandGroup = new L3CommandGroup(elevatorSubsystem, coralizerSubsystem);
     public final L4CommandGroup l4CommandGroup = new L4CommandGroup(elevatorSubsystem, coralizerSubsystem);
-    public final DropoffCommandGroup dropoffCommandGroup = new DropoffCommandGroup(elevatorSubsystem, coralizerSubsystem);
+    public final L4DropoffCommandGroup dropoffCommandGroup = new L4DropoffCommandGroup(elevatorSubsystem, coralizerSubsystem);
     public final SourceCommandGroup sourceCommandGroup = new SourceCommandGroup(elevatorSubsystem, coralizerSubsystem);
     public final DealgifyCommandGroup dealgifyCommandGroup = new DealgifyCommandGroup(elevatorSubsystem, coralizerSubsystem);
 
