@@ -46,13 +46,13 @@ public class CameraSystem {
 
         cameras = List.of(
                 new Camera(new Translation3d(inToM(-3), inToM(8.5), inToM(12.125)),
-                        new Rotation3d(0, Math.PI / 4, 0),
+                        new Rotation3d(0, -Math.PI / 4, 0),
                         "L45"),
                 new Camera(new Translation3d(inToM(-3), inToM(8.5), inToM(16.125)),
                         new Rotation3d(0, 0, 0),
                         "L0"),
                 new Camera(new Translation3d(inToM(-3), inToM(-8.5), inToM(12.125)),
-                        new Rotation3d(Math.PI, Math.PI / 4, 0),
+                        new Rotation3d(Math.PI, -Math.PI / 4, 0),
                         "R45"),
                 new Camera(new Translation3d(inToM(-3), inToM(-8.5), inToM(16.125)),
                         new Rotation3d(Math.PI, 0,0),
@@ -112,12 +112,13 @@ public class CameraSystem {
 
         for (Pose3d possible : results) {
             double factor = filter.LOF(possible, tagLog);
+            System.out.println(factor); //TODO test
             if (factor <= cLOFRejectionValue) {
                 filteredResults.add(possible);
             }
         }
 
-        return results;
+        return filteredResults;
 
     }
 

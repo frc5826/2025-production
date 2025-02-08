@@ -4,8 +4,10 @@ import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.config.RobotConfig;
 import com.pathplanner.lib.controllers.PPHolonomicDriveController;
 import com.studica.frc.AHRS;
+import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.math.geometry.Rotation3d;
 import edu.wpi.first.math.geometry.Translation3d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.math.util.Units;
@@ -33,6 +35,8 @@ public class SwerveSubsystem extends LoggedSubsystem {
 
     private Localization localization;
 
+    private double gyroOffset;
+
     public SwerveSubsystem(Localization localization) {
         double angleConversionFactor = SwerveMath.calculateDegreesPerSteeringRotation(
                 12.8, 1);
@@ -51,6 +55,7 @@ public class SwerveSubsystem extends LoggedSubsystem {
         SmartDashboard.putData("/drive/ahrs",(AHRS)swerveDrive.getGyro().getIMU());
 
         resetOdometry(new Pose2d(0, 0, new Rotation2d()));
+        zeroGyro();
 
         this.localization = localization;
 
@@ -61,6 +66,11 @@ public class SwerveSubsystem extends LoggedSubsystem {
     {
         targetAngle = new Rotation2d();
         swerveDrive.zeroGyro();
+        gyroOffset = ((AHRS)swerveDrive.getGyro().getIMU()).getAngle() % 360;
+    }
+
+    public void setGyroOffset(double yawRads) {
+        swerveDrive.setGyro(new Rotation3d(0, 0, yawRads + swerveDrive.getGyro().getRawRotation3d().getZ()));
     }
 
     public Pose2d getLocalizationPose() { return localization.getPose(); }
@@ -86,6 +96,8 @@ public class SwerveSubsystem extends LoggedSubsystem {
     public void resetOdometry(Pose2d pose) { swerveDrive.resetOdometry(pose); }
 
     public Rotation2d getIMUYaw() { return swerveDrive.getYaw(); }
+
+    public Rotation2d getIMUContinuousAngle() { return Rotation2d.fromDegrees(-((AHRS)swerveDrive.getGyro().getIMU()).getAngle() + gyroOffset); }
 
     public Rotation2d getTargetAngle() { return targetAngle; }
 

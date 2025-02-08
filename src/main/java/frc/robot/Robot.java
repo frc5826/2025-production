@@ -55,6 +55,9 @@ public class Robot extends TimedRobot
     @Override
     public void autonomousInit()
     {
+
+        robotContainer.initZeroGyro();
+
         if (autonomousCommand != null)
         {
             autonomousCommand.schedule();

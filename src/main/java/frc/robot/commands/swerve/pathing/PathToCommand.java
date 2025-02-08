@@ -1,4 +1,4 @@
-package frc.robot.commands.swerve;
+package frc.robot.commands.swerve.pathing;
 
 import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.path.GoalEndState;
@@ -39,7 +39,7 @@ public class PathToCommand extends LoggedCommand {
 
         Pose2d start = swerveSubsystem.getLocalizationPose();
         start = new Pose2d(start.getTranslation(), MathHelper.getAngleAtoB(start, goal));
-        Pose2d end = new Pose2d(goal.getTranslation(), MathHelper.getAngleAtoB(goal, start));
+        Pose2d end = new Pose2d(goal.getTranslation(), MathHelper.getAngleAtoB(start, goal));
 
         List<Waypoint> points = PathPlannerPath.waypointsFromPoses(start, end);
 

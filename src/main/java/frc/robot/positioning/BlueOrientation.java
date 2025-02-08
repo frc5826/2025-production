@@ -7,8 +7,6 @@ public class BlueOrientation implements Orientation{
 
     protected BlueOrientation() {}
 
-    //TODO find poses
-
     @Override
     public Pose2d getReefA() { return new Pose2d(3.16, 4.19, Rotation2d.fromDegrees(0)); }
 

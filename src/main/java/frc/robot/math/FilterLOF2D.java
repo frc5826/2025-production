@@ -60,8 +60,8 @@ public class FilterLOF2D {
         return distlist.get(k);
     }
 
-    public double dist(Pose3d A, Pose3d B){
-        return Math.sqrt(Math.pow(A.getX() - B.getX(), 2) + Math.pow(A.getY() - B.getY(), 2));
+    public double dist(Pose3d A, Pose3d B) {
+        return /*Math.sqrt(*/Math.pow(A.getX() - B.getX(), 2) + Math.pow(A.getY() - B.getY(), 2)/*)*/;
     }
 
     public void adjk(int adj){
