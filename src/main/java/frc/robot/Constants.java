@@ -5,6 +5,8 @@
 
 package frc.robot;
 
+import edu.wpi.first.wpilibj.Joystick;
+import edu.wpi.first.wpilibj.PowerDistribution;
 import com.pathplanner.lib.config.PIDConstants;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
@@ -21,6 +23,45 @@ import frc.robot.subsystems.ButtonBoard;
  */
 public final class Constants
 {
+
+    public static final Joystick cJoystick = new Joystick(0);
+
+    //public static final PowerDistribution cPowerDistribution = new PowerDistribution();
+
+    public static class Elevator {
+        public static final int cElevatorMotor1ID = 1;
+        public static final int cElevatorMotor2ID = 2;
+
+        //TODO Real values
+        public static final int cElevatorEncoder1IDA = 1;
+        public static final int cElevatorEncoder1IDB = 0;
+        public static final int cElevatorEncoder2IDA = -1;
+        public static final int cElevatorEncoder2IDB = -1;
+
+        public static final double cElevatorP = 2;
+        public static final double cElevatorI = 0;
+        public static final double cElevatorD = 0.01;
+        public static final double cElevatorMinOutput = -1;
+        public static final double cElevatorMaxOutput = 1;
+        public static final double cElevatorVUp = 1;
+        public static final double cElevatorVDown = 0.6;
+        public static final double cElevatorG = 0.06;
+        public static final double cElevatorMaxAcceleration = 1;
+        public static final double cElevatorMaxVelocity = 1.67;
+        public static final double cElevatorHeightMin = 0;
+        public static final double cElevatorHeightMax = 1.68;//TODO
+        public static final double cElevatorDeadband = 0.03;
+
+        public static class ConversionFactor {
+            public static final double cElevatorClicksPerMeter = 17777;
+            public static final double cElevatorOverlapPosition = 0.877;
+            public static final double cElevatorOverlapConversion = 1.18;
+            public static final double cElevatorGearboxRatio = 0.2;
+            public static final double cElevatorPulleyRatio = 1.5;
+            public static final double cElevatorPulleyRadius = 1.375 * 0.0254 * Math.PI;
+            public static final double cElevatorRPMtoMPS = cElevatorGearboxRatio * cElevatorPulleyRatio * cElevatorPulleyRadius * (1.0 / 60);//TODO find actual value
+        }
+    }
 
     public static final ButtonBoard cButtonBoard = new ButtonBoard(25);
     public static final XboxController cXbox = new XboxController(1);
@@ -61,4 +102,18 @@ public final class Constants
         public static Pose2d coralStationRB = new Pose2d(1.19, 1.02, Rotation2d.fromDegrees(-126));
         public static Pose2d coralStationRC = new Pose2d(1.63, 0.71, Rotation2d.fromDegrees(-126));
     }
+
+    public static class Coralizer{
+        public static final double cCoralizerP = 0.01;
+        public static final double cCoralizerI = 0;
+        public static final double cCoralizerD = 0;
+        public static final double cCoralizerG = 0.06;
+        public static final double cCoralizerMin = -1;
+        public static final double cCoralizerMax = 1;
+        public static final double cCoralizerDeadband = 1;
+
+        public static final double cCoralizerMinRotation = -90;
+        public static final double cCoralizerMaxRotation = 90;
+    }
+
 }
