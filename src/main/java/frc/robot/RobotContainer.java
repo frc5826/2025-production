@@ -5,7 +5,6 @@
 
 package frc.robot;
 
-
 import frc.robot.commands.commandgroups.*;
 import frc.robot.commands.coralizer.CoralizerIntakeCommand;
 import frc.robot.commands.coralizer.CoralizerReWristCommand;
@@ -16,17 +15,21 @@ import frc.robot.subsystems.CoralizerSubsystem;
 import frc.robot.subsystems.ElevatorSubsystem;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
+import com.pathplanner.lib.path.PathConstraints;
+import edu.wpi.first.wpilibj.DataLogManager;
+import edu.wpi.first.wpilibj2.command.CommandScheduler;
+import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
+import frc.robot.commands.swerve.pathing.PathFindCommand;
+import frc.robot.commands.swerve.pathing.PathToCommand;
+import frc.robot.commands.swerve.TeleopDriveCommand;
+import frc.robot.localization.Localization;
+import frc.robot.positioning.FieldOrientation;
+import frc.robot.subsystems.SwerveSubsystem;
 
 import static frc.robot.Constants.cJoystick;
+import static frc.robot.Constants.cXbox;
 
-
-/**
- * This class is where the bulk of the robot should be declared. Since Command-based is a
- * "declarative" paradigm, very little robot logic should actually be handled in the {@link Robot}
- * periodic methods (other than the scheduler calls). Instead, the structure of the robot (including
- * subsystems, commands, and trigger mappings) should be declared here.
- */
 public class RobotContainer
 {
 
@@ -56,12 +59,20 @@ public class RobotContainer
     public final DealgifyCommandGroup dealgifyCommandGroup = new DealgifyCommandGroup(elevatorSubsystem, coralizerSubsystem);
 
     /** The container for the robot. Contains subsystems, OI devices, and commands. */
+    public final Localization localization = new Localization();
+
+    public final SwerveSubsystem swerveSubsystem = new SwerveSubsystem(localization);
+
     public RobotContainer()
     {
-        // Configure the trigger bindings
-        configureBindings();
+        DataLogManager.start("/U/logs");
+        CommandScheduler.getInstance().setDefaultCommand(swerveSubsystem,new TeleopDriveCommand(swerveSubsystem));
+
+        // Setup button bindings
+        bindXbox();
+        bindBoard();
     }
-    
+
     
     /**
      * Use this method to define your trigger->command mappings. Triggers can be created via the
@@ -92,16 +103,38 @@ public class RobotContainer
         new Trigger(() -> cJoystick.getRawButton(11)).onTrue(l1CommandGroup);
         new Trigger(() -> cJoystick.getRawButton(12)).onTrue(l2CommandGroup);
     }
-    
-    
-    /**
-     * Use this to pass the autonomous command to the main {@link Robot} class.
-     *
-     * @return the command to run in autonomous
-     */
-    public Command getAutonomousCommand()
-    {
-        // An example command will be run in autonomous
-        return null;
+
+    public void prePeriodic(boolean teleop) {
+
+        if(teleop) {
+            localization.move();
+            localization.measure(swerveSubsystem);
+            localization.updateField();
+        }
+
+    }
+
+    public void postPeriodic() {
+
+    }
+
+    private void bindXbox() {
+        new Trigger(cXbox::getBackButtonPressed).onTrue(new InstantCommand(swerveSubsystem::zeroGyro));
+        new Trigger(cXbox::getStartButtonPressed).onTrue(new InstantCommand(this::initZeroGyro)); //TODO test
+
+        PathConstraints constraints = new PathConstraints(1, 2, Math.PI * 3, Math.PI * 3);
+        new Trigger(cXbox::getAButton).whileTrue(new PathToCommand(FieldOrientation.getOrientation().getReefA(), 0, constraints, swerveSubsystem));
+        new Trigger(cXbox::getBButton).whileTrue(new PathToCommand(FieldOrientation.getOrientation().getCoralStationRB(), 0, constraints, swerveSubsystem));
+        new Trigger(cXbox::getYButton).whileTrue(new PathFindCommand(FieldOrientation.getOrientation().getReefF(), constraints, swerveSubsystem));
+        new Trigger(cXbox::getXButton).whileTrue(new PathToCommand(FieldOrientation.getOrientation().getReefC(), 0, constraints, swerveSubsystem));
+    }
+
+    private void bindBoard() {
+
+    }
+
+    //Called in auto init to give the cameras time to localize us
+    public void initZeroGyro() {
+        swerveSubsystem.setGyroOffset(localization.getCameraPose().getRotation().getRadians());
     }
 }

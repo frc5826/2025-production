@@ -1,10 +1,12 @@
 package frc.robot.math;
 
+import com.pathplanner.lib.config.PIDConstants;
 import edu.wpi.first.epilogue.Logged;
 import edu.wpi.first.networktables.NTSendable;
 import edu.wpi.first.networktables.NTSendableBuilder;
 
 import java.util.function.DoubleSupplier;
+
 @Logged
 public class PID implements NTSendable {
     private double P,I,D;
@@ -27,6 +29,10 @@ public class PID implements NTSendable {
         this.min_output = min;
         this.deadband = deadband;
         this.actualSupplier = actualSupplier;
+    }
+
+    public PID(PIDConstants pid, double max, double min, double deadband, DoubleSupplier actualSupplier){
+        this(pid.kP, pid.kI, pid.kD, max, min, deadband, actualSupplier);
     }
 
     public double calculate() {
@@ -88,6 +94,8 @@ public class PID implements NTSendable {
     private void setD(double D) {
         this.D = D;
     }
+
+    public double getDeadband() { return deadband; }
 
     @Override
     public String toString() {
