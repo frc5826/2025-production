@@ -6,20 +6,37 @@ import frc.robot.subsystems.CoralizerSubsystem;
 public class CoralizerIntakeCommand extends LoggedCommand {
 
     private CoralizerSubsystem coralizerSubsystem;
-    private double speed;
+    private IntakeDirection direction;
 
-    public CoralizerIntakeCommand(CoralizerSubsystem coralizerSubsystem, double speed) {
+    public CoralizerIntakeCommand(CoralizerSubsystem coralizerSubsystem, IntakeDirection direction) {
         this.coralizerSubsystem = coralizerSubsystem;
-        this.speed = speed;
+        this.direction = direction;
     }
 
     @Override
     public void initialize() {
-        coralizerSubsystem.setIntakeSpeed(speed);
+        switch (direction){
+            case IN -> coralizerSubsystem.setIntakeSpeed(1);
+            case OUT -> coralizerSubsystem.setIntakeSpeed(-0.15);
+            case SHOOT -> coralizerSubsystem.setIntakeSpeed(-1);
+        }
+    }
+
+    @Override
+    public boolean isFinished() {
+        if(direction != IntakeDirection.OUT) {return coralizerSubsystem.hasCoral();}
+        return false;
     }
 
     @Override
     public void end(boolean interrupted) {
         coralizerSubsystem.setIntakeSpeed(0);
     }
+
+    public static enum IntakeDirection{
+        IN,
+        OUT,
+        SHOOT
+    }
+
 }

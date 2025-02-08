@@ -6,7 +6,9 @@
 package frc.robot;
 
 
+import frc.robot.commands.commandgroups.*;
 import frc.robot.commands.coralizer.CoralizerIntakeCommand;
+import frc.robot.commands.coralizer.CoralizerReWristCommand;
 import frc.robot.commands.coralizer.CoralizerWristCommand;
 import frc.robot.commands.elevator.ElevatorPositionCommand;
 import frc.robot.commands.elevator.ElevatorRepositionCommand;
@@ -39,11 +41,19 @@ public class RobotContainer
 
     public final CoralizerSubsystem coralizerSubsystem = new CoralizerSubsystem();
 
-    public final CoralizerIntakeCommand coralizerInCommand = new CoralizerIntakeCommand(coralizerSubsystem, 0.75);
-    public final CoralizerIntakeCommand coralizerOutCommand = new CoralizerIntakeCommand(coralizerSubsystem, -1);
-    public final CoralizerWristCommand coralizerWristCommandUp = new CoralizerWristCommand(coralizerSubsystem, 45);
-    public final CoralizerWristCommand coralizerWristCommandDown = new CoralizerWristCommand(coralizerSubsystem, 0);
+    public final CoralizerIntakeCommand coralizerInCommand = new CoralizerIntakeCommand(coralizerSubsystem, CoralizerIntakeCommand.IntakeDirection.IN);
+    public final CoralizerIntakeCommand coralizerOutCommand = new CoralizerIntakeCommand(coralizerSubsystem, CoralizerIntakeCommand.IntakeDirection.OUT);
+    public final CoralizerIntakeCommand coralizerShootCommand = new CoralizerIntakeCommand(coralizerSubsystem, CoralizerIntakeCommand.IntakeDirection.SHOOT);
+    public final CoralizerReWristCommand coralizerWristCommandUp = new CoralizerReWristCommand(coralizerSubsystem, 1);
+    public final CoralizerReWristCommand coralizerWristCommandDown = new CoralizerReWristCommand(coralizerSubsystem, -1);
 
+    public final L1CommandGroup l1CommandGroup = new L1CommandGroup(elevatorSubsystem, coralizerSubsystem);
+    public final L2CommandGroup l2CommandGroup = new L2CommandGroup(elevatorSubsystem, coralizerSubsystem);
+    public final L3CommandGroup l3CommandGroup = new L3CommandGroup(elevatorSubsystem, coralizerSubsystem);
+    public final L4CommandGroup l4CommandGroup = new L4CommandGroup(elevatorSubsystem, coralizerSubsystem);
+    public final DropoffCommandGroup dropoffCommandGroup = new DropoffCommandGroup(elevatorSubsystem, coralizerSubsystem);
+    public final SourceCommandGroup sourceCommandGroup = new SourceCommandGroup(elevatorSubsystem, coralizerSubsystem);
+    public final DealgifyCommandGroup dealgifyCommandGroup = new DealgifyCommandGroup(elevatorSubsystem, coralizerSubsystem);
 
     /** The container for the robot. Contains subsystems, OI devices, and commands. */
     public RobotContainer()
@@ -64,14 +74,23 @@ public class RobotContainer
      */
     private void configureBindings()
     {
-        new Trigger(cJoystick::getTrigger).whileTrue(coralizerInCommand);
+        new Trigger(cJoystick::getTrigger).onTrue(dropoffCommandGroup);
 
-        new Trigger(() -> cJoystick.getRawButton(2)).whileTrue(coralizerOutCommand);
+        new Trigger(() -> cJoystick.getRawButton(2)).whileTrue(sourceCommandGroup);
 
         new Trigger(() -> cJoystick.getRawButton(3)).onTrue(coralizerWristCommandDown);
         new Trigger(() -> cJoystick.getRawButton(5)).onTrue(coralizerWristCommandUp);
-//        new Trigger(() -> cJoystick.getRawButton(4)).onTrue(elevatorRepositionCommandBigDown);
-//        new Trigger(() -> cJoystick.getRawButton(6)).onTrue(elevatorRepositionCommandBigUp);
+        new Trigger(() -> cJoystick.getRawButton(4)).whileTrue(coralizerInCommand);
+        new Trigger(() -> cJoystick.getRawButton(6)).whileTrue(coralizerOutCommand);
+
+        new Trigger(() -> cJoystick.getRawButton(7)).onTrue(dealgifyCommandGroup);
+
+        new Trigger(() -> cJoystick.getRawButton(8)).whileTrue(coralizerShootCommand);
+
+        new Trigger(() -> cJoystick.getRawButton(9)).onTrue(l3CommandGroup);
+        new Trigger(() -> cJoystick.getRawButton(10)).onTrue(l4CommandGroup);
+        new Trigger(() -> cJoystick.getRawButton(11)).onTrue(l1CommandGroup);
+        new Trigger(() -> cJoystick.getRawButton(12)).onTrue(l2CommandGroup);
     }
     
     

@@ -6,6 +6,7 @@
 package frc.robot;
 
 import edu.wpi.first.wpilibj.Joystick;
+import edu.wpi.first.wpilibj.PowerDistribution;
 
 /**
  * The Constants class provides a convenient place for teams to hold robot-wide numerical or boolean
@@ -18,7 +19,9 @@ import edu.wpi.first.wpilibj.Joystick;
 public final class Constants
 {
 
-    public static final Joystick cJoystick= new Joystick(0);
+    public static final Joystick cJoystick = new Joystick(0);
+
+    //public static final PowerDistribution cPowerDistribution = new PowerDistribution();
 
     public static class Elevator {
         public static final int cElevatorMotor1ID = 1;
@@ -41,8 +44,8 @@ public final class Constants
         public static final double cElevatorMaxAcceleration = 1;
         public static final double cElevatorMaxVelocity = 1.67;
         public static final double cElevatorHeightMin = 0;
-        public static final double cElevatorHeightMax = 1.4;//TODO
-        public static final double cElevatorDeadband = 0.01;
+        public static final double cElevatorHeightMax = 1.68;//TODO
+        public static final double cElevatorDeadband = 0.03;
 
         public static class ConversionFactor{
             public static final double cElevatorClicksPerMeter = 17777;
@@ -57,12 +60,13 @@ public final class Constants
     }
 
     public static class Coralizer{
-        public static final double cCoralizerP = 0.1;
+        public static final double cCoralizerP = 0.01;
         public static final double cCoralizerI = 0;
         public static final double cCoralizerD = 0;
+        public static final double cCoralizerG = 0.06;
         public static final double cCoralizerMin = -1;
         public static final double cCoralizerMax = 1;
-        public static final double cCoralizerDeadband = 0;
+        public static final double cCoralizerDeadband = 1;
 
         public static final double cCoralizerMinRotation = -90;
         public static final double cCoralizerMaxRotation = 90;

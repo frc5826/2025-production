@@ -31,7 +31,7 @@ public class ElevatorRepositionCommand extends LoggedCommand {
     @Override
     public boolean isFinished() {
 
-        return true; //Math.abs(elevatorSubsystem.getDesiredPos() - elevatorSubsystem.getPos()) <= cElevatorDeadband;
+        return Math.abs(elevatorSubsystem.getDesiredPos() - elevatorSubsystem.getPos()) <= cElevatorDeadband;
 
     }
 }

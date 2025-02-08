@@ -6,14 +6,15 @@ import frc.robot.commands.elevator.ElevatorPositionCommand;
 import frc.robot.subsystems.CoralizerSubsystem;
 import frc.robot.subsystems.ElevatorSubsystem;
 
-public class L2CommandGroup extends SequentialCommandGroup {
+public class SourceCommandGroup extends SequentialCommandGroup {
 
-    public L2CommandGroup(ElevatorSubsystem elevatorSubsystem, CoralizerSubsystem coralizerSubsystem) {
+    public SourceCommandGroup(ElevatorSubsystem elevatorSubsystem, CoralizerSubsystem coralizerSubsystem) {
 
-         addCommands(
-                new ElevatorPositionCommand(elevatorSubsystem, 0.41),
-                new CoralizerWristCommand(coralizerSubsystem, 35)
+        addCommands(
+                new ElevatorPositionCommand(elevatorSubsystem, 0),
+                new CoralizerWristCommand(coralizerSubsystem, 68)
         );
 
     }
+
 }
