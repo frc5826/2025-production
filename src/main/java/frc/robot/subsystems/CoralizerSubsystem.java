@@ -7,7 +7,7 @@ import com.revrobotics.spark.config.SparkBaseConfig;
 import com.revrobotics.spark.config.SparkMaxConfig;
 import edu.wpi.first.wpilibj.PowerDistribution;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
-import frc.robot.math.HelperMath;
+import frc.robot.math.MathHelper;
 import frc.robot.math.PID;
 
 import static frc.robot.Constants.*;
@@ -55,7 +55,7 @@ public class CoralizerSubsystem extends LoggedSubsystem {
     }
 
     public void setWristTarget(double wristTarget) {
-        pid.setGoal(HelperMath.clamp(wristTarget, cCoralizerMinRotation, cCoralizerMaxRotation));
+        pid.setGoal(MathHelper.clamp(wristTarget, cCoralizerMinRotation, cCoralizerMaxRotation));
         this.wristTarget = wristTarget;
     }
 

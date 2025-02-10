@@ -7,7 +7,7 @@ import com.revrobotics.spark.config.SparkMaxConfig;
 import edu.wpi.first.wpilibj.Encoder;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.math.ElevatorController;
-import frc.robot.math.HelperMath;
+import frc.robot.math.MathHelper;
 import frc.robot.math.PID;
 
 import static frc.robot.Constants.Elevator.*;
@@ -60,7 +60,7 @@ public class ElevatorSubsystem extends LoggedSubsystem {
 
     public void setDesiredPosition(double position) {
 
-        position = HelperMath.clamp(position, cElevatorHeightMin, cElevatorHeightMax);
+        position = MathHelper.clamp(position, cElevatorHeightMin, cElevatorHeightMax);
 
         if(getPos() < desiredPos){
             currentController = upController;

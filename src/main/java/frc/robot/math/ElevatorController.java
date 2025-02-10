@@ -43,7 +43,7 @@ public class ElevatorController implements NTSendable {
         setPoint = profile.calculate(deltaTime, setPoint, goal);
         pid.setGoal(setPoint.position);
         output = setPoint.velocity * V + G + pid.calculate();
-        return HelperMath.clamp(output, min, max);
+        return MathHelper.clamp(output, min, max);
 
     }
 
