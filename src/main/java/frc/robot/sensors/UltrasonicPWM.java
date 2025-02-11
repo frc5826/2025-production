@@ -23,11 +23,21 @@ public class UltrasonicPWM implements NTSendable {
         return ultrasonicReading.getHighTimeNanoseconds()/100000.0;
     }
 
+    public double getOffsetUltrasonic(){
+        if (getUltrasonic() <= 0.30){
+            return 0.00;
+        }
+        else {
+            return getUltrasonic() - 0.30;
+        }
+    }
+
 
     @Override
     public void initSendable(NTSendableBuilder builder) {
 
         builder.setSmartDashboardType("5826-Ultrasonic");
-        builder.addDoubleProperty("Millimeters", this::getUltrasonic, null);
+        builder.addDoubleProperty("FromCameraMeters", this::getUltrasonic, null);
+        builder.addDoubleProperty("FromBumperMeters", this::getOffsetUltrasonic, null);
     }
 }
