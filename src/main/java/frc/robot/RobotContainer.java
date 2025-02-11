@@ -11,6 +11,7 @@ import frc.robot.commands.coralizer.CoralizerReWristCommand;
 import frc.robot.commands.elevator.ElevatorPositionCommand;
 import frc.robot.commands.elevator.ElevatorRepositionCommand;
 import frc.robot.commands.swerve.CrabWalkCommand;
+import frc.robot.subsystems.CameraSubsystem;
 import frc.robot.subsystems.CoralizerSubsystem;
 import frc.robot.subsystems.ElevatorSubsystem;
 import edu.wpi.first.wpilibj.DataLogManager;
@@ -27,7 +28,9 @@ import static frc.robot.Constants.cXbox;
 public class RobotContainer
 {
 
-    public final Localization localization = new Localization();
+    public final CameraSubsystem cameraSubsystem = new CameraSubsystem();
+
+    public final Localization localization = new Localization(cameraSubsystem);
     public final SwerveSubsystem swerveSubsystem = new SwerveSubsystem(localization);
 
     public final ElevatorSubsystem elevatorSubsystem = new ElevatorSubsystem();

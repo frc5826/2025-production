@@ -13,8 +13,8 @@ import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardLayout;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 import edu.wpi.first.wpilibj.smartdashboard.Field2d;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import frc.robot.subsystems.CameraSubsystem;
 import frc.robot.subsystems.SwerveSubsystem;
-import frc.robot.sensors.CameraSystem;
 import org.apache.commons.math3.distribution.MultivariateNormalDistribution;
 import org.apache.commons.math3.linear.RealMatrix;
 import org.apache.commons.math3.linear.RealVector;
@@ -26,15 +26,15 @@ public class Localization {
     private KalmanFilter kalmanFilter;
     private final Variances measVar;
     private final Timer timer;
-    private final CameraSystem cameras;
+    private final CameraSubsystem cameraSubsystem;
     private Pose2d cameraPose;
 
     private Field2d field;
 
-    public Localization() {
+    public Localization(CameraSubsystem cameraSubsystem) {
         kalmanFilter = new KalmanFilter(new MultivariateNormalDistribution(new double[]{0, 0, 0, 0, 0, 0, 0, 0, 0}, initCovar()));
-        this.measVar = new Variances(3, 0.8, 5, 2, 0.6, 5);
-        cameras = new CameraSystem();
+        this.measVar = new Variances(5, 1.2, 8, 4, 1.2, 8);
+        this.cameraSubsystem = cameraSubsystem;
         timer = new Timer();
 
         field = new Field2d();
@@ -49,6 +49,30 @@ public class Localization {
     public void measure(SwerveSubsystem s) {
         RealVector zOdo = kalmanFilter.getX().copy();
         RealMatrix ROdo = kalmanFilter.getP().copy();
+
+        //Position from cameras
+        for(Pose3d p: cameraSubsystem.getCameraMeasurements()) {
+            cameraPose = p.toPose2d();
+
+            zOdo.setEntry(0, p.getX());
+            zOdo.setEntry(1, p.getY());
+
+            ROdo.setEntry(0, 0, measVar.xyPos());
+            ROdo.setEntry(1, 1, measVar.xyPos());
+
+            Rotation2d angleDiff = p.getRotation().toRotation2d().minus(s.getIMUContinuousAngle());
+
+            zOdo.setEntry(2, s.getIMUContinuousAngle().getRadians()+angleDiff.getRadians());
+
+            ROdo.setEntry(2, 2, measVar.rPos());
+            SmartDashboard.putNumber("cam Diff", angleDiff.getDegrees());
+            SmartDashboard.putNumber("continuous gyro angle", s.getIMUContinuousAngle().getDegrees());
+
+            kalmanFilter.measure(ROdo, zOdo);
+        }
+
+        zOdo = kalmanFilter.getX().copy();
+        ROdo = kalmanFilter.getP().copy();
 
         //Acceleration from accelerometer
         Optional<Translation3d> accelOptional = s.getAcc();
@@ -74,25 +98,6 @@ public class Localization {
         zOdo.setEntry(2, s.getIMUContinuousAngle().getRadians());
 
         ROdo.setEntry(2, 2, measVar.rPos());
-
-        //Position from cameras
-        for(Pose3d p: cameras.getCameraMeasurements()) {
-            cameraPose = p.toPose2d();
-
-            zOdo.setEntry(0, p.getX());
-            zOdo.setEntry(1, p.getY());
-
-            ROdo.setEntry(0, 0, measVar.xyPos());
-            ROdo.setEntry(1, 1, measVar.xyPos());
-
-            Rotation2d angleDiff = p.getRotation().toRotation2d().minus(s.getIMUContinuousAngle());
-
-            zOdo.setEntry(2, s.getIMUContinuousAngle().getRadians()+angleDiff.getRadians());
-
-            ROdo.setEntry(2, 2, measVar.rPos());
-            SmartDashboard.putNumber("cam Diff", angleDiff.getDegrees());
-            SmartDashboard.putNumber("continuous gyro angle", s.getIMUContinuousAngle().getDegrees());
-        }
 
         //for all your readings...
 
