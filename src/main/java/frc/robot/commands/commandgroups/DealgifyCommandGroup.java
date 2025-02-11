@@ -1,6 +1,8 @@
 package frc.robot.commands.commandgroups;
 
+import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
+import frc.robot.commands.coralizer.CoralizerIntakeCommand;
 import frc.robot.commands.coralizer.CoralizerWristCommand;
 import frc.robot.commands.elevator.ElevatorPositionCommand;
 import frc.robot.subsystems.CoralizerSubsystem;
@@ -11,8 +13,10 @@ public class DealgifyCommandGroup extends SequentialCommandGroup {
     public DealgifyCommandGroup(ElevatorSubsystem elevatorSubsystem, CoralizerSubsystem coralizerSubsystem) {
 
         addCommands(
+                new InstantCommand(() -> elevatorSubsystem.setElevatorTarget(ElevatorSubsystem.ElevatorTarget.NONE)),
                 new ElevatorPositionCommand(elevatorSubsystem, 0.61),
-                new CoralizerWristCommand(coralizerSubsystem, 0)
+                new CoralizerWristCommand(coralizerSubsystem, 0),
+                new CoralizerIntakeCommand(coralizerSubsystem, CoralizerIntakeCommand.IntakeDirection.IN)
         );
 
     }

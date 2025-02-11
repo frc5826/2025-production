@@ -1,5 +1,6 @@
 package frc.robot.commands.commandgroups;
 
+import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import frc.robot.commands.coralizer.CoralizerIntakeCommand;
 import frc.robot.commands.coralizer.CoralizerWristCommand;
@@ -12,6 +13,7 @@ public class SourceCommandGroup extends SequentialCommandGroup {
     public SourceCommandGroup(ElevatorSubsystem elevatorSubsystem, CoralizerSubsystem coralizerSubsystem) {
 
         addCommands(
+                new InstantCommand(() -> elevatorSubsystem.setElevatorTarget(ElevatorSubsystem.ElevatorTarget.NONE)),
                 new ElevatorPositionCommand(elevatorSubsystem, 0),
                 new CoralizerWristCommand(coralizerSubsystem, 68),
                 new CoralizerIntakeCommand(coralizerSubsystem, CoralizerIntakeCommand.IntakeDirection.IN)

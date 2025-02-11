@@ -22,6 +22,7 @@ public class ElevatorSubsystem extends LoggedSubsystem {
     private SparkMax motor, motorFollower;
     private Encoder encoder;
     private double desiredPos;
+    private ElevatorTarget elevatorTarget;
 
     public ElevatorSubsystem(){
 
@@ -43,6 +44,8 @@ public class ElevatorSubsystem extends LoggedSubsystem {
         motorFollower.configure(configFollower, SparkBase.ResetMode.kResetSafeParameters, SparkBase.PersistMode.kPersistParameters);
 
         currentController = upController;
+
+        elevatorTarget = ElevatorTarget.NONE;
 
     }
         //TODO is .02 correct???
@@ -94,6 +97,22 @@ public class ElevatorSubsystem extends LoggedSubsystem {
 
         return pos;
 
+    }
+
+    public ElevatorTarget getElevatorTarget() {
+        return elevatorTarget;
+    }
+
+    public void setElevatorTarget(ElevatorTarget elevatorTarget) {
+        this.elevatorTarget = elevatorTarget;
+    }
+
+    public static enum ElevatorTarget{
+        L1,
+        L2,
+        L3,
+        L4,
+        NONE
     }
 
 }
