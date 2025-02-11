@@ -48,7 +48,7 @@ public class ElevatorSubsystem extends LoggedSubsystem {
         elevatorTarget = ElevatorTarget.NONE;
 
     }
-        //TODO is .02 correct???
+
     @Override
     public void periodic() {
 

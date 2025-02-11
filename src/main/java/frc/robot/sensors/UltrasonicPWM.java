@@ -5,7 +5,6 @@ import edu.wpi.first.networktables.NTSendableBuilder;
 import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.DutyCycle;
 
-//TODO
 public class UltrasonicPWM implements NTSendable {
 
 
