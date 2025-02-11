@@ -7,6 +7,7 @@ import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import frc.robot.commands.commandgroups.L4DropoffCommandGroup;
 import frc.robot.commands.commandgroups.L4CommandGroup;
+import frc.robot.commands.commandgroups.SourceCommandGroup;
 import frc.robot.commands.swerve.MoveTimeCommand;
 import frc.robot.commands.swerve.pathing.PathFindThenAccuratePathCommand;
 import frc.robot.commands.swerve.pathing.PathToCommand;
@@ -40,15 +41,14 @@ public class Right extends SequentialCommandGroup {
         //Path and prep elevator
         addCommands(
                 Commands.parallel(
-                        new PathToCommand(o.getReefE(), 0, fastConstraints, s),
+                        new PathToCommand(o.getReefE(), 0, slowConstraints, s),
                         new L4CommandGroup(e, c)
                 )
         );
 
         //Drop off coral
         addCommands(
-                new L4DropoffCommandGroup(e, c),
-                new MoveTimeCommand(0.5, new ChassisSpeeds(-1, 0, 0), true, s)
+                new L4DropoffCommandGroup(e, c, s)
         );
 
         //Path to coral station
@@ -58,21 +58,20 @@ public class Right extends SequentialCommandGroup {
 
         //Pickup coral
         addCommands(
-
+                new SourceCommandGroup(e, c)
         );
 
-        //Path to reef
+        //Path to reef and prep elevator
         addCommands(
                 Commands.parallel(
-                        new PathToCommand(o.getReefC(), 0, slowConstraints, s)
-                        //raise elevator
-                        //prep wrist
+                        new PathToCommand(o.getReefC(), 0, slowConstraints, s),
+                        new L4CommandGroup(e, c)
                 )
         );
 
         //Drop off coral
         addCommands(
-
+                new L4DropoffCommandGroup(e, c, s)
         );
 
     }

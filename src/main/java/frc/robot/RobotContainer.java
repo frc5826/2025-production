@@ -10,19 +10,15 @@ import frc.robot.commands.coralizer.CoralizerIntakeCommand;
 import frc.robot.commands.coralizer.CoralizerReWristCommand;
 import frc.robot.commands.elevator.ElevatorPositionCommand;
 import frc.robot.commands.elevator.ElevatorRepositionCommand;
+import frc.robot.commands.swerve.CrabWalkCommand;
 import frc.robot.subsystems.CoralizerSubsystem;
 import frc.robot.subsystems.ElevatorSubsystem;
-import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
-import com.pathplanner.lib.path.PathConstraints;
 import edu.wpi.first.wpilibj.DataLogManager;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
-import frc.robot.commands.swerve.pathing.PathFindCommand;
-import frc.robot.commands.swerve.pathing.PathToCommand;
 import frc.robot.commands.swerve.TeleopDriveCommand;
 import frc.robot.localization.Localization;
-import frc.robot.positioning.FieldOrientation;
 import frc.robot.subsystems.SwerveSubsystem;
 
 import static frc.robot.Constants.cJoystick;
@@ -30,6 +26,9 @@ import static frc.robot.Constants.cXbox;
 
 public class RobotContainer
 {
+
+    public final Localization localization = new Localization();
+    public final SwerveSubsystem swerveSubsystem = new SwerveSubsystem(localization);
 
     public final ElevatorSubsystem elevatorSubsystem = new ElevatorSubsystem();
 
@@ -52,14 +51,10 @@ public class RobotContainer
     public final L2CommandGroup l2CommandGroup = new L2CommandGroup(elevatorSubsystem, coralizerSubsystem);
     public final L3CommandGroup l3CommandGroup = new L3CommandGroup(elevatorSubsystem, coralizerSubsystem);
     public final L4CommandGroup l4CommandGroup = new L4CommandGroup(elevatorSubsystem, coralizerSubsystem);
-    public final L4DropoffCommandGroup dropoffCommandGroup = new L4DropoffCommandGroup(elevatorSubsystem, coralizerSubsystem);
+    public final L4DropoffCommandGroup L4DropoffCommandGroup = new L4DropoffCommandGroup(elevatorSubsystem, coralizerSubsystem, swerveSubsystem);
+    public final L3L2DropoffCommandGroup L3L2DropoffCommandGroup = new L3L2DropoffCommandGroup(elevatorSubsystem, coralizerSubsystem, swerveSubsystem);
     public final SourceCommandGroup sourceCommandGroup = new SourceCommandGroup(elevatorSubsystem, coralizerSubsystem);
     public final DealgifyCommandGroup dealgifyCommandGroup = new DealgifyCommandGroup(elevatorSubsystem, coralizerSubsystem);
-
-    /** The container for the robot. Contains subsystems, OI devices, and commands. */
-    public final Localization localization = new Localization();
-
-    public final SwerveSubsystem swerveSubsystem = new SwerveSubsystem(localization);
 
     public RobotContainer()
     {
@@ -69,21 +64,26 @@ public class RobotContainer
         // Setup button bindings
         bindXbox();
         bindBoard();
+        bindJoystick();
     }
 
-    
-    /**
-     * Use this method to define your trigger->command mappings. Triggers can be created via the
-     * {@link Trigger#Trigger(java.util.function.BooleanSupplier)} constructor with an arbitrary
-     * predicate, or via the named factories in {@link
-     * edu.wpi.first.wpilibj2.command.button.CommandGenericHID}'s subclasses for {@link
-     * CommandXboxController Xbox}/{@link edu.wpi.first.wpilibj2.command.button.CommandPS4Controller
-     * PS4} controllers or {@link edu.wpi.first.wpilibj2.command.button.CommandJoystick Flight
-     * joysticks}.
-     */
-    private void configureBindings()
+    public void prePeriodic(boolean teleop) {
+
+        if(teleop) {
+            localization.move();
+            localization.measure(swerveSubsystem);
+            localization.updateField();
+        }
+
+    }
+
+    public void postPeriodic() {
+
+    }
+
+    private void bindJoystick()
     {
-        new Trigger(cJoystick::getTrigger).onTrue(dropoffCommandGroup);
+        new Trigger(cJoystick::getTrigger).onTrue(L4DropoffCommandGroup);
 
         new Trigger(() -> cJoystick.getRawButton(2)).whileTrue(sourceCommandGroup);
 
@@ -102,29 +102,18 @@ public class RobotContainer
         new Trigger(() -> cJoystick.getRawButton(12)).onTrue(l2CommandGroup);
     }
 
-    public void prePeriodic(boolean teleop) {
-
-        if(teleop) {
-            localization.move();
-            localization.measure(swerveSubsystem);
-            localization.updateField();
-        }
-
-    }
-
-    public void postPeriodic() {
-
-    }
-
     private void bindXbox() {
         new Trigger(cXbox::getBackButtonPressed).onTrue(new InstantCommand(swerveSubsystem::zeroGyro));
         new Trigger(cXbox::getStartButtonPressed).onTrue(new InstantCommand(this::initZeroGyro)); //TODO test
 
-        PathConstraints constraints = new PathConstraints(1, 2, Math.PI * 3, Math.PI * 3);
-        new Trigger(cXbox::getAButton).whileTrue(new PathToCommand(FieldOrientation.getOrientation().getReefA(), 0, constraints, swerveSubsystem));
-        new Trigger(cXbox::getBButton).whileTrue(new PathToCommand(FieldOrientation.getOrientation().getCoralStationRB(), 0, constraints, swerveSubsystem));
-        new Trigger(cXbox::getYButton).whileTrue(new PathFindCommand(FieldOrientation.getOrientation().getReefF(), constraints, swerveSubsystem));
-        new Trigger(cXbox::getXButton).whileTrue(new PathToCommand(FieldOrientation.getOrientation().getReefC(), 0, constraints, swerveSubsystem));
+        new Trigger(cXbox::getRightBumperButton).whileTrue(new CrabWalkCommand(true, 0.25, swerveSubsystem));
+        new Trigger(cXbox::getLeftBumperButton).whileTrue(new CrabWalkCommand(false, 0.25, swerveSubsystem));
+
+//        PathConstraints constraints = new PathConstraints(1, 2, Math.PI * 3, Math.PI * 3);
+//        new Trigger(cXbox::getAButton).whileTrue(new PathToCommand(FieldOrientation.getOrientation().getReefA(), 0, constraints, swerveSubsystem));
+//        new Trigger(cXbox::getBButton).whileTrue(new PathToCommand(FieldOrientation.getOrientation().getCoralStationRB(), 0, constraints, swerveSubsystem));
+//        new Trigger(cXbox::getYButton).whileTrue(new PathFindCommand(FieldOrientation.getOrientation().getReefF(), constraints, swerveSubsystem));
+//        new Trigger(cXbox::getXButton).whileTrue(new PathToCommand(FieldOrientation.getOrientation().getReefC(), 0, constraints, swerveSubsystem));
     }
 
     private void bindBoard() {

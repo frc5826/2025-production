@@ -25,7 +25,7 @@ public class CoralizerIntakeCommand extends LoggedCommand {
     @Override
     public boolean isFinished() {
         if(direction != IntakeDirection.OUT) {return coralizerSubsystem.hasCoral();}
-        return false;
+        return !coralizerSubsystem.hasCoral();
     }
 
     @Override

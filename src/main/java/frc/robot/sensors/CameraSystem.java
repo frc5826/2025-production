@@ -26,6 +26,7 @@ public class CameraSystem {
 
 
     private static final double POSE_CUTOFF = 0.2;
+    private static final double distanceCutoff = 4;
     private AprilTagFieldLayout fieldLayout;
     private final List<Camera> cameras;
     private DoubleLogEntry xLog, yLog, rotationLog, ambiguityLog;
@@ -83,7 +84,10 @@ public class CameraSystem {
                 if (result.hasTargets()) {
 
                     for (PhotonTrackedTarget target : result.getTargets()) {
-                        if (target.getFiducialId() > -1 && target.getPoseAmbiguity() <= POSE_CUTOFF && target.getPoseAmbiguity() != -1) {
+                        if (target.getFiducialId() > -1 &&
+                                target.getPoseAmbiguity() <= POSE_CUTOFF &&
+                                target.getPoseAmbiguity() != -1 &&
+                                Math.hypot(target.getBestCameraToTarget().getX(), target.getBestCameraToTarget().getY()) < distanceCutoff) { //TODO test if distance rejection works
 
                             Pose3d robotPose = getRobotLocation(camera.getCameraToRobot(), target.getBestCameraToTarget(), target.getFiducialId());
 
