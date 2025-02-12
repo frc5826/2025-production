@@ -11,6 +11,7 @@ public class CoralizerIntakeCommand extends LoggedCommand {
     public CoralizerIntakeCommand(CoralizerSubsystem coralizerSubsystem, IntakeDirection direction) {
         this.coralizerSubsystem = coralizerSubsystem;
         this.direction = direction;
+        addRequirements(coralizerSubsystem);
     }
 
     @Override

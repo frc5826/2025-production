@@ -5,6 +5,7 @@
 
 package frc.robot;
 
+import com.pathplanner.lib.path.PathConstraints;
 import frc.robot.commands.commandgroups.*;
 import frc.robot.commands.coralizer.CoralizerIntakeCommand;
 import frc.robot.commands.coralizer.CoralizerReWristCommand;
@@ -12,6 +13,9 @@ import frc.robot.commands.elevator.ElevatorPositionCommand;
 import frc.robot.commands.elevator.ElevatorRepositionCommand;
 import frc.robot.commands.swerve.CrabWalkCommand;
 import frc.robot.subsystems.CameraSubsystem;
+import frc.robot.commands.swerve.pathing.AccuratePathCommand;
+import frc.robot.commands.swerve.pathing.PathFindCommand;
+import frc.robot.positioning.FieldOrientation;
 import frc.robot.subsystems.CoralizerSubsystem;
 import frc.robot.subsystems.ElevatorSubsystem;
 import edu.wpi.first.wpilibj.DataLogManager;
@@ -22,11 +26,9 @@ import frc.robot.commands.swerve.TeleopDriveCommand;
 import frc.robot.localization.Localization;
 import frc.robot.subsystems.SwerveSubsystem;
 
-import static frc.robot.Constants.cJoystick;
-import static frc.robot.Constants.cXbox;
+import static frc.robot.Constants.*;
 
-public class RobotContainer
-{
+public class RobotContainer {
 
     public final CameraSubsystem cameraSubsystem = new CameraSubsystem();
 
@@ -59,10 +61,9 @@ public class RobotContainer
     public final SourceCommandGroup sourceCommandGroup = new SourceCommandGroup(elevatorSubsystem, coralizerSubsystem);
     public final DealgifyCommandGroup dealgifyCommandGroup = new DealgifyCommandGroup(elevatorSubsystem, coralizerSubsystem);
 
-    public RobotContainer()
-    {
+    public RobotContainer() {
         DataLogManager.start("/U/logs");
-        CommandScheduler.getInstance().setDefaultCommand(swerveSubsystem,new TeleopDriveCommand(swerveSubsystem));
+        CommandScheduler.getInstance().setDefaultCommand(swerveSubsystem, new TeleopDriveCommand(swerveSubsystem));
 
         // Setup button bindings
         bindXbox();
@@ -72,7 +73,7 @@ public class RobotContainer
 
     public void prePeriodic(boolean teleop) {
 
-        if(teleop) {
+        if (teleop) {
             localization.move();
             localization.measure(swerveSubsystem);
             localization.updateField();
@@ -84,8 +85,7 @@ public class RobotContainer
 
     }
 
-    private void bindJoystick()
-    {
+    private void bindJoystick() {
         new Trigger(cJoystick::getTrigger).onTrue(L4DropoffCommandGroup);
 
         new Trigger(() -> cJoystick.getRawButton(2)).whileTrue(sourceCommandGroup);
@@ -119,8 +119,39 @@ public class RobotContainer
 //        new Trigger(cXbox::getXButton).whileTrue(new PathToCommand(FieldOrientation.getOrientation().getReefC(), 0, constraints, swerveSubsystem));
     }
 
+    //TODO set real constraints and different constraints variable for Source Pickup :)
     private void bindBoard() {
-
+        PathConstraints constraints = new PathConstraints(0, 0, 0, 0, 0);
+        //For Buttons 0-11, Starts at top left white button and goes clockwise around
+        new Trigger(() -> cButtonBoard.getButton(0)).whileTrue(new PathFindCommand(FieldOrientation.getOrientation().getReefH(), constraints, swerveSubsystem).andThen(new AccuratePathCommand(FieldOrientation.getOrientation().getReefH(), false, cameraSubsystem, swerveSubsystem)));
+        new Trigger(() -> cButtonBoard.getButton(1)).whileTrue(new PathFindCommand(FieldOrientation.getOrientation().getReefG(), constraints, swerveSubsystem).andThen(new AccuratePathCommand(FieldOrientation.getOrientation().getReefG(), false, cameraSubsystem, swerveSubsystem)));
+        new Trigger(() -> cButtonBoard.getButton(2)).whileTrue(new PathFindCommand(FieldOrientation.getOrientation().getReefF(), constraints, swerveSubsystem).andThen(new AccuratePathCommand(FieldOrientation.getOrientation().getReefF(), false, cameraSubsystem, swerveSubsystem)));
+        new Trigger(() -> cButtonBoard.getButton(3)).whileTrue(new PathFindCommand(FieldOrientation.getOrientation().getReefE(), constraints, swerveSubsystem).andThen(new AccuratePathCommand(FieldOrientation.getOrientation().getReefE(), false, cameraSubsystem, swerveSubsystem)));
+        new Trigger(() -> cButtonBoard.getButton(4)).whileTrue(new PathFindCommand(FieldOrientation.getOrientation().getReefD(), constraints, swerveSubsystem).andThen(new AccuratePathCommand(FieldOrientation.getOrientation().getReefD(), false, cameraSubsystem, swerveSubsystem)));
+        new Trigger(() -> cButtonBoard.getButton(5)).whileTrue(new PathFindCommand(FieldOrientation.getOrientation().getReefC(), constraints, swerveSubsystem).andThen(new AccuratePathCommand(FieldOrientation.getOrientation().getReefC(), false, cameraSubsystem, swerveSubsystem)));
+        new Trigger(() -> cButtonBoard.getButton(6)).whileTrue(new PathFindCommand(FieldOrientation.getOrientation().getReefB(), constraints, swerveSubsystem).andThen(new AccuratePathCommand(FieldOrientation.getOrientation().getReefB(), false, cameraSubsystem, swerveSubsystem)));
+        new Trigger(() -> cButtonBoard.getButton(7)).whileTrue(new PathFindCommand(FieldOrientation.getOrientation().getReefA(), constraints, swerveSubsystem).andThen(new AccuratePathCommand(FieldOrientation.getOrientation().getReefA(), false, cameraSubsystem, swerveSubsystem)));
+        new Trigger(() -> cButtonBoard.getButton(8)).whileTrue(new PathFindCommand(FieldOrientation.getOrientation().getReefL(), constraints, swerveSubsystem).andThen(new AccuratePathCommand(FieldOrientation.getOrientation().getReefL(), false, cameraSubsystem, swerveSubsystem)));
+        new Trigger(() -> cButtonBoard.getButton(9)).whileTrue(new PathFindCommand(FieldOrientation.getOrientation().getReefK(), constraints, swerveSubsystem).andThen(new AccuratePathCommand(FieldOrientation.getOrientation().getReefK(), false, cameraSubsystem, swerveSubsystem)));
+        new Trigger(() -> cButtonBoard.getButton(10)).whileTrue(new PathFindCommand(FieldOrientation.getOrientation().getReefJ(), constraints, swerveSubsystem).andThen(new AccuratePathCommand(FieldOrientation.getOrientation().getReefJ(), false, cameraSubsystem, swerveSubsystem)));
+        new Trigger(() -> cButtonBoard.getButton(11)).whileTrue(new PathFindCommand(FieldOrientation.getOrientation().getReefI(), constraints, swerveSubsystem).andThen(new AccuratePathCommand(FieldOrientation.getOrientation().getReefI(), false, cameraSubsystem, swerveSubsystem)));
+        //For Buttons 12-15, Starts at top white button and goes straight down
+        new Trigger(() -> cButtonBoard.getButtonPressed(12)).onTrue(new L4CommandGroup(elevatorSubsystem, coralizerSubsystem));
+        new Trigger(() -> cButtonBoard.getButtonPressed(13)).onTrue(new L3CommandGroup(elevatorSubsystem, coralizerSubsystem));
+        new Trigger(() -> cButtonBoard.getButtonPressed(14)).onTrue(new L2CommandGroup(elevatorSubsystem, coralizerSubsystem));
+        new Trigger(() -> cButtonBoard.getButtonPressed(15)).onTrue(new L1CommandGroup(elevatorSubsystem, coralizerSubsystem));
+        //For Buttons 16-18, Starts at top right black button and goes left
+        new Trigger(() -> cButtonBoard.getButton(16)).onTrue(new DropoffCommandGroup(elevatorSubsystem, coralizerSubsystem, swerveSubsystem));
+        new Trigger(() -> cButtonBoard.getButtonPressed(17)).onTrue(new HomeCommandGroup(elevatorSubsystem, coralizerSubsystem));
+        new Trigger(() -> cButtonBoard.getButtonPressed(18)).onTrue(new DealgifyCommandGroup(elevatorSubsystem, coralizerSubsystem));
+        //For Buttons 19-21, Starts at middle right red button and goes left
+        new Trigger(() -> cButtonBoard.getButton(19)).whileTrue(new AllignSourceCommandGroup(FieldOrientation.getOrientation().getCoralStationLB(), constraints, swerveSubsystem, elevatorSubsystem, coralizerSubsystem, cameraSubsystem).andThen(new AccuratePathCommand(FieldOrientation.getOrientation().getCoralStationLB(), true, cameraSubsystem, swerveSubsystem)));
+        new Trigger(() -> cButtonBoard.getButton(20)).whileTrue(new AllignSourceCommandGroup(FieldOrientation.getOrientation().getCoralStationRB(), constraints, swerveSubsystem, elevatorSubsystem, coralizerSubsystem, cameraSubsystem).andThen(new AccuratePathCommand(FieldOrientation.getOrientation().getCoralStationRB(), true, cameraSubsystem, swerveSubsystem)));
+        new Trigger(() -> cButtonBoard.getButton(21)).whileTrue(new CoralizerIntakeCommand(coralizerSubsystem, CoralizerIntakeCommand.IntakeDirection.OUT));
+        //For Buttons 22-24, Starts at bottom right white button and goes left
+        new Trigger(() -> cButtonBoard.getButton(22)).whileTrue(new CoralizerIntakeCommand(coralizerSubsystem, CoralizerIntakeCommand.IntakeDirection.IN));
+        new Trigger(() -> cButtonBoard.getButton(23)).whileTrue(new AllignSourceCommandGroup(FieldOrientation.getOrientation().getCoralStationLA(), constraints, swerveSubsystem, elevatorSubsystem, coralizerSubsystem, cameraSubsystem).andThen(new AccuratePathCommand(FieldOrientation.getOrientation().getCoralStationLA(), true, cameraSubsystem, swerveSubsystem)));
+        new Trigger(() -> cButtonBoard.getButton(24)).whileTrue(new AllignSourceCommandGroup(FieldOrientation.getOrientation().getCoralStationRA(), constraints, swerveSubsystem, elevatorSubsystem, coralizerSubsystem, cameraSubsystem).andThen(new AccuratePathCommand(FieldOrientation.getOrientation().getCoralStationRA(), true, cameraSubsystem, swerveSubsystem)));
     }
 
     //Called in auto init to give the cameras time to localize us

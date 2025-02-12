@@ -36,7 +36,7 @@ public class UltrasonicPWM implements NTSendable {
     public void initSendable(NTSendableBuilder builder) {
 
         builder.setSmartDashboardType("5826-Ultrasonic");
-        builder.addDoubleProperty("FromCameraMeters", this::getUltrasonic, null);
+        builder.addDoubleProperty("FromSensorMeters", this::getUltrasonic, null);
         builder.addDoubleProperty("FromBumperMeters", this::getOffsetUltrasonic, null);
     }
 }

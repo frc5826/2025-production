@@ -11,6 +11,7 @@ public class CoralizerReWristCommand extends LoggedCommand {
     public CoralizerReWristCommand(CoralizerSubsystem coralizerSubsystem, double rotation) {
         this.coralizerSubsystem = coralizerSubsystem;
         this.rotation = rotation;
+        addRequirements(coralizerSubsystem);
     }
 
     @Override

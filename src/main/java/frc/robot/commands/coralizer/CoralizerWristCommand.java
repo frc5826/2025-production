@@ -13,6 +13,7 @@ public class CoralizerWristCommand extends LoggedCommand {
     public CoralizerWristCommand(CoralizerSubsystem coralizerSubsystem, double rotation) {
         this.coralizerSubsystem = coralizerSubsystem;
         this.rotation = rotation;
+        addRequirements(coralizerSubsystem);
     }
 
     @Override
