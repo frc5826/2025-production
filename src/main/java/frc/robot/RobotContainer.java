@@ -144,7 +144,7 @@ public class RobotContainer {
         new Trigger(() -> cButtonBoard.getButtonPressed(14)).onTrue(new L2CommandGroup(elevatorSubsystem, coralizerSubsystem));
         new Trigger(() -> cButtonBoard.getButtonPressed(15)).onTrue(new L1CommandGroup(elevatorSubsystem, coralizerSubsystem));
         //For Buttons 16-18, Starts at top right black button and goes left
-        new Trigger(() -> cButtonBoard.getButton(16)).onTrue(new DropoffCommandGroup(elevatorSubsystem, coralizerSubsystem, swerveSubsystem));
+        new Trigger(() -> cButtonBoard.getButtonPressed(16)).onTrue(new DropoffCommandGroup(elevatorSubsystem, coralizerSubsystem, swerveSubsystem));
         new Trigger(() -> cButtonBoard.getButtonPressed(17)).onTrue(new HomeCommandGroup(elevatorSubsystem, coralizerSubsystem));
         new Trigger(() -> cButtonBoard.getButtonPressed(18)).onTrue(new DealgifyL2CommandGroup(elevatorSubsystem, coralizerSubsystem));
         //For Buttons 19-21, Starts at middle right red button and goes left

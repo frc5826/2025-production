@@ -13,7 +13,7 @@ import frc.robot.math.PID;
 import static frc.robot.Constants.*;
 import static frc.robot.Constants.Coralizer.*;
 
-public class CoralizerSubsystem extends LoggedSubsystem {
+public class CoralizerSubsystem extends LoggedSubsystem{
 
     private SparkMax intakeMotor;
     private SparkMax wristMotor;
@@ -47,6 +47,7 @@ public class CoralizerSubsystem extends LoggedSubsystem {
         wristMotor.set(speed);
         SmartDashboard.putNumber("coralizer/Encoder", getRotation());
         SmartDashboard.putNumber("coralizer/Output", speed);
+        SmartDashboard.putBoolean("coralizer/HasCoral", hasCoral());
         //SmartDashboard.putNumber("coralizer/Current", cPowerDistribution.getCurrent(2));
     }
 
@@ -72,7 +73,7 @@ public class CoralizerSubsystem extends LoggedSubsystem {
     }
 
     public boolean hasCoral(){
-        return intakeMotor.getForwardLimitSwitch().isPressed() || intakeMotor.getReverseLimitSwitch().isPressed();
+        return intakeMotor.getReverseLimitSwitch().isPressed();
     }
 
 }
