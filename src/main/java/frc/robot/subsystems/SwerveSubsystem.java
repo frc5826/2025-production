@@ -14,6 +14,7 @@ import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.Filesystem;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import frc.robot.Constants;
 import frc.robot.localization.Localization;
 import swervelib.SwerveDrive;
 import swervelib.math.SwerveMath;
@@ -37,6 +38,8 @@ public class SwerveSubsystem extends LoggedSubsystem {
 
     private double gyroOffset;
 
+    private double speedMultiplier;
+
     public SwerveSubsystem(Localization localization) {
         double angleConversionFactor = SwerveMath.calculateDegreesPerSteeringRotation(
                 12.8, 1);
@@ -58,6 +61,8 @@ public class SwerveSubsystem extends LoggedSubsystem {
         zeroGyro();
 
         this.localization = localization;
+
+        speedMultiplier = cLowSpeedMultiplier;
 
         setupPathPlanner();
     }
@@ -84,6 +89,12 @@ public class SwerveSubsystem extends LoggedSubsystem {
         } else
             return Optional.empty();
     }
+
+    public void toggleSpeedMultiplier() {
+        speedMultiplier = speedMultiplier == cHighSpeedMultiplier ? cLowSpeedMultiplier : cHighSpeedMultiplier;
+    }
+
+    public double getSpeedMultiplier() { return speedMultiplier; }
 
     public Rotation2d getRotationCorrected() {
         return getIMUYaw().getRadians() < 0 ? getIMUYaw().plus(new Rotation2d(2 * Math.PI)) : getIMUYaw();

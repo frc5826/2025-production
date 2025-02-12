@@ -14,7 +14,9 @@ public class TeleopDriveCommand extends LoggedCommand {
 
     private final SwerveSubsystem swerveSubsystem;
 
-    private final PID turnPID = new PID(4, 0, .4, cMaxAngularVelocity, 0.5, 0.03, this::getTurnDiff);
+    private double mult;
+
+    private final PID turnPID = new PID(4, 0, .3, cMaxAngularVelocity, 0.5, 0.03, this::getTurnDiff);
 
     public TeleopDriveCommand(SwerveSubsystem swerveSubsystem) {
         this.swerveSubsystem = swerveSubsystem;
@@ -43,8 +45,10 @@ public class TeleopDriveCommand extends LoggedCommand {
             swerveSubsystem.setTargetAngle( Rotation2d.fromRadians(Math.atan2(-rx, -ry)));
         }
 
+        mult = swerveSubsystem.getSpeedMultiplier();
+
         ChassisSpeeds speeds = new ChassisSpeeds(
-                x * cMaxVelocity * .5, y * cMaxVelocity * .5, -turnPID.calculate());
+                x * cMaxVelocity * mult, y * cMaxVelocity * mult, -turnPID.calculate());
 
         swerveSubsystem.driveFieldOriented(ChassisSpeeds.fromFieldRelativeSpeeds(speeds, Rotation2d.fromRadians(speeds.omegaRadiansPerSecond)));
     }

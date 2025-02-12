@@ -6,6 +6,7 @@
 package frc.robot;
 
 import com.pathplanner.lib.path.PathConstraints;
+import edu.wpi.first.wpilibj.DriverStation;
 import frc.robot.commands.commandgroups.*;
 import frc.robot.commands.coralizer.CoralizerIntakeCommand;
 import frc.robot.commands.coralizer.CoralizerReWristCommand;
@@ -109,6 +110,8 @@ public class RobotContainer {
         new Trigger(cXbox::getBackButtonPressed).onTrue(new InstantCommand(swerveSubsystem::zeroGyro));
         new Trigger(cXbox::getStartButtonPressed).onTrue(new InstantCommand(this::initZeroGyro)); //TODO test
 
+        new Trigger(cXbox::getRightStickButtonPressed).onTrue(new InstantCommand(swerveSubsystem::toggleSpeedMultiplier));
+
         new Trigger(cXbox::getRightBumperButton).whileTrue(new CrabWalkCommand(true, 0.25, swerveSubsystem));
         new Trigger(cXbox::getLeftBumperButton).whileTrue(new CrabWalkCommand(false, 0.25, swerveSubsystem));
 
@@ -156,6 +159,14 @@ public class RobotContainer {
 
     //Called in auto init to give the cameras time to localize us
     public void initZeroGyro() {
-        swerveSubsystem.setGyroOffset(localization.getCameraPose().getRotation().getRadians());
+
+        if (DriverStation.getAlliance().isPresent()) {
+            swerveSubsystem.setGyroOffset(
+                    localization.getCameraPose().getRotation().getRadians()
+                            + (DriverStation.getAlliance().get() == DriverStation.Alliance.Blue ? 0 : Math.PI));
+        } else {
+            System.err.println("Ah heck, no alliance found! Gyro is not zeroed :(");
+        }
+        
     }
 }

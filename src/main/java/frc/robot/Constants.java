@@ -75,6 +75,9 @@ public final class Constants
 
         public static final PIDConstants cDrivePID = new PIDConstants(1, 0, 0);
         public static final PIDConstants cTurnPID = new PIDConstants(4, 0, 0);
+
+        public static final double cHighSpeedMultiplier = 1;
+        public static final double cLowSpeedMultiplier = 0.5;
     }
 
     public static final double cLOFRejectionValue = 0.5;
