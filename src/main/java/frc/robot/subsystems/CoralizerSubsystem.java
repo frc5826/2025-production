@@ -30,7 +30,7 @@ public class CoralizerSubsystem extends LoggedSubsystem {
         pid.setGoal(0);
         wristTarget = 0;
         SparkMaxConfig config = new SparkMaxConfig();
-        config.idleMode(SparkBaseConfig.IdleMode.kCoast);
+        config.idleMode(SparkBaseConfig.IdleMode.kBrake);
         config.inverted(false);
         config.smartCurrentLimit(40);
         wristMotor.configure(config, SparkBase.ResetMode.kResetSafeParameters, SparkBase.PersistMode.kPersistParameters);
