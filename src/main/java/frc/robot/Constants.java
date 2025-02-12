@@ -48,6 +48,9 @@ public final class Constants
         public static final double cElevatorHeightMin = 0;
         public static final double cElevatorHeightMax = 1.68;
         public static final double cElevatorDeadband = 0.03;
+        //TODO get limit switch IDs
+        public static final int cElevatorLimitSwitch1ID = 0;
+        public static final int cElevatorLimitSwitch2ID = 0;
 
         public static class ConversionFactor {
             public static final double cElevatorClicksPerMeter = 17777;

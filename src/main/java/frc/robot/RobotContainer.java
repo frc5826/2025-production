@@ -59,7 +59,7 @@ public class RobotContainer {
     public final L4DropoffCommandGroup L4DropoffCommandGroup = new L4DropoffCommandGroup(elevatorSubsystem, coralizerSubsystem, swerveSubsystem);
     public final L3L2DropoffCommandGroup L3L2DropoffCommandGroup = new L3L2DropoffCommandGroup(elevatorSubsystem, coralizerSubsystem, swerveSubsystem);
     public final SourceCommandGroup sourceCommandGroup = new SourceCommandGroup(elevatorSubsystem, coralizerSubsystem);
-    public final DealgifyCommandGroup dealgifyCommandGroup = new DealgifyCommandGroup(elevatorSubsystem, coralizerSubsystem);
+    public final DealgifyL2CommandGroup dealgifyL2CommandGroup = new DealgifyL2CommandGroup(elevatorSubsystem, coralizerSubsystem);
 
     public RobotContainer() {
         DataLogManager.start("/U/logs");
@@ -95,7 +95,7 @@ public class RobotContainer {
         new Trigger(() -> cJoystick.getRawButton(4)).whileTrue(coralizerInCommand);
         new Trigger(() -> cJoystick.getRawButton(6)).whileTrue(coralizerOutCommand);
 
-        new Trigger(() -> cJoystick.getRawButton(7)).onTrue(dealgifyCommandGroup);
+        new Trigger(() -> cJoystick.getRawButton(7)).onTrue(dealgifyL2CommandGroup);
 
         new Trigger(() -> cJoystick.getRawButton(8)).whileTrue(coralizerShootCommand);
 
@@ -143,7 +143,7 @@ public class RobotContainer {
         //For Buttons 16-18, Starts at top right black button and goes left
         new Trigger(() -> cButtonBoard.getButton(16)).onTrue(new DropoffCommandGroup(elevatorSubsystem, coralizerSubsystem, swerveSubsystem));
         new Trigger(() -> cButtonBoard.getButtonPressed(17)).onTrue(new HomeCommandGroup(elevatorSubsystem, coralizerSubsystem));
-        new Trigger(() -> cButtonBoard.getButtonPressed(18)).onTrue(new DealgifyCommandGroup(elevatorSubsystem, coralizerSubsystem));
+        new Trigger(() -> cButtonBoard.getButtonPressed(18)).onTrue(new DealgifyL2CommandGroup(elevatorSubsystem, coralizerSubsystem));
         //For Buttons 19-21, Starts at middle right red button and goes left
         new Trigger(() -> cButtonBoard.getButton(19)).whileTrue(new AllignSourceCommandGroup(FieldOrientation.getOrientation().getCoralStationLB(), constraints, swerveSubsystem, elevatorSubsystem, coralizerSubsystem, cameraSubsystem).andThen(new AccuratePathCommand(FieldOrientation.getOrientation().getCoralStationLB(), true, cameraSubsystem, swerveSubsystem)));
         new Trigger(() -> cButtonBoard.getButton(20)).whileTrue(new AllignSourceCommandGroup(FieldOrientation.getOrientation().getCoralStationRB(), constraints, swerveSubsystem, elevatorSubsystem, coralizerSubsystem, cameraSubsystem).andThen(new AccuratePathCommand(FieldOrientation.getOrientation().getCoralStationRB(), true, cameraSubsystem, swerveSubsystem)));

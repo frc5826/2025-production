@@ -9,6 +9,7 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.math.ElevatorController;
 import frc.robot.math.MathHelper;
 import frc.robot.math.PID;
+import frc.robot.sensors.MagneticSwitches;
 
 import static frc.robot.Constants.Elevator.*;
 import static frc.robot.Constants.Elevator.ConversionFactor.*;
@@ -23,6 +24,8 @@ public class ElevatorSubsystem extends LoggedSubsystem {
     private Encoder encoder;
     private double desiredPos;
     private ElevatorTarget elevatorTarget;
+    //TODO implement switches
+    private MagneticSwitches magneticSwitches;
 
     public ElevatorSubsystem(){
 

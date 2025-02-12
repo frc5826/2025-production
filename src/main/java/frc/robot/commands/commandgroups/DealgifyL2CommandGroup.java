@@ -8,9 +8,9 @@ import frc.robot.commands.elevator.ElevatorPositionCommand;
 import frc.robot.subsystems.CoralizerSubsystem;
 import frc.robot.subsystems.ElevatorSubsystem;
 
-public class DealgifyCommandGroup extends SequentialCommandGroup {
+public class DealgifyL2CommandGroup extends SequentialCommandGroup {
 
-    public DealgifyCommandGroup(ElevatorSubsystem elevatorSubsystem, CoralizerSubsystem coralizerSubsystem) {
+    public DealgifyL2CommandGroup(ElevatorSubsystem elevatorSubsystem, CoralizerSubsystem coralizerSubsystem) {
 
         addCommands(
                 new InstantCommand(() -> elevatorSubsystem.setElevatorTarget(ElevatorSubsystem.ElevatorTarget.NONE)),

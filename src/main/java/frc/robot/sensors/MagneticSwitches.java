@@ -6,16 +6,15 @@ import edu.wpi.first.wpilibj.DigitalInput;
 
 public class MagneticSwitches implements NTSendable {
 
-    private DigitalInput limitSwitch1, limitSwitch2, limitSwitch3;
+    private DigitalInput limitSwitch1, limitSwitch2;
 
-    public MagneticSwitches(int channel1, int channel2, int channel3){
+    public MagneticSwitches(int channel1, int channel2){
         limitSwitch1 = new DigitalInput(channel1);
         limitSwitch2 = new DigitalInput(channel2);
-        limitSwitch3 = new DigitalInput(channel3);
     }
 
     public boolean getMagSwitch(){
-        return limitSwitch1.get() && limitSwitch2.get() && limitSwitch3.get();
+        return limitSwitch1.get() && limitSwitch2.get();
     }
 
     @Override
