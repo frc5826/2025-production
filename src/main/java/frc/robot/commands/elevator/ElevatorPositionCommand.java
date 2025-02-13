@@ -3,6 +3,8 @@ package frc.robot.commands.elevator;
 import frc.robot.commands.LoggedCommand;
 import frc.robot.subsystems.ElevatorSubsystem;
 
+import static frc.robot.Constants.Elevator.cElevatorDeadband;
+
 public class ElevatorPositionCommand extends LoggedCommand {
 
     private ElevatorSubsystem elevatorSubsystem;
@@ -29,7 +31,7 @@ public class ElevatorPositionCommand extends LoggedCommand {
     @Override
     public boolean isFinished() {
 
-        return true; //Math.abs(elevatorSubsystem.getDesiredPos() - elevatorSubsystem.getPos()) <= cElevatorDeadband;
+        return Math.abs(elevatorSubsystem.getDesiredPos() - elevatorSubsystem.getPos()) <= cElevatorDeadband;
 
     }
 }

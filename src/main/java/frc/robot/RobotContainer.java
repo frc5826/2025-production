@@ -153,8 +153,8 @@ public class RobotContainer {
         new Trigger(() -> cButtonBoard.getButton(21)).whileTrue(new CoralizerIntakeCommand(coralizerSubsystem, CoralizerIntakeCommand.IntakeDirection.OUT));
         //For Buttons 22-24, Starts at bottom right white button and goes left
         new Trigger(() -> cButtonBoard.getButton(22)).whileTrue(new CoralizerIntakeCommand(coralizerSubsystem, CoralizerIntakeCommand.IntakeDirection.IN));
-        new Trigger(() -> cButtonBoard.getButton(23)).whileTrue(new AllignSourceCommandGroup(FieldOrientation.getOrientation().getCoralStationLA(), constraints, swerveSubsystem, elevatorSubsystem, coralizerSubsystem, cameraSubsystem).andThen(new AccuratePathCommand(FieldOrientation.getOrientation().getCoralStationLA(), true, cameraSubsystem, swerveSubsystem)));
-        new Trigger(() -> cButtonBoard.getButton(24)).whileTrue(new AllignSourceCommandGroup(FieldOrientation.getOrientation().getCoralStationRA(), constraints, swerveSubsystem, elevatorSubsystem, coralizerSubsystem, cameraSubsystem).andThen(new AccuratePathCommand(FieldOrientation.getOrientation().getCoralStationRA(), true, cameraSubsystem, swerveSubsystem)));
+        new Trigger(() -> cButtonBoard.getButtonPressed(23)).onTrue(new DealgifyL3CommandGroup(elevatorSubsystem, coralizerSubsystem));
+        new Trigger(() -> cButtonBoard.getButtonPressed(24)).onTrue(new SourceCommandGroup(elevatorSubsystem, coralizerSubsystem));
     }
 
     //Called in auto init to give the cameras time to localize us

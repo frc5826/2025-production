@@ -332,3 +332,16 @@ bin/
 
 # End entries from WPI Lib team
 
+.gradle/8.11/checksums/checksums.lock
+.gradle/8.11/checksums/md5-checksums.bin
+.gradle/8.11/checksums/sha1-checksums.bin
+.gradle/8.11/executionHistory/executionHistory.bin
+.gradle/8.11/executionHistory/executionHistory.lock
+.gradle/8.11/fileHashes/fileHashes.bin
+.gradle/8.11/fileHashes/fileHashes.lock
+.gradle/8.11/fileHashes/resourceHashesCache.bin
+.gradle/buildOutputCleanup/buildOutputCleanup.lock
+.gradle/buildOutputCleanup/outputFiles.bin
+.gradle/file-system.probe
+build/generated/sources/annotationProcessor/java/main/edu/wpi/first/epilogue/Epilogue.java
+build/tmp/compileJava/previous-compilation-data.bin

@@ -47,7 +47,7 @@ public final class Constants
         public static final double cElevatorMaxVelocity = 1.67;
         public static final double cElevatorHeightMin = 0;
         public static final double cElevatorHeightMax = 1.68;
-        public static final double cElevatorDeadband = 0.03;
+        public static final double cElevatorDeadband = 0.05;
         //TODO get limit switch IDs
         public static final int cElevatorLimitSwitch1ID = 0;
         public static final int cElevatorLimitSwitch2ID = 0;
@@ -107,7 +107,7 @@ public final class Constants
     }
 
     public static class Coralizer{
-        public static final double cCoralizerP = 0.01;
+        public static final double cCoralizerP = 0.025;
         public static final double cCoralizerI = 0;
         public static final double cCoralizerD = 0;
         public static final double cCoralizerG = 0.06;

@@ -12,6 +12,7 @@ public class L4CommandGroup extends SequentialCommandGroup {
     public L4CommandGroup(ElevatorSubsystem elevatorSubsystem, CoralizerSubsystem coralizerSubsystem) {
 
          addCommands(
+                 new CoralizerWristCommand(coralizerSubsystem, 75),
                  new InstantCommand(() -> elevatorSubsystem.setElevatorTarget(ElevatorSubsystem.ElevatorTarget.L4)),
                  new ElevatorPositionCommand(elevatorSubsystem, 1.68),
                  new CoralizerWristCommand(coralizerSubsystem, 0)

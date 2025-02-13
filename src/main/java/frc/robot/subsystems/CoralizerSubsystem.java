@@ -73,7 +73,7 @@ public class CoralizerSubsystem extends LoggedSubsystem{
     }
 
     public boolean hasCoral(){
-        return intakeMotor.getReverseLimitSwitch().isPressed();
+        return intakeMotor.getReverseLimitSwitch().isPressed() || intakeMotor.getForwardLimitSwitch().isPressed();
     }
 
 }

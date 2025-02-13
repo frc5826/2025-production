@@ -12,6 +12,7 @@ public class L3CommandGroup extends SequentialCommandGroup {
     public L3CommandGroup(ElevatorSubsystem elevatorSubsystem, CoralizerSubsystem coralizerSubsystem) {
 
          addCommands(
+                 new CoralizerWristCommand(coralizerSubsystem, 75),
                  new InstantCommand(() -> elevatorSubsystem.setElevatorTarget(ElevatorSubsystem.ElevatorTarget.L3)),
                  new ElevatorPositionCommand(elevatorSubsystem, 0.81),
                  new CoralizerWristCommand(coralizerSubsystem, 35)

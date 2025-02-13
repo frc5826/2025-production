@@ -23,6 +23,6 @@ public class CoralizerWristCommand extends LoggedCommand {
 
     @Override
     public boolean isFinished() {
-        return true;//Math.abs(coralizerSubsystem.getRotation() - rotation) <= cCoralizerDeadband;
+        return Math.abs(coralizerSubsystem.getRotation() - rotation) <= cCoralizerDeadband;
     }
 }
