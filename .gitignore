@@ -345,3 +345,6 @@ bin/
 .gradle/file-system.probe
 build/generated/sources/annotationProcessor/java/main/edu/wpi/first/epilogue/Epilogue.java
 build/tmp/compileJava/previous-compilation-data.bin
+*.bin
+/.gradle/
+/build/

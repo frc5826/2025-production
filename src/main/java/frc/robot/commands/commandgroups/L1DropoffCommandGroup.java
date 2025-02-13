@@ -17,7 +17,7 @@ public class L1DropoffCommandGroup extends SequentialCommandGroup {
 
     public L1DropoffCommandGroup(ElevatorSubsystem elevatorSubsystem, CoralizerSubsystem coralizerSubsystem, SwerveSubsystem swerveSubsystem){
         addCommands(
-                new ElevatorPositionCommand(elevatorSubsystem, 0.35),
+                new ElevatorPositionCommand(elevatorSubsystem, 0.5),
                 new CoralizerWristCommand(coralizerSubsystem, -20),
                 new CoralizerIntakeCommand(coralizerSubsystem, OUT)
         );

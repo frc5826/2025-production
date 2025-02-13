@@ -28,7 +28,7 @@ public class CoralizerSubsystem extends LoggedSubsystem{
         wristMotor = new SparkMax(3, SparkLowLevel.MotorType.kBrushless);
         pid = new PID(cCoralizerP, cCoralizerI, cCoralizerD, cCoralizerMax, cCoralizerMin, cCoralizerDeadband, this::getRotation);
         pid.setGoal(0);
-        wristTarget = 0;
+        wristTarget = 60;
         SparkMaxConfig config = new SparkMaxConfig();
         config.idleMode(SparkBaseConfig.IdleMode.kBrake);
         config.inverted(false);
