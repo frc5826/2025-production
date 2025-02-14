@@ -108,7 +108,8 @@ public class SwerveSubsystem extends LoggedSubsystem {
 
     public Rotation2d getIMUYaw() { return swerveDrive.getYaw(); }
 
-    public Rotation2d getIMUContinuousAngle() { return Rotation2d.fromDegrees(-((AHRS)swerveDrive.getGyro().getIMU()).getAngle() + gyroOffset); }
+    public Rotation2d getIMUContinuousAngle() {
+        return Rotation2d.fromDegrees(-((AHRS)swerveDrive.getGyro().getIMU()).getAngle() + gyroOffset); }
 
     public Rotation2d getTargetAngle() { return targetAngle; }
 

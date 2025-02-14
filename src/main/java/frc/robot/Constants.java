@@ -38,8 +38,8 @@ public final class Constants
         public static final double cElevatorMinOutput = -1;
         public static final double cElevatorMaxOutput = 1;
         public static final double cElevatorVUp = 1;
-        public static final double cElevatorVDown = 0.6;
-        public static final double cElevatorG = 0.06;
+        public static final double cElevatorVDown = 0.8; //TODO THESE ARE NAMED INCORRECTLY WYATT!!!!!!!!!!!!!!!!!!
+        public static final double cElevatorG = 0.07;
         public static final double cElevatorMaxAcceleration = 1;
         public static final double cElevatorMaxVelocity = 1.67;
         public static final double cElevatorHeightMin = 0;
@@ -63,7 +63,8 @@ public final class Constants
     public static final ButtonBoard cButtonBoard = new ButtonBoard(25);
     public static final XboxController cXbox = new XboxController(1);
 
-    public static final double cTeleDriveDeadband = 0.2;
+    public static final double cTeleDriveDeadband = 0.25;
+    public static final double cTeleTurnDeadband = 0.25;
     public static final double cTurnDeadband = 0.8;
 
     public static class  Swerve {

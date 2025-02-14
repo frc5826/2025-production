@@ -33,6 +33,7 @@ public class TeleopDriveCommand extends LoggedCommand {
 
         x = Math.abs(x) > cTeleDriveDeadband ? x : 0;
         y = Math.abs(y) > cTeleDriveDeadband ? y : 0;
+        t = Math.abs(t) > cTeleTurnDeadband ? t : 0;
 
 //        double rx = cXbox.getRightX();
 //        double ry = cXbox.getRightY();

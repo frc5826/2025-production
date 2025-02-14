@@ -62,9 +62,9 @@ public class Localization {
 
             Rotation2d angleDiff = p.getRotation().toRotation2d().minus(s.getIMUContinuousAngle());
 
-            zOdo.setEntry(2, s.getIMUContinuousAngle().getRadians()+angleDiff.getRadians());
-
-            ROdo.setEntry(2, 2, measVar.rPos());
+//            zOdo.setEntry(2, s.getIMUContinuousAngle().getRadians()+angleDiff.getRadians());
+//
+//            ROdo.setEntry(2, 2, measVar.rPos());
             SmartDashboard.putNumber("cam Diff", angleDiff.getDegrees());
             SmartDashboard.putNumber("continuous gyro angle", s.getIMUContinuousAngle().getDegrees());
 
@@ -162,4 +162,13 @@ public class Localization {
         position.addDouble("Robot Y", ()-> getPose().getY());
         position.addDouble("Robot rotation", ()-> getPose().getRotation().getDegrees());
     }
+
+//    public void resetFilter() {
+//        double[] x = kalmanFilter.getX().toArray();
+//
+//        kalmanFilter = new KalmanFilter(new MultivariateNormalDistribution(
+//
+//        ))
+//    }
+
 }
