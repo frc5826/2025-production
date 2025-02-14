@@ -8,9 +8,9 @@ import java.util.Optional;
 
 public class FieldOrientation {
 
-    private static final Orientation blueOrientation = new BlueOrientation();
-    private static final Orientation redOrientation = new RedOrientation();
-    private static final Orientation unknownOrientation = new UnknownOrientation();
+    public static final Orientation blueOrientation = new BlueOrientation();
+    public static final Orientation redOrientation = new RedOrientation();
+    public static final Orientation unknownOrientation = new UnknownOrientation();
 
     //We should never be using this for position. But on the off-chance this gets called, make it the middle-ish of the field.
     protected static final Pose2d NOTHING_POSE = new Pose2d(17.55/2, 7.5, Rotation2d.fromDegrees(0));

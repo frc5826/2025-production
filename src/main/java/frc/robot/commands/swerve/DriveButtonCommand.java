@@ -24,7 +24,6 @@ public class DriveButtonCommand extends LoggedCommand {
     @Override
     public void execute() {
         s.driveRobotOriented(speeds);
-        s.setTargetAngle(s.getIMUYaw());
         super.execute();
     }
 

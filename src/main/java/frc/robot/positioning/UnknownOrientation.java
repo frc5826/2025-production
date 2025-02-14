@@ -64,6 +64,11 @@ public class UnknownOrientation implements Orientation {
     public Pose2d getCoralStationRC() { return null; }
 
     @Override
+    public double getStartOrientation() {
+        return 0;
+    }
+
+    @Override
     public boolean isValid() {
         return false;
     }

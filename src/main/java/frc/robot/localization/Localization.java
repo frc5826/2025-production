@@ -60,13 +60,11 @@ public class Localization {
             ROdo.setEntry(0, 0, measVar.xyPos());
             ROdo.setEntry(1, 1, measVar.xyPos());
 
-            Rotation2d angleDiff = p.getRotation().toRotation2d().minus(s.getIMUContinuousAngle());
+            Rotation2d angleDiff = p.getRotation().toRotation2d().minus(s.getAdjustedIMUContinuousAngle());
 
-//            zOdo.setEntry(2, s.getIMUContinuousAngle().getRadians()+angleDiff.getRadians());
-//
-//            ROdo.setEntry(2, 2, measVar.rPos());
-            SmartDashboard.putNumber("cam Diff", angleDiff.getDegrees());
-            SmartDashboard.putNumber("continuous gyro angle", s.getIMUContinuousAngle().getDegrees());
+            zOdo.setEntry(2, s.getAdjustedIMUContinuousAngle().getRadians()+angleDiff.getRadians());
+
+            ROdo.setEntry(2, 2, measVar.rPos());
 
             kalmanFilter.measure(ROdo, zOdo);
         }
@@ -77,8 +75,8 @@ public class Localization {
         //Acceleration from accelerometer
         Optional<Translation3d> accelOptional = s.getAcc();
         if(accelOptional.isPresent()){
-            zOdo.setEntry(6, accelOptional.get().getX());
-            zOdo.setEntry(7, accelOptional.get().getY());
+            zOdo.setEntry(6, -accelOptional.get().getX()); //TODO negative
+            zOdo.setEntry(7, -accelOptional.get().getY());
 
             ROdo.setEntry(6, 6, measVar.xyAcc());
             ROdo.setEntry(7, 7, measVar.xyAcc());
@@ -86,8 +84,8 @@ public class Localization {
 
         //Velocity from wheel encoders
         ChassisSpeeds velocity = s.getOdoVel();
-        zOdo.setEntry(3, velocity.vxMetersPerSecond);
-        zOdo.setEntry(4, velocity.vyMetersPerSecond);
+        zOdo.setEntry(3, -velocity.vxMetersPerSecond); //TODO why negative
+        zOdo.setEntry(4, -velocity.vyMetersPerSecond);
         zOdo.setEntry(5, velocity.omegaRadiansPerSecond);
 
         ROdo.setEntry(3, 3, measVar.xyVel());
@@ -95,7 +93,7 @@ public class Localization {
         ROdo.setEntry(5, 5, measVar.rVel());
 
         //Rotation from gyro
-        zOdo.setEntry(2, s.getIMUContinuousAngle().getRadians());
+        zOdo.setEntry(2, s.getAdjustedIMUContinuousAngle().getRadians());
 
         ROdo.setEntry(2, 2, measVar.rPos());
 

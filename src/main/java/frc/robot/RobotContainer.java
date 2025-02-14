@@ -8,6 +8,7 @@ package frc.robot;
 import com.pathplanner.lib.path.PathConstraints;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.wpilibj.DriverStation;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Commands;
 import frc.robot.commands.commandgroups.*;
 import frc.robot.commands.coralizer.CoralizerIntakeCommand;
@@ -76,6 +77,13 @@ public class RobotContainer {
 
     public void prePeriodic(boolean teleop) {
 
+        SmartDashboard.putNumber("Adjusted angle", swerveSubsystem.getAdjustedIMUContinuousAngle().getDegrees());
+        SmartDashboard.putNumber("Not adjusted angle", swerveSubsystem.getIMUContinuousAngle().getDegrees());
+
+        if (!swerveSubsystem.getOrientation().equals(FieldOrientation.getOrientation())) {
+            swerveSubsystem.setOrientation(FieldOrientation.getOrientation());
+        }
+
         if (teleop) {
             localization.move();
             localization.measure(swerveSubsystem);
@@ -89,9 +97,6 @@ public class RobotContainer {
     }
 
     private void bindXbox() {
-        new Trigger(cXbox::getBackButtonPressed).onTrue(new InstantCommand(swerveSubsystem::zeroGyro));
-        new Trigger(cXbox::getStartButtonPressed).onTrue(new InstantCommand(this::initZeroGyro)); //TODO test
-
         new Trigger(() -> cXbox.getRightTriggerAxis() > 0.5).onTrue(new InstantCommand(() -> swerveSubsystem.setSpeedMultiplier(true)));
         new Trigger(() -> cXbox.getRightTriggerAxis() < 0.5).onTrue(new InstantCommand(() -> swerveSubsystem.setSpeedMultiplier(false)));
 
@@ -142,17 +147,4 @@ public class RobotContainer {
 //        new Trigger(() -> cButtonBoard.getButtonPressed(25)).onTrue(() -> CommandScheduler.getInstance().cancelAll());
     }
 
-    //Called in auto init to give the cameras time to localize us
-    public void initZeroGyro() {
-
-        if (DriverStation.getAlliance().isPresent()) {
-            swerveSubsystem.setGyroOffset(
-                    localization.getCameraPose().getRotation().getRadians()
-                            + (DriverStation.getAlliance().get() == DriverStation.Alliance.Blue ? 0 : Math.PI));
-//            localization.
-        } else {
-            System.err.println("Ah heck, no alliance found! Gyro is not zeroed :(");
-        }
-
-    }
 }

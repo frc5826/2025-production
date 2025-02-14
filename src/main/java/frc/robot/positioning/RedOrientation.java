@@ -68,6 +68,11 @@ public class RedOrientation implements Orientation {
     public Pose2d getCoralStationRC() { return FlippingUtil.flipFieldPose(coralStationRC); }
 
     @Override
+    public double getStartOrientation() {
+        return 0;
+    }
+
+    @Override
     public boolean isValid() {
         return true;
     }

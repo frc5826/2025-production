@@ -42,6 +42,8 @@ public interface Orientation {
 
     Pose2d getCoralStationRC();
 
+    double getStartOrientation();
+
     boolean isValid();
 
 }
