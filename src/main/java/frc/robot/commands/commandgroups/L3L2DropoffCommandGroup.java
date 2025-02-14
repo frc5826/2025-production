@@ -15,7 +15,7 @@ public class L3L2DropoffCommandGroup extends SequentialCommandGroup {
         addCommands(
                 new ElevatorRepositionCommand(elevatorSubsystem, -0.3),
                 //new CoralizerWristCommand(coralizerSubsystem, 10),
-                new MoveTimeCommand(0.5, new ChassisSpeeds(-0.5, 0, 0), true, swerveSubsystem),
+                new MoveTimeCommand(0.75, new ChassisSpeeds(-0.5, 0, 0), true, swerveSubsystem),
                 new HomeCommandGroup(elevatorSubsystem, coralizerSubsystem)
         );
     }

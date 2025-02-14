@@ -17,7 +17,7 @@ public class L4DropoffCommandGroup extends SequentialCommandGroup {
         addCommands(
                 new ElevatorRepositionCommand(elevatorSubsystem, -0.3),
                 new CoralizerIntakeCommand(coralizerSubsystem, OUT),
-                new MoveTimeCommand(0.5, new ChassisSpeeds(-0.5, 0, 0), true, swerveSubsystem),
+                new MoveTimeCommand(0.75, new ChassisSpeeds(-0.5, 0, 0), true, swerveSubsystem),
                 new HomeCommandGroup(elevatorSubsystem, coralizerSubsystem)
         );
     }

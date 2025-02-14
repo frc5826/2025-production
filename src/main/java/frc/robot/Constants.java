@@ -5,7 +5,6 @@
 
 package frc.robot;
 
-import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.PowerDistribution;
 import com.pathplanner.lib.config.PIDConstants;
 import edu.wpi.first.math.geometry.Pose2d;
@@ -23,8 +22,6 @@ import frc.robot.subsystems.ButtonBoard;
  */
 public final class Constants
 {
-
-    public static final Joystick cJoystick = new Joystick(0);
 
     //public static final PowerDistribution cPowerDistribution = new PowerDistribution();
 
@@ -111,9 +108,9 @@ public final class Constants
         public static final double cCoralizerI = 0;
         public static final double cCoralizerD = 0;
         public static final double cCoralizerG = 0.06;
-        public static final double cCoralizerMin = -1;
-        public static final double cCoralizerMax = 1;
-        public static final double cCoralizerDeadband = 1;
+        public static final double cCoralizerMin = -0.75;
+        public static final double cCoralizerMax = 0.75;
+        public static final double cCoralizerDeadband = 1.25;
 
         public static final double cCoralizerMinRotation = -90;
         public static final double cCoralizerMaxRotation = 90;

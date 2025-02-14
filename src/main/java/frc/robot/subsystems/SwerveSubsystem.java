@@ -90,8 +90,8 @@ public class SwerveSubsystem extends LoggedSubsystem {
             return Optional.empty();
     }
 
-    public void toggleSpeedMultiplier() {
-        speedMultiplier = speedMultiplier == cHighSpeedMultiplier ? cLowSpeedMultiplier : cHighSpeedMultiplier;
+    public void setSpeedMultiplier(boolean fast) {
+        speedMultiplier = fast ? cHighSpeedMultiplier : cLowSpeedMultiplier;
     }
 
     public double getSpeedMultiplier() { return speedMultiplier; }

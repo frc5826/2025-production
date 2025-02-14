@@ -6,13 +6,16 @@
 package frc.robot;
 
 import com.pathplanner.lib.path.PathConstraints;
+import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.wpilibj.DriverStation;
+import edu.wpi.first.wpilibj2.command.Commands;
 import frc.robot.commands.commandgroups.*;
 import frc.robot.commands.coralizer.CoralizerIntakeCommand;
 import frc.robot.commands.coralizer.CoralizerReWristCommand;
 import frc.robot.commands.elevator.ElevatorPositionCommand;
 import frc.robot.commands.elevator.ElevatorRepositionCommand;
 import frc.robot.commands.swerve.CrabWalkCommand;
+import frc.robot.commands.swerve.DriveButtonCommand;
 import frc.robot.subsystems.CameraSubsystem;
 import frc.robot.commands.swerve.pathing.AccuratePathCommand;
 import frc.robot.commands.swerve.pathing.PathFindCommand;
@@ -69,7 +72,6 @@ public class RobotContainer {
         // Setup button bindings
         bindXbox();
         bindBoard();
-        bindJoystick();
     }
 
     public void prePeriodic(boolean teleop) {
@@ -86,40 +88,21 @@ public class RobotContainer {
 
     }
 
-    private void bindJoystick() {
-        new Trigger(cJoystick::getTrigger).onTrue(L4DropoffCommandGroup);
-
-        new Trigger(() -> cJoystick.getRawButton(2)).whileTrue(sourceCommandGroup);
-
-        new Trigger(() -> cJoystick.getRawButton(3)).onTrue(coralizerWristCommandDown);
-        new Trigger(() -> cJoystick.getRawButton(5)).onTrue(coralizerWristCommandUp);
-        new Trigger(() -> cJoystick.getRawButton(4)).whileTrue(coralizerInCommand);
-        new Trigger(() -> cJoystick.getRawButton(6)).whileTrue(coralizerOutCommand);
-
-        new Trigger(() -> cJoystick.getRawButton(7)).onTrue(dealgifyL2CommandGroup);
-
-        new Trigger(() -> cJoystick.getRawButton(8)).whileTrue(coralizerShootCommand);
-
-        new Trigger(() -> cJoystick.getRawButton(9)).onTrue(l3CommandGroup);
-        new Trigger(() -> cJoystick.getRawButton(10)).onTrue(l4CommandGroup);
-        new Trigger(() -> cJoystick.getRawButton(11)).onTrue(l1CommandGroup);
-        new Trigger(() -> cJoystick.getRawButton(12)).onTrue(l2CommandGroup);
-    }
-
     private void bindXbox() {
         new Trigger(cXbox::getBackButtonPressed).onTrue(new InstantCommand(swerveSubsystem::zeroGyro));
         new Trigger(cXbox::getStartButtonPressed).onTrue(new InstantCommand(this::initZeroGyro)); //TODO test
 
-        new Trigger(cXbox::getRightStickButtonPressed).onTrue(new InstantCommand(swerveSubsystem::toggleSpeedMultiplier));
+        new Trigger(() -> cXbox.getRightTriggerAxis() > 0.5).onTrue(new InstantCommand(() -> swerveSubsystem.setSpeedMultiplier(true)));
+        new Trigger(() -> cXbox.getRightTriggerAxis() < 0.5).onTrue(new InstantCommand(() -> swerveSubsystem.setSpeedMultiplier(false)));
 
-        new Trigger(cXbox::getRightBumperButton).whileTrue(new CrabWalkCommand(true, 0.25, swerveSubsystem));
-        new Trigger(cXbox::getLeftBumperButton).whileTrue(new CrabWalkCommand(false, 0.25, swerveSubsystem));
+        new Trigger(() -> cXbox.getPOV() == 0).whileTrue(new CrabWalkCommand(CrabWalkCommand.Direction.FRONT, 0.3, swerveSubsystem));
+        new Trigger(() -> cXbox.getPOV() == 90).whileTrue(new CrabWalkCommand(CrabWalkCommand.Direction.RIGHT, 0.3, swerveSubsystem));
+        new Trigger(() -> cXbox.getPOV() == 180).whileTrue(new CrabWalkCommand(CrabWalkCommand.Direction.BACK, 0.3, swerveSubsystem));
+        new Trigger(() -> cXbox.getPOV() == 270).whileTrue(new CrabWalkCommand(CrabWalkCommand.Direction.LEFT, 0.3, swerveSubsystem));
 
-//        PathConstraints constraints = new PathConstraints(1, 2, Math.PI * 3, Math.PI * 3);
-//        new Trigger(cXbox::getAButton).whileTrue(new PathToCommand(FieldOrientation.getOrientation().getReefA(), 0, constraints, swerveSubsystem));
-//        new Trigger(cXbox::getBButton).whileTrue(new PathToCommand(FieldOrientation.getOrientation().getCoralStationRB(), 0, constraints, swerveSubsystem));
-//        new Trigger(cXbox::getYButton).whileTrue(new PathFindCommand(FieldOrientation.getOrientation().getReefF(), constraints, swerveSubsystem));
-//        new Trigger(cXbox::getXButton).whileTrue(new PathToCommand(FieldOrientation.getOrientation().getReefC(), 0, constraints, swerveSubsystem));
+        new Trigger(cXbox::getRightBumperButton).whileTrue(new DriveButtonCommand(new ChassisSpeeds(0, 0, -0.7), swerveSubsystem));
+        new Trigger(cXbox::getLeftBumperButton).whileTrue(new DriveButtonCommand(new ChassisSpeeds(0, 0, 0.7), swerveSubsystem));
+
     }
 
     //TODO set real constraints and different constraints variable for Source Pickup :)
@@ -155,6 +138,8 @@ public class RobotContainer {
         new Trigger(() -> cButtonBoard.getButton(22)).whileTrue(new CoralizerIntakeCommand(coralizerSubsystem, CoralizerIntakeCommand.IntakeDirection.IN));
         new Trigger(() -> cButtonBoard.getButtonPressed(23)).onTrue(new DealgifyL3CommandGroup(elevatorSubsystem, coralizerSubsystem));
         new Trigger(() -> cButtonBoard.getButtonPressed(24)).onTrue(new SourceCommandGroup(elevatorSubsystem, coralizerSubsystem));
+        //Cancel current command
+//        new Trigger(() -> cButtonBoard.getButtonPressed(25)).onTrue(() -> CommandScheduler.getInstance().cancelAll());
     }
 
     //Called in auto init to give the cameras time to localize us
