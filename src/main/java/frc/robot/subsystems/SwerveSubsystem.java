@@ -4,9 +4,7 @@ import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.config.RobotConfig;
 import com.pathplanner.lib.controllers.PPHolonomicDriveController;
 import com.studica.frc.AHRS;
-import edu.wpi.first.math.geometry.Pose2d;
-import edu.wpi.first.math.geometry.Rotation2d;
-import edu.wpi.first.math.geometry.Translation3d;
+import edu.wpi.first.math.geometry.*;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.DriverStation;
@@ -68,14 +66,25 @@ public class SwerveSubsystem extends LoggedSubsystem {
 
     public Pose2d getLocalizationPose() { return localization.getPose(); }
 
-    public Optional<Translation3d> getAcc() {
-        if(swerveDrive.getAccel().isPresent()) {
-            var t = swerveDrive.getAccel().get()
-                    .rotateBy(((AHRS)swerveDrive.getGyro().getIMU()).getRotation3d().unaryMinus())
-                    .rotateBy(swerveDrive.getGyroRotation3d().unaryMinus());
-            return Optional.of(new Translation3d(t.getX(),t.getY(),t.getZ()));
-        } else
+    //old get accel
+//    public Optional<Translation3d> getAcc() {
+//        if(swerveDrive.getAccel().isPresent()) {
+//            var t = swerveDrive.getAccel().get()
+//                    .rotateBy(((AHRS)swerveDrive.getGyro().getIMU()).getRotation3d().unaryMinus())
+//                    .rotateBy(swerveDrive.getGyroRotation3d().unaryMinus());
+//            return Optional.of(new Translation3d(t.getX(),t.getY(),t.getZ()));
+//        } else
+//            return Optional.empty();
+//    }
+
+    public Optional<Translation3d> getFieldAcc() {
+        if (swerveDrive.getAccel().isPresent()) {
+            Translation3d acc = swerveDrive.getAccel().get();
+            acc.rotateBy(new Rotation3d(getAdjustedIMUContinuousAngle().unaryMinus()));
+            return Optional.of(acc);
+        } else {
             return Optional.empty();
+        }
     }
 
     public Orientation getOrientation() {
@@ -93,7 +102,16 @@ public class SwerveSubsystem extends LoggedSubsystem {
 
     public double getSpeedMultiplier() { return speedMultiplier; }
 
+    //old get vel
     public ChassisSpeeds getOdoVel() { return swerveDrive.getFieldVelocity(); }
+
+    public ChassisSpeeds getOdoFieldVel() {
+        ChassisSpeeds vel = swerveDrive.getRobotVelocity();
+        Translation2d velTranslation = new Translation2d(vel.vxMetersPerSecond, vel.vyMetersPerSecond);
+        velTranslation.rotateBy(getAdjustedIMUContinuousAngle().unaryMinus());
+        vel = new ChassisSpeeds(velTranslation.getX(), velTranslation.getY(), vel.omegaRadiansPerSecond);
+        return vel;
+    }
 
     public void driveFieldOriented(ChassisSpeeds velocity) { swerveDrive.driveFieldOriented(velocity); }
 

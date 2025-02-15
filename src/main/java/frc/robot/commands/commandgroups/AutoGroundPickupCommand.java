@@ -13,7 +13,7 @@ public class AutoGroundPickupCommand extends SequentialCommandGroup {
 
         addCommands(
                 Commands.parallel(
-                        new CoralizerWristCommand(c, -5),
+                        new CoralizerWristCommand(c, -10),
                         new ElevatorPositionCommand(e, 0)
                 ),
                 new CoralizerIntakeCommand(c, CoralizerIntakeCommand.IntakeDirection.IN),

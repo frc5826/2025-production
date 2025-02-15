@@ -8,6 +8,11 @@ package frc.robot;
 import com.pathplanner.lib.path.PathConstraints;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.wpilibj.DriverStation;
+import edu.wpi.first.wpilibj.shuffleboard.BuiltInLayouts;
+import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
+import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardLayout;
+import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
+import edu.wpi.first.wpilibj.smartdashboard.Field2d;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Commands;
 import frc.robot.commands.commandgroups.*;
@@ -28,8 +33,8 @@ import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.commands.swerve.TeleopDriveCommand;
-import frc.robot.localization.Localization;
 import frc.robot.subsystems.SwerveSubsystem;
+import frc.robot.localization.Localization;
 
 import static frc.robot.Constants.*;
 
@@ -66,6 +71,8 @@ public class RobotContainer {
     public final SourceCommandGroup sourceCommandGroup = new SourceCommandGroup(elevatorSubsystem, coralizerSubsystem);
     public final DealgifyL2CommandGroup dealgifyL2CommandGroup = new DealgifyL2CommandGroup(elevatorSubsystem, coralizerSubsystem);
 
+    private Field2d field;
+
     public RobotContainer() {
         DataLogManager.start("/U/logs");
         CommandScheduler.getInstance().setDefaultCommand(swerveSubsystem, new TeleopDriveCommand(swerveSubsystem));
@@ -73,6 +80,10 @@ public class RobotContainer {
         // Setup button bindings
         bindXbox();
         bindBoard();
+
+        //Create elastic tabs
+        field = new Field2d();
+        setupFieldTab();
     }
 
     public void prePeriodic(boolean teleop) {
@@ -87,7 +98,7 @@ public class RobotContainer {
         if (teleop) {
             localization.move();
             localization.measure(swerveSubsystem);
-            localization.updateField();
+            updateField();
         }
 
     }
@@ -143,8 +154,42 @@ public class RobotContainer {
         new Trigger(() -> cButtonBoard.getButton(22)).whileTrue(new CoralizerIntakeCommand(coralizerSubsystem, CoralizerIntakeCommand.IntakeDirection.IN));
         new Trigger(() -> cButtonBoard.getButtonPressed(23)).onTrue(new DealgifyL3CommandGroup(elevatorSubsystem, coralizerSubsystem));
         new Trigger(() -> cButtonBoard.getButtonPressed(24)).onTrue(new SourceCommandGroup(elevatorSubsystem, coralizerSubsystem));
-        //Cancel current command
-//        new Trigger(() -> cButtonBoard.getButtonPressed(25)).onTrue(() -> CommandScheduler.getInstance().cancelAll());
+        //Ground pickup
+        //new Trigger(() -> cButtonBoard.getButtonPressed(25)).onTrue(new AutoGroundPickupCommand(elevatorSubsystem, coralizerSubsystem));
+    }
+
+    public void updateField() {
+        field.setRobotPose(localization.getPose());
+    }
+
+    private void setupFieldTab() {
+        ShuffleboardTab tab = Shuffleboard.getTab("field");
+
+        field = new Field2d();
+        tab.add(field)
+                .withPosition(4,0)
+                .withSize(4,3);
+
+        //Filtered position
+        ShuffleboardLayout position = tab.getLayout("Filtered position", BuiltInLayouts.kList)
+                .withPosition(2,0)
+                .withSize(2,3);
+
+        position.addDouble("Robot X", ()-> localization.getPose().getX());
+        position.addDouble("Robot Y", ()-> localization.getPose().getY());
+        position.addDouble("Robot rotation", ()-> localization.getPose().getRotation().getDegrees());
+
+
+//        //Filter inputs
+//        ShuffleboardLayout inputs = tab.getLayout("Filter inputs", BuiltInLayouts.kList)
+//                .withPosition(0, 0).withSize(2, 4);
+//
+////        if (swerveSubsystem.getFieldAcc().isPresent()) {
+////            inputs.add("Acceleration", swerveSubsystem.getFieldAcc().get());
+////        }
+//        inputs.add("Velocity", swerveSubsystem.getOdoFieldVel());
+//        inputs.add("Adjusted gyro angle", swerveSubsystem.getAdjustedIMUContinuousAngle());
+//        inputs.add("Cam pose", cameraSubsystem.getCameraMeasurements());
     }
 
 }

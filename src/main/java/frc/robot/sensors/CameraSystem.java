@@ -131,19 +131,9 @@ public class CameraSystem {
 
         Pose3d robotPose = null;
 
-
         if (tagPose.isPresent()) {
             Pose3d camPose = tagPose.get().transformBy(aprilTagLocation.inverse());
-
-            SmartDashboard.putNumber("pre transform x", camPose.getX());
-            SmartDashboard.putNumber("pre transform Y", camPose.getY());
-            SmartDashboard.putNumber("pre transform yaw", Math.toDegrees(camPose.getRotation().getZ()));
-
             robotPose = camPose.transformBy(cameraToRobot);
-
-            SmartDashboard.putNumber("post transform x", robotPose.getX());
-            SmartDashboard.putNumber("post transform Y", robotPose.getY());
-            SmartDashboard.putNumber("post transform yaw", Math.toDegrees(robotPose.getRotation().getZ()));
         }
 
         return robotPose;
