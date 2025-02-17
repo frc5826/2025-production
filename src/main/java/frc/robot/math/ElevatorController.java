@@ -27,7 +27,6 @@ public class ElevatorController implements NTSendable {
         setPoint = new TrapezoidProfile.State();
         goal = new TrapezoidProfile.State();
 
-
     }
 
     public void setGoal(double startPosition, double endPosition, double startVelocity){
@@ -38,7 +37,6 @@ public class ElevatorController implements NTSendable {
     }
 
     public double calculate(double deltaTime){
-
 
         setPoint = profile.calculate(deltaTime, setPoint, goal);
         pid.setGoal(setPoint.position);
@@ -75,9 +73,12 @@ public class ElevatorController implements NTSendable {
         return goal.position;
     }
 
+    public boolean isFinished(){
+        return setPoint.position == goal.position;
+    }
+
     @Override
     public void initSendable(NTSendableBuilder builder) {
-
         builder.setSmartDashboardType("5826-ElevatorController");
         builder.addDoubleProperty("V", this::getV, this::setV );
         builder.addDoubleProperty("G", this::getG, this::setG);

@@ -64,9 +64,10 @@ public class ElevatorSubsystem extends LoggedSubsystem {
 
     }
 
-    public void setDesiredPosition(double position) {
+    public void setDesiredPosition(double position, LevelTarget levelTarget) {
 
         desiredPos = MathHelper.clamp(position, cElevatorHeightMin, cElevatorHeightMax);
+        this.levelTarget = levelTarget;
 
         if(getPos() < desiredPos){
             currentController = upController;
@@ -103,10 +104,6 @@ public class ElevatorSubsystem extends LoggedSubsystem {
 
     public LevelTarget getLevelTarget() {
         return levelTarget;
-    }
-
-    public void setLevelTarget(LevelTarget levelTarget) {
-        this.levelTarget = levelTarget;
     }
 
     public static enum LevelTarget {

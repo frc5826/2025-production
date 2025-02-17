@@ -10,13 +10,15 @@ public class ElevatorPositionCommand extends LoggedCommand {
 
     private ElevatorSubsystem elevatorSubsystem;
     private double position;
+    private ElevatorSubsystem.LevelTarget levelTarget;
     private Timer timeoutTimer;
 
 
-    public ElevatorPositionCommand(ElevatorSubsystem elevatorSubsystem, double position){
+    public ElevatorPositionCommand(ElevatorSubsystem elevatorSubsystem, double position, ElevatorSubsystem.LevelTarget levelTarget){
 
         this.elevatorSubsystem = elevatorSubsystem;
         this.position = position;
+        this.levelTarget = levelTarget;
 
         addRequirements(elevatorSubsystem);
 
@@ -27,7 +29,7 @@ public class ElevatorPositionCommand extends LoggedCommand {
     public void initialize() {
         super.initialize();
 
-        elevatorSubsystem.setDesiredPosition(position);
+        elevatorSubsystem.setDesiredPosition(position, levelTarget);
         timeoutTimer.reset();
         timeoutTimer.start();
     }
