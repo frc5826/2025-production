@@ -88,6 +88,7 @@ public class SwerveSubsystem extends LoggedSubsystem {
             Translation3d acc = swerveDrive.getAccel().get();
             //TODO - Ryan's Notes - When you call rotateBy(), does it change the object you are passing in? If not, how do you get access to the rotated Translation?
             acc.rotateBy(navX.getRotation3d().unaryMinus());
+            //TODO - Ryan's Notes - This doesn't like being a minus.
             acc.rotateBy(new Rotation3d(getAdjustedIMUContinuousAngle().unaryMinus()));
             return Optional.of(acc);
         } else {
@@ -117,6 +118,7 @@ public class SwerveSubsystem extends LoggedSubsystem {
         ChassisSpeeds vel = swerveDrive.getRobotVelocity();
         Translation2d velTranslation = new Translation2d(vel.vxMetersPerSecond, vel.vyMetersPerSecond);
         //TODO - Ryan's Notes - When you call rotateBy(), does it change the object you are passing in? If not, how do you get access to the rotated Translation?
+        //TODO - Ryan's Notes - This doesn't like being a minus.
         velTranslation.rotateBy(getAdjustedIMUContinuousAngle().unaryMinus());
         vel = new ChassisSpeeds(velTranslation.getX(), velTranslation.getY(), vel.omegaRadiansPerSecond);
         return vel;
