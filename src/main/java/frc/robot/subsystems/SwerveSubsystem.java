@@ -86,6 +86,7 @@ public class SwerveSubsystem extends LoggedSubsystem {
     public Optional<Translation3d> getFieldAcc() {
         if (swerveDrive.getAccel().isPresent()) {
             Translation3d acc = swerveDrive.getAccel().get();
+            //TODO - Ryan's Notes - When you call rotateBy(), does it change the object you are passing in? If not, how do you get access to the rotated Translation?
             acc.rotateBy(navX.getRotation3d().unaryMinus());
             acc.rotateBy(new Rotation3d(getAdjustedIMUContinuousAngle().unaryMinus()));
             return Optional.of(acc);
@@ -115,6 +116,7 @@ public class SwerveSubsystem extends LoggedSubsystem {
     public ChassisSpeeds getOdoFieldVel() {
         ChassisSpeeds vel = swerveDrive.getRobotVelocity();
         Translation2d velTranslation = new Translation2d(vel.vxMetersPerSecond, vel.vyMetersPerSecond);
+        //TODO - Ryan's Notes - When you call rotateBy(), does it change the object you are passing in? If not, how do you get access to the rotated Translation?
         velTranslation.rotateBy(getAdjustedIMUContinuousAngle().unaryMinus());
         vel = new ChassisSpeeds(velTranslation.getX(), velTranslation.getY(), vel.omegaRadiansPerSecond);
         return vel;
@@ -129,8 +131,8 @@ public class SwerveSubsystem extends LoggedSubsystem {
     }
 
     public void teleDriveFieldOriented(ChassisSpeeds vel) {
-        swerveDrive.drive(ChassisSpeeds.fromFieldRelativeSpeeds(vel,
-                getAdjustedIMUContinuousAngle().minus(new Rotation2d(orientation.getDriveOrientation())))); //TODO xbox y might not need a negative
+        //TODO - Ryan's Notes - What unit is getAdjustedIMUContinuousAngle and orientation.getDriveOrientation() in? What unit is fromFieldRelativeSpeeds() expecting?
+        swerveDrive.drive(ChassisSpeeds.fromFieldRelativeSpeeds(vel, getAdjustedIMUContinuousAngle().minus(new Rotation2d(orientation.getDriveOrientation())))); //TODO xbox y might not need a negative
     }
 
     public void driveSRSFieldOriented(ChassisSpeeds velocity) {
@@ -140,10 +142,12 @@ public class SwerveSubsystem extends LoggedSubsystem {
     public void resetOdometry(Pose2d pose) { swerveDrive.resetOdometry(pose); }
 
     public Rotation2d getIMUContinuousAngle() {
+        //TODO - Ryan's Notes - Positive rotation on the NavX is CW, but on the field it's CCW.
         return Rotation2d.fromDegrees(navX.getAngle());
     }
 
     public Rotation2d getAdjustedIMUContinuousAngle() {
+        //TODO - Ryan's Notes - Positive rotation on the NavX is CW, but on the field it's CCW.
         return Rotation2d.fromDegrees(navX.getAngle() + imuOffset);
     }
 
