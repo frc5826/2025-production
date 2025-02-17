@@ -70,6 +70,11 @@ public class BlueOrientation implements Orientation{
     }
 
     @Override
+    public double getDriveOrientation() {
+        return 0;
+    }
+
+        @Override
     public boolean isValid() {
         return true;
     }

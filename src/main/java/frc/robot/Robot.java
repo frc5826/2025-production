@@ -41,6 +41,7 @@ public class Robot extends TimedRobot
 
     @Override
     public void robotInit() {
+        autonomousCommand = robotContainer.getAutoCommand();
         teleop = false;
     }
 
@@ -55,6 +56,8 @@ public class Robot extends TimedRobot
     @Override
     public void autonomousInit()
     {
+        robotContainer.initZeroGyro();
+
         if (autonomousCommand != null)
         {
             autonomousCommand.schedule();

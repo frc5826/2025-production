@@ -10,7 +10,7 @@ public class Dumb extends SequentialCommandGroup {
 
         addCommands(
                 new MoveTimeCommand(2.5,
-                        new ChassisSpeeds(1, 0, 0),
+                        new ChassisSpeeds(0.75, 0, 0),
                         true, s)
         );
 

@@ -35,8 +35,12 @@ public class SwerveSubsystem extends LoggedSubsystem {
 
     private double speedMultiplier;
 
+    private AHRS navX;//TODO replace all instances of (AHRS)swerveDrive.getGyro().getIMU()
+
     private double imuOffset = 0;
     private Orientation orientation = FieldOrientation.unknownOrientation;
+
+    private double driveAngleOffset;
 
     public SwerveSubsystem(Localization localization) {
         double angleConversionFactor = SwerveMath.calculateDegreesPerSteeringRotation(
@@ -61,6 +65,8 @@ public class SwerveSubsystem extends LoggedSubsystem {
 
         speedMultiplier = cLowSpeedMultiplier;
 
+        navX = (AHRS)swerveDrive.getGyro().getIMU();
+
         setupPathPlanner();
     }
 
@@ -80,6 +86,7 @@ public class SwerveSubsystem extends LoggedSubsystem {
     public Optional<Translation3d> getFieldAcc() {
         if (swerveDrive.getAccel().isPresent()) {
             Translation3d acc = swerveDrive.getAccel().get();
+            acc.rotateBy(navX.getRotation3d().unaryMinus());
             acc.rotateBy(new Rotation3d(getAdjustedIMUContinuousAngle().unaryMinus()));
             return Optional.of(acc);
         } else {
@@ -113,16 +120,47 @@ public class SwerveSubsystem extends LoggedSubsystem {
         return vel;
     }
 
-    public void driveFieldOriented(ChassisSpeeds velocity) { swerveDrive.driveFieldOriented(velocity); }
+    //broken
+    public void driveFieldOriented(ChassisSpeeds velocity) {
+        //TODO getYaw gets the value from swervedrive.getOdometry, which has an internal offset
+        //  which is doubled up with our offset
+        swerveDrive.drive(ChassisSpeeds.fromFieldRelativeSpeeds(velocity,
+                navX.getRotation2d().plus(new Rotation2d(-driveAngleOffset))));
+    }
+
+    public void teleDriveFieldOriented(ChassisSpeeds vel) {
+        swerveDrive.drive(ChassisSpeeds.fromFieldRelativeSpeeds(vel,
+                getAdjustedIMUContinuousAngle().minus(new Rotation2d(orientation.getDriveOrientation())))); //TODO xbox y might not need a negative
+    }
+
+    public void driveSRSFieldOriented(ChassisSpeeds velocity) {
+        swerveDrive.driveFieldOriented(velocity);
+    }
 
     public void resetOdometry(Pose2d pose) { swerveDrive.resetOdometry(pose); }
 
     public Rotation2d getIMUContinuousAngle() {
-        return Rotation2d.fromDegrees(((AHRS)swerveDrive.getGyro().getIMU()).getAngle());
+        return Rotation2d.fromDegrees(navX.getAngle());
     }
 
     public Rotation2d getAdjustedIMUContinuousAngle() {
-        return Rotation2d.fromDegrees(((AHRS)swerveDrive.getGyro().getIMU()).getAngle() + imuOffset);
+        return Rotation2d.fromDegrees(navX.getAngle() + imuOffset);
+    }
+
+    public Rotation2d getYaw() {
+        return swerveDrive.getYaw();
+    }
+
+    public void resetDriveGyro() {
+        driveAngleOffset = swerveDrive.getGyro().getRawRotation3d().getZ();
+    }
+
+    public void setDriveGyroOffset(double offsetRad) {
+        driveAngleOffset = swerveDrive.getGyro().getRawRotation3d().getZ() + offsetRad;
+    }
+
+    public void zeroOdoGyro(double offset) {
+        swerveDrive.setGyro(new Rotation3d(0, 0, offset));
     }
 
     public Rotation2d getTargetAngle() { return targetAngle; }

@@ -73,6 +73,11 @@ public class RedOrientation implements Orientation {
     }
 
     @Override
+    public double getDriveOrientation() {
+        return 180;
+    }
+
+    @Override
     public boolean isValid() {
         return true;
     }

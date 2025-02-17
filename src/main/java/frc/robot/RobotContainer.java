@@ -14,7 +14,9 @@ import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardLayout;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 import edu.wpi.first.wpilibj.smartdashboard.Field2d;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
+import frc.robot.commands.autos.Dumb;
 import frc.robot.commands.commandgroups.*;
 import frc.robot.commands.coralizer.CoralizerIntakeCommand;
 import frc.robot.commands.coralizer.CoralizerReWristCommand;
@@ -95,11 +97,11 @@ public class RobotContainer {
             swerveSubsystem.setOrientation(FieldOrientation.getOrientation());
         }
 
-        if (teleop) {
+        //if (teleop) {
             localization.move();
             localization.measure(swerveSubsystem);
             updateField();
-        }
+        //}
 
     }
 
@@ -107,14 +109,20 @@ public class RobotContainer {
 
     }
 
+    public Command getAutoCommand() {
+        return new Dumb(swerveSubsystem);
+    }
+
     private void bindXbox() {
+        new Trigger(cXbox::getBackButtonPressed).onTrue(new InstantCommand(swerveSubsystem::resetDriveGyro));
+
         new Trigger(() -> cXbox.getRightTriggerAxis() > 0.5).onTrue(new InstantCommand(() -> swerveSubsystem.setSpeedMultiplier(true)));
         new Trigger(() -> cXbox.getRightTriggerAxis() < 0.5).onTrue(new InstantCommand(() -> swerveSubsystem.setSpeedMultiplier(false)));
 
-        new Trigger(() -> cXbox.getPOV() == 0).whileTrue(new CrabWalkCommand(CrabWalkCommand.Direction.FRONT, 0.3, swerveSubsystem));
-        new Trigger(() -> cXbox.getPOV() == 90).whileTrue(new CrabWalkCommand(CrabWalkCommand.Direction.RIGHT, 0.3, swerveSubsystem));
-        new Trigger(() -> cXbox.getPOV() == 180).whileTrue(new CrabWalkCommand(CrabWalkCommand.Direction.BACK, 0.3, swerveSubsystem));
-        new Trigger(() -> cXbox.getPOV() == 270).whileTrue(new CrabWalkCommand(CrabWalkCommand.Direction.LEFT, 0.3, swerveSubsystem));
+        new Trigger(() -> cXbox.getPOV() == 0).whileTrue(new CrabWalkCommand(CrabWalkCommand.Direction.FRONT, 0.35, swerveSubsystem));
+        new Trigger(() -> cXbox.getPOV() == 90).whileTrue(new CrabWalkCommand(CrabWalkCommand.Direction.RIGHT, 0.35, swerveSubsystem));
+        new Trigger(() -> cXbox.getPOV() == 180).whileTrue(new CrabWalkCommand(CrabWalkCommand.Direction.BACK, 0.35, swerveSubsystem));
+        new Trigger(() -> cXbox.getPOV() == 270).whileTrue(new CrabWalkCommand(CrabWalkCommand.Direction.LEFT, 0.35, swerveSubsystem));
 
         new Trigger(cXbox::getRightBumperButton).whileTrue(new DriveButtonCommand(new ChassisSpeeds(0, 0, -0.7), swerveSubsystem));
         new Trigger(cXbox::getLeftBumperButton).whileTrue(new DriveButtonCommand(new ChassisSpeeds(0, 0, 0.7), swerveSubsystem));
@@ -136,7 +144,8 @@ public class RobotContainer {
         new Trigger(() -> cButtonBoard.getButton(8)).whileTrue(new PathFindCommand(FieldOrientation.getOrientation().getReefL(), constraints, swerveSubsystem).andThen(new AccuratePathCommand(FieldOrientation.getOrientation().getReefL(), false, cameraSubsystem, swerveSubsystem)));
         new Trigger(() -> cButtonBoard.getButton(9)).whileTrue(new PathFindCommand(FieldOrientation.getOrientation().getReefK(), constraints, swerveSubsystem).andThen(new AccuratePathCommand(FieldOrientation.getOrientation().getReefK(), false, cameraSubsystem, swerveSubsystem)));
         new Trigger(() -> cButtonBoard.getButton(10)).whileTrue(new PathFindCommand(FieldOrientation.getOrientation().getReefJ(), constraints, swerveSubsystem).andThen(new AccuratePathCommand(FieldOrientation.getOrientation().getReefJ(), false, cameraSubsystem, swerveSubsystem)));
-        new Trigger(() -> cButtonBoard.getButton(11)).whileTrue(new PathFindCommand(FieldOrientation.getOrientation().getReefI(), constraints, swerveSubsystem).andThen(new AccuratePathCommand(FieldOrientation.getOrientation().getReefI(), false, cameraSubsystem, swerveSubsystem)));
+        //new Trigger(() -> cButtonBoard.getButton(11)).whileTrue(new PathFindCommand(FieldOrientation.getOrientation().getReefI(), constraints, swerveSubsystem).andThen(new AccuratePathCommand(FieldOrientation.getOrientation().getReefI(), false, cameraSubsystem, swerveSubsystem)));
+        new Trigger(() -> cButtonBoard.getButtonPressed(11)).onTrue(new AutoGroundPickupCommand(elevatorSubsystem, coralizerSubsystem));
         //For Buttons 12-15, Starts at top white button and goes straight down
         new Trigger(() -> cButtonBoard.getButtonPressed(12)).onTrue(new L4CommandGroup(elevatorSubsystem, coralizerSubsystem, swerveSubsystem));
         new Trigger(() -> cButtonBoard.getButtonPressed(13)).onTrue(new L3CommandGroup(elevatorSubsystem, coralizerSubsystem));
@@ -156,6 +165,11 @@ public class RobotContainer {
         new Trigger(() -> cButtonBoard.getButtonPressed(24)).onTrue(new SourceCommandGroup(elevatorSubsystem, coralizerSubsystem));
         //Ground pickup
         //new Trigger(() -> cButtonBoard.getButtonPressed(25)).onTrue(new AutoGroundPickupCommand(elevatorSubsystem, coralizerSubsystem));
+    }
+
+    public void initZeroGyro() {
+        swerveSubsystem.zeroOdoGyro(Math.toRadians(FieldOrientation.getOrientation().getStartOrientation()));
+        swerveSubsystem.setDriveGyroOffset(Math.PI);
     }
 
     public void updateField() {

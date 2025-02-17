@@ -1,5 +1,6 @@
 package frc.robot.commands.elevator;
 
+import edu.wpi.first.wpilibj.Timer;
 import frc.robot.commands.LoggedCommand;
 import frc.robot.subsystems.ElevatorSubsystem;
 
@@ -9,6 +10,7 @@ public class ElevatorPositionCommand extends LoggedCommand {
 
     private ElevatorSubsystem elevatorSubsystem;
     private double position;
+    private Timer timeoutTimer;
 
 
     public ElevatorPositionCommand(ElevatorSubsystem elevatorSubsystem, double position){
@@ -18,6 +20,7 @@ public class ElevatorPositionCommand extends LoggedCommand {
 
         addRequirements(elevatorSubsystem);
 
+        timeoutTimer = new Timer();
     }
 
     @Override
@@ -25,13 +28,19 @@ public class ElevatorPositionCommand extends LoggedCommand {
         super.initialize();
 
         elevatorSubsystem.setDesiredPosition(position);
-
+        timeoutTimer.reset();
+        timeoutTimer.start();
     }
 
     @Override
     public boolean isFinished() {
-
+        if (timeoutTimer.get() >= 3){return true;}
         return Math.abs(elevatorSubsystem.getDesiredPos() - elevatorSubsystem.getPos()) <= cElevatorDeadband;
 
+    }
+
+    @Override
+    public void end(boolean interrupted) {
+        timeoutTimer.reset();
     }
 }

@@ -16,6 +16,7 @@ public class CoralizerReWristCommand extends LoggedCommand {
 
     @Override
     public void initialize() {
+        super.initialize();
         coralizerSubsystem.setWristTarget(rotation + coralizerSubsystem.getWristTarget());
     }
 

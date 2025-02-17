@@ -16,8 +16,6 @@ public class CrabWalkCommand extends LoggedCommand {
         this.swerveSubsystem = swerveSubsystem;
         this.direction = direction;
         this.speed = speed;
-
-        addRequirements(swerveSubsystem);
     }
 
     @Override

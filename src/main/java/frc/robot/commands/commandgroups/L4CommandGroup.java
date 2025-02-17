@@ -18,10 +18,10 @@ public class L4CommandGroup extends SequentialCommandGroup {
          addCommands(
                  new CoralizerWristCommand(coralizerSubsystem, 75),
                  Commands.parallel(
-                         new MoveTimeCommand(0.2, new ChassisSpeeds(-0.6, 0, 0), true, swerveSubsystem),
+                         new MoveTimeCommand(0.2, new ChassisSpeeds(-0.65, 0, 0), true, swerveSubsystem),
                          new InstantCommand(() -> elevatorSubsystem.setElevatorTarget(ElevatorSubsystem.ElevatorTarget.L4))
                  ),
-                 new ElevatorPositionCommand(elevatorSubsystem, 1.68),
+                 new ElevatorPositionCommand(elevatorSubsystem, 1.71),
                  new CoralizerWristCommand(coralizerSubsystem, 0)
          );
     }

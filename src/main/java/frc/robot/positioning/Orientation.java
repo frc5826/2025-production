@@ -44,6 +44,8 @@ public interface Orientation {
 
     double getStartOrientation();
 
+    double getDriveOrientation();
+
     boolean isValid();
 
 }
