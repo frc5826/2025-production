@@ -24,14 +24,14 @@ public class ElevatorRepositionCommand extends LoggedCommand {
     public void initialize() {
         super.initialize();
 
-        elevatorSubsystem.setDesiredPosition(elevatorSubsystem.getDesiredPos() + position);
+        elevatorSubsystem.setDesiredPosition(elevatorSubsystem.getDesiredPosition() + position);
 
     }
 
     @Override
     public boolean isFinished() {
 
-        return Math.abs(elevatorSubsystem.getDesiredPos() - elevatorSubsystem.getPos()) <= cElevatorDeadband;
+        return Math.abs(elevatorSubsystem.getDesiredPosition() - elevatorSubsystem.getPos()) <= cElevatorDeadband;
 
     }
 }

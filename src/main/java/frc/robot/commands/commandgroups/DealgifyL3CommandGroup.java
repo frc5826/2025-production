@@ -13,7 +13,7 @@ public class DealgifyL3CommandGroup extends SequentialCommandGroup {
     public DealgifyL3CommandGroup(ElevatorSubsystem elevatorSubsystem, CoralizerSubsystem coralizerSubsystem) {
 
         addCommands(
-                new InstantCommand(() -> elevatorSubsystem.setElevatorTarget(ElevatorSubsystem.ElevatorTarget.NONE)),
+                new InstantCommand(() -> elevatorSubsystem.setLevelTarget(ElevatorSubsystem.LevelTarget.NONE)),
                 new ElevatorPositionCommand(elevatorSubsystem, 1.01),
                 new CoralizerWristCommand(coralizerSubsystem, 0),
                 new CoralizerIntakeCommand(coralizerSubsystem, CoralizerIntakeCommand.IntakeDirection.IN)

@@ -35,7 +35,7 @@ public class ElevatorPositionCommand extends LoggedCommand {
     @Override
     public boolean isFinished() {
         if (timeoutTimer.get() >= 3){return true;}
-        return Math.abs(elevatorSubsystem.getDesiredPos() - elevatorSubsystem.getPos()) <= cElevatorDeadband;
+        return Math.abs(elevatorSubsystem.getDesiredPosition() - elevatorSubsystem.getPos()) <= cElevatorDeadband;
 
     }
 

@@ -13,7 +13,7 @@ public class L2CommandGroup extends SequentialCommandGroup {
 
          addCommands(
                  new CoralizerWristCommand(coralizerSubsystem, 75),
-                 new InstantCommand(() -> elevatorSubsystem.setElevatorTarget(ElevatorSubsystem.ElevatorTarget.L2)),
+                 new InstantCommand(() -> elevatorSubsystem.setLevelTarget(ElevatorSubsystem.LevelTarget.L2)),
                  new ElevatorPositionCommand(elevatorSubsystem, 0.44),
                  new CoralizerWristCommand(coralizerSubsystem, 35)
          );

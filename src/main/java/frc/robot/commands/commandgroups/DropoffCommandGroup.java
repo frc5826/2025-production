@@ -7,7 +7,7 @@ import frc.robot.subsystems.ElevatorSubsystem;
 import frc.robot.subsystems.SwerveSubsystem;
 
 import static frc.robot.commands.coralizer.CoralizerIntakeCommand.IntakeDirection.OUT;
-import static frc.robot.subsystems.ElevatorSubsystem.ElevatorTarget.*;
+import static frc.robot.subsystems.ElevatorSubsystem.LevelTarget.*;
 
 public class DropoffCommandGroup extends Command {
 
@@ -27,14 +27,14 @@ public class DropoffCommandGroup extends Command {
     @Override
     public void initialize() {
         super.initialize();
-    ElevatorSubsystem.ElevatorTarget elevatorTarget = elevatorSubsystem.getElevatorTarget();
-        if (elevatorTarget == L1){
+    ElevatorSubsystem.LevelTarget levelTarget = elevatorSubsystem.getLevelTarget();
+        if (levelTarget == L1){
             command = new L1DropoffCommandGroup(elevatorSubsystem, coralizerSubsystem, swerveSubsystem);
         }
-        else if (elevatorTarget == L2 || elevatorTarget == L3){
+        else if (levelTarget == L2 || levelTarget == L3){
             command = new L3L2DropoffCommandGroup(elevatorSubsystem, coralizerSubsystem, swerveSubsystem);
         }
-        else if (elevatorTarget == L4){
+        else if (levelTarget == L4){
             command = new L4DropoffCommandGroup(elevatorSubsystem, coralizerSubsystem, swerveSubsystem);
         }
         else {

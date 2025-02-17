@@ -23,7 +23,7 @@ public class ElevatorSubsystem extends LoggedSubsystem {
     private SparkMax motor, motorFollower;
     private Encoder encoder;
     private double desiredPos;
-    private ElevatorTarget elevatorTarget;
+    private LevelTarget levelTarget;
     //TODO implement switches
     private MagneticSwitches magneticSwitches;
 
@@ -48,7 +48,7 @@ public class ElevatorSubsystem extends LoggedSubsystem {
 
         currentController = upController;
 
-        elevatorTarget = ElevatorTarget.NONE;
+        levelTarget = LevelTarget.NONE;
 
     }
 
@@ -66,7 +66,7 @@ public class ElevatorSubsystem extends LoggedSubsystem {
 
     public void setDesiredPosition(double position) {
 
-        position = MathHelper.clamp(position, cElevatorHeightMin, cElevatorHeightMax);
+        desiredPos = MathHelper.clamp(position, cElevatorHeightMin, cElevatorHeightMax);
 
         if(getPos() < desiredPos){
             currentController = upController;
@@ -77,15 +77,14 @@ public class ElevatorSubsystem extends LoggedSubsystem {
             SmartDashboard.putString("elevator/CurrentFF", "Down");
         }
 
-        desiredPos = position;
-        upController.setGoal(getPos(), position, motor.getEncoder().getVelocity()* cElevatorRPMtoMPS);
-        downController.setGoal(getPos(), position, motor.getEncoder().getVelocity()* cElevatorRPMtoMPS);
+        upController.setGoal(getPos(), desiredPos, motor.getEncoder().getVelocity() * cElevatorRPMtoMPS);
+        downController.setGoal(getPos(), desiredPos, motor.getEncoder().getVelocity() * cElevatorRPMtoMPS);
 
         SmartDashboard.putNumber("elevator/Goal", desiredPos);
 
     }
 
-    public double getDesiredPos(){
+    public double getDesiredPosition(){
         return desiredPos;
     }
 
@@ -102,15 +101,15 @@ public class ElevatorSubsystem extends LoggedSubsystem {
 
     }
 
-    public ElevatorTarget getElevatorTarget() {
-        return elevatorTarget;
+    public LevelTarget getLevelTarget() {
+        return levelTarget;
     }
 
-    public void setElevatorTarget(ElevatorTarget elevatorTarget) {
-        this.elevatorTarget = elevatorTarget;
+    public void setLevelTarget(LevelTarget levelTarget) {
+        this.levelTarget = levelTarget;
     }
 
-    public static enum ElevatorTarget{
+    public static enum LevelTarget {
         L1,
         L2,
         L3,
