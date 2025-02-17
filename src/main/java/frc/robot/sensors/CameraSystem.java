@@ -37,7 +37,7 @@ public class CameraSystem {
     public CameraSystem() {
 
         try {
-            fieldLayout = AprilTagFieldLayout.loadFromResource(AprilTagFields.k2025Reefscape.m_resourceFile);
+            fieldLayout = AprilTagFieldLayout.loadFromResource(AprilTagFields.k2025ReefscapeWelded.m_resourceFile);
             fieldLayout.setOrigin(AprilTagFieldLayout.OriginPosition.kBlueAllianceWallRightSide);
         } catch (IOException e) {
             fieldLayout = null;
