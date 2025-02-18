@@ -7,12 +7,6 @@ import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation3d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.wpilibj.Timer;
-import edu.wpi.first.wpilibj.shuffleboard.BuiltInLayouts;
-import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
-import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardLayout;
-import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
-import edu.wpi.first.wpilibj.smartdashboard.Field2d;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.subsystems.CameraSubsystem;
 import frc.robot.subsystems.SwerveSubsystem;
 import org.apache.commons.math3.distribution.MultivariateNormalDistribution;
@@ -29,16 +23,11 @@ public class Localization {
     private final CameraSubsystem cameraSubsystem;
     private Pose2d cameraPose;
 
-    private Field2d field;
-
     public Localization(CameraSubsystem cameraSubsystem) {
         kalmanFilter = new KalmanFilter(new MultivariateNormalDistribution(new double[]{0, 0, 0, 0, 0, 0, 0, 0, 0}, initCovar()));
         this.measVar = new Variances(5, 1.2, 8, 4, 1.2, 8);
         this.cameraSubsystem = cameraSubsystem;
         timer = new Timer();
-
-        field = new Field2d();
-        setupFieldTab();
     }
 
     public void move() {
@@ -60,13 +49,11 @@ public class Localization {
             ROdo.setEntry(0, 0, measVar.xyPos());
             ROdo.setEntry(1, 1, measVar.xyPos());
 
-            Rotation2d angleDiff = p.getRotation().toRotation2d().minus(s.getIMUContinuousAngle());
+            Rotation2d angleDiff = p.getRotation().toRotation2d().minus(s.getAdjustedIMUContinuousAngle());
 
-//            zOdo.setEntry(2, s.getIMUContinuousAngle().getRadians()+angleDiff.getRadians());
-//
-//            ROdo.setEntry(2, 2, measVar.rPos());
-            SmartDashboard.putNumber("cam Diff", angleDiff.getDegrees());
-            SmartDashboard.putNumber("continuous gyro angle", s.getIMUContinuousAngle().getDegrees());
+            zOdo.setEntry(2, s.getAdjustedIMUContinuousAngle().getRadians()+angleDiff.getRadians());
+
+            ROdo.setEntry(2, 2, measVar.rPos());
 
             kalmanFilter.measure(ROdo, zOdo);
         }
@@ -75,7 +62,7 @@ public class Localization {
         ROdo = kalmanFilter.getP().copy();
 
         //Acceleration from accelerometer
-        Optional<Translation3d> accelOptional = s.getAcc();
+        Optional<Translation3d> accelOptional = s.getFieldAcc();
         if(accelOptional.isPresent()){
             zOdo.setEntry(6, accelOptional.get().getX());
             zOdo.setEntry(7, accelOptional.get().getY());
@@ -85,8 +72,8 @@ public class Localization {
         }
 
         //Velocity from wheel encoders
-        ChassisSpeeds velocity = s.getOdoVel();
-        zOdo.setEntry(3, velocity.vxMetersPerSecond);
+        ChassisSpeeds velocity = s.getOdoFieldVel();
+        zOdo.setEntry(3, velocity.vxMetersPerSecond); //TODO test this and acc
         zOdo.setEntry(4, velocity.vyMetersPerSecond);
         zOdo.setEntry(5, velocity.omegaRadiansPerSecond);
 
@@ -95,7 +82,7 @@ public class Localization {
         ROdo.setEntry(5, 5, measVar.rVel());
 
         //Rotation from gyro
-        zOdo.setEntry(2, s.getIMUContinuousAngle().getRadians());
+        zOdo.setEntry(2, s.getAdjustedIMUContinuousAngle().getRadians());
 
         ROdo.setEntry(2, 2, measVar.rPos());
 
@@ -112,10 +99,7 @@ public class Localization {
         RealVector m = kalmanFilter.getX();
 
         double yaw = m.getEntry(2) % (Math.PI * 2);
-        SmartDashboard.putNumber("step 1", Math.toDegrees(m.getEntry(2)));
-        SmartDashboard.putNumber("step 2", Math.toDegrees(Math.abs(m.getEntry(2)) % (Math.PI * 2)));
         if (yaw > Math.PI) {yaw -= Math.PI * 2;}
-        SmartDashboard.putNumber("step 3", Math.toDegrees(yaw));
 
         Pose2d pose = new Pose2d(
                 m.getEntry(0),
@@ -142,33 +126,5 @@ public class Localization {
                 {0, 0, 0, 0, 0, 0, 0, 0, 0.1}};
     }
 
-    public void updateField() {
-        field.setRobotPose(getPose());
-    }
-
-    private void setupFieldTab() {
-        ShuffleboardTab tab = Shuffleboard.getTab("field");
-
-        field = new Field2d();
-        tab.add(field)
-                .withPosition(2,0)
-                .withSize(5,3);
-
-        ShuffleboardLayout position = tab.getLayout("Robot position", BuiltInLayouts.kList)
-                .withPosition(0,0)
-                .withSize(2,2);
-
-        position.addDouble("Robot X", ()-> getPose().getX());
-        position.addDouble("Robot Y", ()-> getPose().getY());
-        position.addDouble("Robot rotation", ()-> getPose().getRotation().getDegrees());
-    }
-
-//    public void resetFilter() {
-//        double[] x = kalmanFilter.getX().toArray();
-//
-//        kalmanFilter = new KalmanFilter(new MultivariateNormalDistribution(
-//
-//        ))
-//    }
-
 }
+

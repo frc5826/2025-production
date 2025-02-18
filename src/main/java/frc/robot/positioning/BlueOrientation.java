@@ -65,6 +65,16 @@ public class BlueOrientation implements Orientation{
     public Pose2d getCoralStationRC() { return new Pose2d(1.63, 0.71, Rotation2d.fromDegrees(-126)); }
 
     @Override
+    public double getStartOrientation() {
+        return 180;
+    }
+
+    @Override
+    public double getDriveOrientation() {
+        return 0;
+    }
+
+        @Override
     public boolean isValid() {
         return true;
     }

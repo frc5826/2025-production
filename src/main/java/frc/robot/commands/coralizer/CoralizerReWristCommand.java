@@ -1,26 +1,20 @@
 package frc.robot.commands.coralizer;
 
-import frc.robot.commands.LoggedCommand;
 import frc.robot.subsystems.CoralizerSubsystem;
 
-public class CoralizerReWristCommand extends LoggedCommand {
+public class CoralizerReWristCommand extends CoralizerWristCommand {
 
-    private CoralizerSubsystem coralizerSubsystem;
-    private double rotation;
+    private double rotationOffset;
 
-    public CoralizerReWristCommand(CoralizerSubsystem coralizerSubsystem, double rotation) {
-        this.coralizerSubsystem = coralizerSubsystem;
-        this.rotation = rotation;
-        addRequirements(coralizerSubsystem);
+    public CoralizerReWristCommand(CoralizerSubsystem coralizerSubsystem, double rotationOffset) {
+        super(coralizerSubsystem, 0);
+        this.rotationOffset = rotationOffset;
     }
 
     @Override
     public void initialize() {
-        coralizerSubsystem.setWristTarget(rotation + coralizerSubsystem.getWristTarget());
-    }
-
-    @Override
-    public boolean isFinished() {
-        return true;//Math.abs(coralizerSubsystem.getRotation() - rotation) <= cCoralizerDeadband;
+        double targetRotation = coralizerSubsystem.getWristTarget() + rotationOffset;
+        super.initialize();
+        coralizerSubsystem.setWristTarget(targetRotation);
     }
 }
