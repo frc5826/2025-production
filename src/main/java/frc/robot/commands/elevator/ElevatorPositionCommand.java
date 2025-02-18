@@ -8,10 +8,10 @@ import static frc.robot.Constants.Elevator.cElevatorDeadband;
 
 public class ElevatorPositionCommand extends LoggedCommand {
 
-    private ElevatorSubsystem elevatorSubsystem;
-    private double position;
-    private ElevatorSubsystem.LevelTarget levelTarget;
-    private Timer timeoutTimer;
+    protected ElevatorSubsystem elevatorSubsystem;
+    protected double position;
+    protected ElevatorSubsystem.LevelTarget levelTarget;
+    protected Timer timeoutTimer;
 
 
     public ElevatorPositionCommand(ElevatorSubsystem elevatorSubsystem, double position, ElevatorSubsystem.LevelTarget levelTarget){

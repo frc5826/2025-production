@@ -37,7 +37,7 @@ public final class Constants
         public static final double cElevatorD = 0.01;
         public static final double cElevatorMinOutput = -1;
         public static final double cElevatorMaxOutput = 1;
-        public static final double cElevatorVUp = 1;
+        public static final double cElevatorVUp = 0.8;
         public static final double cElevatorVDown = 0.8; //TODO THESE ARE NAMED INCORRECTLY WYATT!!!!!!!!!!!!!!!!!!
         public static final double cElevatorG = 0.07;
         public static final double cElevatorMaxAcceleration = 1;
