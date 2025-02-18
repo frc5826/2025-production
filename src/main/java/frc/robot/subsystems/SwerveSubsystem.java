@@ -9,6 +9,7 @@ import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.Filesystem;
+import edu.wpi.first.wpilibj.PowerDistribution;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.localization.Localization;
 import frc.robot.positioning.FieldOrientation;
@@ -29,18 +30,14 @@ public class SwerveSubsystem extends LoggedSubsystem {
 
     private double maximumSpeed = cMaxVelocity;
 
-    private Rotation2d targetAngle = new Rotation2d();
-
     private Localization localization;
 
     private double speedMultiplier;
 
-    private AHRS navX;//TODO replace all instances of (AHRS)swerveDrive.getGyro().getIMU()
+    private AHRS navX;
 
     private double imuOffset = 0;
     private Orientation orientation = FieldOrientation.unknownOrientation;
-
-    private double driveAngleOffset;
 
     public SwerveSubsystem(Localization localization) {
         double angleConversionFactor = SwerveMath.calculateDegreesPerSteeringRotation(
@@ -72,24 +69,11 @@ public class SwerveSubsystem extends LoggedSubsystem {
 
     public Pose2d getLocalizationPose() { return localization.getPose(); }
 
-    //old get accel
-//    public Optional<Translation3d> getAcc() {
-//        if(swerveDrive.getAccel().isPresent()) {
-//            var t = swerveDrive.getAccel().get()
-//                    .rotateBy(((AHRS)swerveDrive.getGyro().getIMU()).getRotation3d().unaryMinus())
-//                    .rotateBy(swerveDrive.getGyroRotation3d().unaryMinus());
-//            return Optional.of(new Translation3d(t.getX(),t.getY(),t.getZ()));
-//        } else
-//            return Optional.empty();
-//    }
-
     public Optional<Translation3d> getFieldAcc() {
         if (swerveDrive.getAccel().isPresent()) {
             Translation3d acc = swerveDrive.getAccel().get();
-            //TODO - Ryan's Notes - When you call rotateBy(), does it change the object you are passing in? If not, how do you get access to the rotated Translation?
-            acc.rotateBy(navX.getRotation3d().unaryMinus());
-            //TODO - Ryan's Notes - This doesn't like being a minus.
-            acc.rotateBy(new Rotation3d(getAdjustedIMUContinuousAngle().unaryMinus()));
+            acc = acc.rotateBy(navX.getRotation3d().unaryMinus());
+            acc = acc.rotateBy(new Rotation3d(getAdjustedIMUContinuousAngle()));
             return Optional.of(acc);
         } else {
             return Optional.empty();
@@ -111,67 +95,36 @@ public class SwerveSubsystem extends LoggedSubsystem {
 
     public double getSpeedMultiplier() { return speedMultiplier; }
 
-    //old get vel
-    public ChassisSpeeds getOdoVel() { return swerveDrive.getFieldVelocity(); }
-
     public ChassisSpeeds getOdoFieldVel() {
         ChassisSpeeds vel = swerveDrive.getRobotVelocity();
         Translation2d velTranslation = new Translation2d(vel.vxMetersPerSecond, vel.vyMetersPerSecond);
-        //TODO - Ryan's Notes - When you call rotateBy(), does it change the object you are passing in? If not, how do you get access to the rotated Translation?
-        //TODO - Ryan's Notes - This doesn't like being a minus.
-        velTranslation.rotateBy(getAdjustedIMUContinuousAngle().unaryMinus());
+        velTranslation = velTranslation.rotateBy(getAdjustedIMUContinuousAngle());
         vel = new ChassisSpeeds(velTranslation.getX(), velTranslation.getY(), vel.omegaRadiansPerSecond);
         return vel;
     }
 
-    //broken
+    //TODO test
     public void driveFieldOriented(ChassisSpeeds velocity) {
-        //TODO getYaw gets the value from swervedrive.getOdometry, which has an internal offset
-        //  which is doubled up with our offset
-        swerveDrive.drive(ChassisSpeeds.fromFieldRelativeSpeeds(velocity,
-                navX.getRotation2d().plus(new Rotation2d(-driveAngleOffset))));
+        swerveDrive.drive(ChassisSpeeds.fromFieldRelativeSpeeds(velocity, getAdjustedIMUContinuousAngle()));
     }
 
     public void teleDriveFieldOriented(ChassisSpeeds vel) {
-        //TODO - Ryan's Notes - What unit is getAdjustedIMUContinuousAngle and orientation.getDriveOrientation() in? What unit is fromFieldRelativeSpeeds() expecting?
-        swerveDrive.drive(ChassisSpeeds.fromFieldRelativeSpeeds(vel, getAdjustedIMUContinuousAngle().minus(new Rotation2d(orientation.getDriveOrientation())))); //TODO xbox y might not need a negative
-    }
-
-    public void driveSRSFieldOriented(ChassisSpeeds velocity) {
-        swerveDrive.driveFieldOriented(velocity);
+        swerveDrive.drive(ChassisSpeeds.fromFieldRelativeSpeeds(vel, getAdjustedIMUContinuousAngle().minus(new Rotation2d(Math.toRadians(orientation.getDriveOrientation())))));
     }
 
     public void resetOdometry(Pose2d pose) { swerveDrive.resetOdometry(pose); }
 
     public Rotation2d getIMUContinuousAngle() {
-        //TODO - Ryan's Notes - Positive rotation on the NavX is CW, but on the field it's CCW.
-        return Rotation2d.fromDegrees(navX.getAngle());
+        return Rotation2d.fromDegrees(-navX.getAngle());
     }
 
     public Rotation2d getAdjustedIMUContinuousAngle() {
-        //TODO - Ryan's Notes - Positive rotation on the NavX is CW, but on the field it's CCW.
-        return Rotation2d.fromDegrees(navX.getAngle() + imuOffset);
-    }
-
-    public Rotation2d getYaw() {
-        return swerveDrive.getYaw();
-    }
-
-    public void resetDriveGyro() {
-        driveAngleOffset = swerveDrive.getGyro().getRawRotation3d().getZ();
-    }
-
-    public void setDriveGyroOffset(double offsetRad) {
-        driveAngleOffset = swerveDrive.getGyro().getRawRotation3d().getZ() + offsetRad;
+        return Rotation2d.fromDegrees(-navX.getAngle() + imuOffset);
     }
 
     public void zeroOdoGyro(double offset) {
         swerveDrive.setGyro(new Rotation3d(0, 0, offset));
     }
-
-    public Rotation2d getTargetAngle() { return targetAngle; }
-
-    public void setTargetAngle(Rotation2d targetAngle) { this.targetAngle = targetAngle; }
 
     public void driveRobotOriented(ChassisSpeeds velocity)
     {

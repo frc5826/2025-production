@@ -7,6 +7,7 @@ package frc.robot;
 
 import com.pathplanner.lib.path.PathConstraints;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
+import edu.wpi.first.wpilibj.PowerDistribution;
 import edu.wpi.first.wpilibj.shuffleboard.BuiltInLayouts;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardLayout;
@@ -90,7 +91,7 @@ public class RobotContainer {
     }
 
     private void bindXbox() {
-        new Trigger(cXbox::getBackButtonPressed).onTrue(new InstantCommand(swerveSubsystem::resetDriveGyro));
+        //new Trigger(cXbox::getBackButtonPressed).onTrue(new InstantCommand(swerveSubsystem::resetDriveGyro)); //TODO zero gyro command
 
         new Trigger(() -> cXbox.getRightTriggerAxis() > 0.5).onTrue(new InstantCommand(() -> swerveSubsystem.setSpeedMultiplier(true)));
         new Trigger(() -> cXbox.getRightTriggerAxis() < 0.5).onTrue(new InstantCommand(() -> swerveSubsystem.setSpeedMultiplier(false)));
@@ -145,7 +146,6 @@ public class RobotContainer {
 
     public void initZeroGyro() {
         swerveSubsystem.zeroOdoGyro(Math.toRadians(FieldOrientation.getOrientation().getStartOrientation()));
-        swerveSubsystem.setDriveGyroOffset(Math.PI);
     }
 
     public void updateField() {
@@ -154,6 +154,8 @@ public class RobotContainer {
 
     private void setupFieldTab() {
         ShuffleboardTab tab = Shuffleboard.getTab("field");
+
+        tab.add("PDH", new PowerDistribution(1, PowerDistribution.ModuleType.kRev));
 
         field = new Field2d();
         tab.add(field)
