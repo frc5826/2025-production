@@ -111,6 +111,20 @@ public class RobotContainer {
     private void bindBoard() {
         PathConstraints constraints = new PathConstraints(1.25, 2, Math.PI * 2,  Math.PI * 2);
         //For Buttons 0-11, Starts at top left white button and goes clockwise around
+
+        new Trigger(() -> cButtonBoard.getButton(0)).whileTrue(new PathFindCommand(FieldOrientation.getOrientation().getReefA(), constraints, swerveSubsystem).andThen(new AccuratePathCommand(FieldOrientation.getOrientation().getReefH(), false, cameraSubsystem, swerveSubsystem)));
+        new Trigger(() -> cButtonBoard.getButton(1)).whileTrue(new PathFindCommand(FieldOrientation.getOrientation().getReefB(), constraints, swerveSubsystem).andThen(new AccuratePathCommand(FieldOrientation.getOrientation().getReefG(), false, cameraSubsystem, swerveSubsystem)));
+        new Trigger(() -> cButtonBoard.getButton(2)).whileTrue(new PathFindCommand(FieldOrientation.getOrientation().getReefC(), constraints, swerveSubsystem).andThen(new AccuratePathCommand(FieldOrientation.getOrientation().getReefF(), false, cameraSubsystem, swerveSubsystem)));
+        new Trigger(() -> cButtonBoard.getButton(3)).whileTrue(new PathFindCommand(FieldOrientation.getOrientation().getReefD(), constraints, swerveSubsystem).andThen(new AccuratePathCommand(FieldOrientation.getOrientation().getReefE(), false, cameraSubsystem, swerveSubsystem)));
+        new Trigger(() -> cButtonBoard.getButton(4)).whileTrue(new PathFindCommand(FieldOrientation.getOrientation().getReefE(), constraints, swerveSubsystem).andThen(new AccuratePathCommand(FieldOrientation.getOrientation().getReefD(), false, cameraSubsystem, swerveSubsystem)));
+        new Trigger(() -> cButtonBoard.getButton(5)).whileTrue(new PathFindCommand(FieldOrientation.getOrientation().getReefF(), constraints, swerveSubsystem).andThen(new AccuratePathCommand(FieldOrientation.getOrientation().getReefC(), false, cameraSubsystem, swerveSubsystem)));
+        new Trigger(() -> cButtonBoard.getButton(6)).whileTrue(new PathFindCommand(FieldOrientation.getOrientation().getReefG(), constraints, swerveSubsystem).andThen(new AccuratePathCommand(FieldOrientation.getOrientation().getReefB(), false, cameraSubsystem, swerveSubsystem)));
+        new Trigger(() -> cButtonBoard.getButton(7)).whileTrue(new PathFindCommand(FieldOrientation.getOrientation().getReefH(), constraints, swerveSubsystem).andThen(new AccuratePathCommand(FieldOrientation.getOrientation().getReefA(), false, cameraSubsystem, swerveSubsystem)));
+        new Trigger(() -> cButtonBoard.getButton(8)).whileTrue(new PathFindCommand(FieldOrientation.getOrientation().getReefI(), constraints, swerveSubsystem).andThen(new AccuratePathCommand(FieldOrientation.getOrientation().getReefL(), false, cameraSubsystem, swerveSubsystem)));
+        new Trigger(() -> cButtonBoard.getButton(9)).whileTrue(new PathFindCommand(FieldOrientation.getOrientation().getReefJ(), constraints, swerveSubsystem).andThen(new AccuratePathCommand(FieldOrientation.getOrientation().getReefK(), false, cameraSubsystem, swerveSubsystem)));
+        new Trigger(() -> cButtonBoard.getButton(10)).whileTrue(new PathFindCommand(FieldOrientation.getOrientation().getReefK(), constraints, swerveSubsystem).andThen(new AccuratePathCommand(FieldOrientation.getOrientation().getReefJ(), false, cameraSubsystem, swerveSubsystem)));
+        new Trigger(() -> cButtonBoard.getButton(11)).whileTrue(new PathFindCommand(FieldOrientation.getOrientation().getReefL(), constraints, swerveSubsystem).andThen(new AccuratePathCommand(FieldOrientation.getOrientation().getReefI(), false, cameraSubsystem, swerveSubsystem)));
+
         new Trigger(() -> cButtonBoard.getButton(0)).whileTrue(new PathFindCommand(FieldOrientation.getOrientation().getReefH(), constraints, swerveSubsystem).andThen(new AccuratePathCommand(FieldOrientation.getOrientation().getReefH(), false, cameraSubsystem, swerveSubsystem)));
         new Trigger(() -> cButtonBoard.getButton(1)).whileTrue(new PathFindCommand(FieldOrientation.getOrientation().getReefG(), constraints, swerveSubsystem).andThen(new AccuratePathCommand(FieldOrientation.getOrientation().getReefG(), false, cameraSubsystem, swerveSubsystem)));
         new Trigger(() -> cButtonBoard.getButton(2)).whileTrue(new PathFindCommand(FieldOrientation.getOrientation().getReefF(), constraints, swerveSubsystem).andThen(new AccuratePathCommand(FieldOrientation.getOrientation().getReefF(), false, cameraSubsystem, swerveSubsystem)));
@@ -124,6 +138,7 @@ public class RobotContainer {
         new Trigger(() -> cButtonBoard.getButton(10)).whileTrue(new PathFindCommand(FieldOrientation.getOrientation().getReefJ(), constraints, swerveSubsystem).andThen(new AccuratePathCommand(FieldOrientation.getOrientation().getReefJ(), false, cameraSubsystem, swerveSubsystem)));
         //new Trigger(() -> cButtonBoard.getButton(11)).whileTrue(new PathFindCommand(FieldOrientation.getOrientation().getReefI(), constraints, swerveSubsystem).andThen(new AccuratePathCommand(FieldOrientation.getOrientation().getReefI(), false, cameraSubsystem, swerveSubsystem)));
         new Trigger(() -> cButtonBoard.getButtonPressed(11)).onTrue(new AutoGroundPickupCommand(elevatorSubsystem, coralizerSubsystem));
+
         //For Buttons 12-15, Starts at top white button and goes straight down
         new Trigger(() -> cButtonBoard.getButtonPressed(12)).onTrue(new L4CommandGroup(elevatorSubsystem, coralizerSubsystem, swerveSubsystem));
         new Trigger(() -> cButtonBoard.getButtonPressed(13)).onTrue(new L3CommandGroup(elevatorSubsystem, coralizerSubsystem));
