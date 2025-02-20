@@ -1,37 +1,20 @@
 package frc.robot.commands.elevator;
 
-import frc.robot.commands.LoggedCommand;
 import frc.robot.subsystems.ElevatorSubsystem;
 
-import static frc.robot.Constants.Elevator.cElevatorDeadband;
+public class ElevatorRepositionCommand extends ElevatorPositionCommand {
 
-public class ElevatorRepositionCommand extends LoggedCommand {
+    private double offset;
 
-    private ElevatorSubsystem elevatorSubsystem;
-    private double position;
-
-
-    public ElevatorRepositionCommand(ElevatorSubsystem elevatorSubsystem, double reposition){
-
-        this.elevatorSubsystem = elevatorSubsystem;
-        this.position = reposition;
-
-        addRequirements(elevatorSubsystem);
-
+    public ElevatorRepositionCommand(ElevatorSubsystem elevatorSubsystem, double offset, ElevatorSubsystem.LevelTarget levelTarget) {
+        super(elevatorSubsystem, 0, levelTarget);
+        this.offset = offset;
     }
 
     @Override
     public void initialize() {
+        double targetPosition = elevatorSubsystem.getDesiredPosition() + offset;
         super.initialize();
-
-        elevatorSubsystem.setDesiredPosition(elevatorSubsystem.getDesiredPos() + position);
-
-    }
-
-    @Override
-    public boolean isFinished() {
-
-        return Math.abs(elevatorSubsystem.getDesiredPos() - elevatorSubsystem.getPos()) <= cElevatorDeadband;
-
+        elevatorSubsystem.setDesiredPosition(targetPosition, levelTarget);
     }
 }

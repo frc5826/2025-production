@@ -1,7 +1,6 @@
 package frc.robot.math;
 
-import edu.wpi.first.math.geometry.Pose2d;
-import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.math.geometry.*;
 
 public class MathHelper {
 
@@ -9,7 +8,13 @@ public class MathHelper {
         return B.getTranslation().minus(A.getTranslation()).getAngle();
     }
 
-    // Yoink
+    public static Pose2d offsetPoseReverse(Pose2d pose, double offset) {
+        return new Pose2d(pose.getX() + (offset * Math.cos(pose.getRotation().getRadians())),
+                pose.getY() + (offset * Math.sin(pose.getRotation().getRadians())),
+                pose.getRotation());
+    }
+
+    //TODO Yoink wut
     public static double clamp(double value, double min, double max) {
         // This unusual condition allows keeping only one branch
         // on common path when min < max and neither of them is NaN.

@@ -38,7 +38,7 @@ public class Right extends SequentialCommandGroup {
         addCommands(
                 Commands.parallel(
                         new PathToCommand(o.getReefE(), 0, slowConstraints, s),
-                        new L4CommandGroup(e, c)
+                        new L4CommandGroup(e, c, s)
                 )
         );
 
@@ -64,7 +64,7 @@ public class Right extends SequentialCommandGroup {
         addCommands(
                 Commands.parallel(
                         new PathToCommand(o.getReefC(), 0, slowConstraints, s),
-                        new L4CommandGroup(e, c)
+                        new L4CommandGroup(e, c, s)
                 )
         );
 

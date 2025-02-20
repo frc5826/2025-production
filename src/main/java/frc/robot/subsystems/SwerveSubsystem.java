@@ -4,18 +4,16 @@ import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.config.RobotConfig;
 import com.pathplanner.lib.controllers.PPHolonomicDriveController;
 import com.studica.frc.AHRS;
-import edu.wpi.first.math.MathUtil;
-import edu.wpi.first.math.geometry.Pose2d;
-import edu.wpi.first.math.geometry.Rotation2d;
-import edu.wpi.first.math.geometry.Rotation3d;
-import edu.wpi.first.math.geometry.Translation3d;
+import edu.wpi.first.math.geometry.*;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.Filesystem;
+import edu.wpi.first.wpilibj.PowerDistribution;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
-import frc.robot.Constants;
 import frc.robot.localization.Localization;
+import frc.robot.positioning.FieldOrientation;
+import frc.robot.positioning.Orientation;
 import swervelib.SwerveDrive;
 import swervelib.math.SwerveMath;
 import swervelib.parser.SwerveParser;
@@ -32,13 +30,14 @@ public class SwerveSubsystem extends LoggedSubsystem {
 
     private double maximumSpeed = cMaxVelocity;
 
-    private Rotation2d targetAngle = new Rotation2d();
-
     private Localization localization;
 
-    private double gyroOffset;
-
     private double speedMultiplier;
+
+    private AHRS navX;
+
+    private double imuOffset = 0;
+    private Orientation orientation = FieldOrientation.unknownOrientation;
 
     public SwerveSubsystem(Localization localization) {
         double angleConversionFactor = SwerveMath.calculateDegreesPerSteeringRotation(
@@ -58,61 +57,74 @@ public class SwerveSubsystem extends LoggedSubsystem {
         SmartDashboard.putData("/drive/ahrs",(AHRS)swerveDrive.getGyro().getIMU());
 
         resetOdometry(new Pose2d(0, 0, new Rotation2d()));
-        zeroGyro();
 
         this.localization = localization;
 
         speedMultiplier = cLowSpeedMultiplier;
 
+        navX = (AHRS)swerveDrive.getGyro().getIMU();
+
         setupPathPlanner();
-    }
-
-    public void zeroGyro()
-    {
-        targetAngle = new Rotation2d();
-        swerveDrive.zeroGyro();
-        gyroOffset = ((AHRS)swerveDrive.getGyro().getIMU()).getAngle() % 360;
-    }
-
-    public void setGyroOffset(double yawRads) {
-        swerveDrive.setGyro(new Rotation3d(0, 0, yawRads + swerveDrive.getGyro().getRawRotation3d().getZ()));
     }
 
     public Pose2d getLocalizationPose() { return localization.getPose(); }
 
-    public Optional<Translation3d> getAcc() {
-        if(swerveDrive.getAccel().isPresent()) {
-            var t = swerveDrive.getAccel().get()
-                    .rotateBy(((AHRS)swerveDrive.getGyro().getIMU()).getRotation3d().unaryMinus())
-                    .rotateBy(swerveDrive.getGyroRotation3d().unaryMinus());
-            return Optional.of(new Translation3d(t.getX(),t.getY(),t.getZ()));
-        } else
+    public Optional<Translation3d> getFieldAcc() {
+        if (swerveDrive.getAccel().isPresent()) {
+            Translation3d acc = swerveDrive.getAccel().get();
+            acc = acc.rotateBy(navX.getRotation3d().unaryMinus());
+            acc = acc.rotateBy(new Rotation3d(getAdjustedIMUContinuousAngle()));
+            return Optional.of(acc);
+        } else {
             return Optional.empty();
+        }
     }
 
-    public void toggleSpeedMultiplier() {
-        speedMultiplier = speedMultiplier == cHighSpeedMultiplier ? cLowSpeedMultiplier : cHighSpeedMultiplier;
+    public Orientation getOrientation() {
+        return orientation;
+    }
+
+    public void setOrientation(Orientation orientation) {
+        this.orientation = orientation;
+        imuOffset = orientation.getStartOrientation() - getIMUContinuousAngle().getDegrees();
+    }
+
+    public void setSpeedMultiplier(boolean fast) {
+        speedMultiplier = fast ? cHighSpeedMultiplier : cLowSpeedMultiplier;
     }
 
     public double getSpeedMultiplier() { return speedMultiplier; }
 
-    public Rotation2d getRotationCorrected() {
-        return getIMUYaw().getRadians() < 0 ? getIMUYaw().plus(new Rotation2d(2 * Math.PI)) : getIMUYaw();
+    public ChassisSpeeds getOdoFieldVel() {
+        ChassisSpeeds vel = swerveDrive.getRobotVelocity();
+        Translation2d velTranslation = new Translation2d(vel.vxMetersPerSecond, vel.vyMetersPerSecond);
+        velTranslation = velTranslation.rotateBy(getAdjustedIMUContinuousAngle());
+        vel = new ChassisSpeeds(velTranslation.getX(), velTranslation.getY(), vel.omegaRadiansPerSecond);
+        return vel;
     }
 
-    public ChassisSpeeds getOdoVel() { return swerveDrive.getFieldVelocity(); }
+    //TODO test
+    public void driveFieldOriented(ChassisSpeeds velocity) {
+        swerveDrive.drive(ChassisSpeeds.fromFieldRelativeSpeeds(velocity, getAdjustedIMUContinuousAngle()));
+    }
 
-    public void driveFieldOriented(ChassisSpeeds velocity) { swerveDrive.driveFieldOriented(velocity); }
+    public void teleDriveFieldOriented(ChassisSpeeds vel) {
+        swerveDrive.drive(ChassisSpeeds.fromFieldRelativeSpeeds(vel, getAdjustedIMUContinuousAngle().minus(new Rotation2d(Math.toRadians(orientation.getDriveOrientation())))));
+    }
 
     public void resetOdometry(Pose2d pose) { swerveDrive.resetOdometry(pose); }
 
-    public Rotation2d getIMUYaw() { return swerveDrive.getYaw(); }
+    public Rotation2d getIMUContinuousAngle() {
+        return Rotation2d.fromDegrees(-navX.getAngle());
+    }
 
-    public Rotation2d getIMUContinuousAngle() { return Rotation2d.fromDegrees(-((AHRS)swerveDrive.getGyro().getIMU()).getAngle() + gyroOffset); }
+    public Rotation2d getAdjustedIMUContinuousAngle() {
+        return Rotation2d.fromDegrees(-navX.getAngle() + imuOffset);
+    }
 
-    public Rotation2d getTargetAngle() { return targetAngle; }
-
-    public void setTargetAngle(Rotation2d targetAngle) { this.targetAngle = targetAngle; }
+    public void zeroOdoGyro(double offset) {
+        swerveDrive.setGyro(new Rotation3d(0, 0, offset));
+    }
 
     public void driveRobotOriented(ChassisSpeeds velocity)
     {

@@ -47,7 +47,7 @@ public class AccuratePathCommand extends LoggedCommand {
         if (!singleTagAlign) {
             return swerveSubsystem.getLocalizationPose();
         } else {
-            return cameraSubsystem.getAligningPose().toPose2d();
+            return swerveSubsystem.getLocalizationPose(); //TODO camera only
         }
     }
 

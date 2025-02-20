@@ -50,7 +50,6 @@ public class PathToCommand extends LoggedCommand {
                 new GoalEndState(endVel, goal.getRotation()));
 
         pathCommand = AutoBuilder.followPath(path);
-        swerveSubsystem.setTargetAngle(goal.getRotation());
 
         pathCommand.initialize();
     }

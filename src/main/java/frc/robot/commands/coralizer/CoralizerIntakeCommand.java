@@ -1,5 +1,6 @@
 package frc.robot.commands.coralizer;
 
+import edu.wpi.first.wpilibj.Timer;
 import frc.robot.commands.LoggedCommand;
 import frc.robot.subsystems.CoralizerSubsystem;
 
@@ -7,44 +8,54 @@ public class CoralizerIntakeCommand extends LoggedCommand {
 
     private CoralizerSubsystem coralizerSubsystem;
     private IntakeDirection direction;
-    private double timer;
+    private Timer releaseTimer;
+    private Timer expirationTimer;
 
     public CoralizerIntakeCommand(CoralizerSubsystem coralizerSubsystem, IntakeDirection direction) {
         this.coralizerSubsystem = coralizerSubsystem;
         this.direction = direction;
         addRequirements(coralizerSubsystem);
-        timer = 0;
+
+        releaseTimer = new Timer();
+        expirationTimer = new Timer();
     }
 
     @Override
     public void initialize() {
+        super.initialize();
         switch (direction){
             case IN -> coralizerSubsystem.setIntakeSpeed(1);
             case OUT -> coralizerSubsystem.setIntakeSpeed(-0.4);
             case SHOOT -> coralizerSubsystem.setIntakeSpeed(-1);
         }
-        timer = 0.25;
+        releaseTimer.reset();
+        expirationTimer.reset();
+        expirationTimer.start();
     }
 
     @Override
     public void execute() {
-        if((direction != IntakeDirection.OUT && coralizerSubsystem.hasCoral()) || (direction == IntakeDirection.OUT && !coralizerSubsystem.hasCoral())) {timer -= 0.02;}
+        if((direction == IntakeDirection.IN && coralizerSubsystem.hasCoral()) || (direction != IntakeDirection.IN && !coralizerSubsystem.hasCoral())) {releaseTimer.start();}
     }
 
     @Override
     public boolean isFinished() {
-        if(timer <= 0){
-            if (direction != IntakeDirection.OUT) {
+        if(releaseTimer.get() >= 0.25){
+            if (direction == IntakeDirection.IN) {
                 return coralizerSubsystem.hasCoral();
             }
             return !coralizerSubsystem.hasCoral();
         }
+        if (expirationTimer.get() >= 7) {return true;}
         return false;
     }
 
     @Override
     public void end(boolean interrupted) {
+        super.end(interrupted);
         coralizerSubsystem.setIntakeSpeed(0);
+        expirationTimer.reset();
+        releaseTimer.reset();
     }
 
     public static enum IntakeDirection{

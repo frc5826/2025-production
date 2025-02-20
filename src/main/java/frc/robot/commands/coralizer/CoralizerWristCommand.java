@@ -7,8 +7,8 @@ import static frc.robot.Constants.Coralizer.*;
 
 public class CoralizerWristCommand extends LoggedCommand {
 
-    private CoralizerSubsystem coralizerSubsystem;
-    private double rotation;
+    protected CoralizerSubsystem coralizerSubsystem;
+    protected double rotation;
 
     public CoralizerWristCommand(CoralizerSubsystem coralizerSubsystem, double rotation) {
         this.coralizerSubsystem = coralizerSubsystem;
@@ -18,6 +18,7 @@ public class CoralizerWristCommand extends LoggedCommand {
 
     @Override
     public void initialize() {
+        super.initialize();
         coralizerSubsystem.setWristTarget(rotation);
     }
 

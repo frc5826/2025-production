@@ -24,7 +24,7 @@ class KalmanFilter {
         this.x = MatrixUtils.createRealVector(initial.getMeans());
         this.P = initial.getCovariances();
 
-        this.moveVar = new Variances(0.1, 0.1, 0.1, 0.1, 0.1, 0.1);
+        this.moveVar = new Variances(1, 1, 1, 1, 1, 1);
 
         this.Q = MatrixUtils.createRealMatrix(new double[][]{
                 //X pos variance

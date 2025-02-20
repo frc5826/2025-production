@@ -5,7 +5,6 @@
 
 package frc.robot;
 
-import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.PowerDistribution;
 import com.pathplanner.lib.config.PIDConstants;
 import edu.wpi.first.math.geometry.Pose2d;
@@ -24,8 +23,6 @@ import frc.robot.subsystems.ButtonBoard;
 public final class Constants
 {
 
-    public static final Joystick cJoystick = new Joystick(0);
-
     //public static final PowerDistribution cPowerDistribution = new PowerDistribution();
 
     public static class Elevator {
@@ -40,14 +37,14 @@ public final class Constants
         public static final double cElevatorD = 0.01;
         public static final double cElevatorMinOutput = -1;
         public static final double cElevatorMaxOutput = 1;
-        public static final double cElevatorVUp = 1;
-        public static final double cElevatorVDown = 0.6;
-        public static final double cElevatorG = 0.06;
+        public static final double cElevatorVUp = 0.8;
+        public static final double cElevatorVDown = 0.8; //TODO THESE ARE NAMED INCORRECTLY WYATT!!!!!!!!!!!!!!!!!!
+        public static final double cElevatorG = 0.07;
         public static final double cElevatorMaxAcceleration = 1;
         public static final double cElevatorMaxVelocity = 1.67;
         public static final double cElevatorHeightMin = 0;
-        public static final double cElevatorHeightMax = 1.68;
-        public static final double cElevatorDeadband = 0.05;
+        public static final double cElevatorHeightMax = 1.71;
+        public static final double cElevatorDeadband = 0.06;
         //TODO get limit switch IDs
         public static final int cElevatorLimitSwitch1ID = 0;
         public static final int cElevatorLimitSwitch2ID = 0;
@@ -66,7 +63,8 @@ public final class Constants
     public static final ButtonBoard cButtonBoard = new ButtonBoard(25);
     public static final XboxController cXbox = new XboxController(1);
 
-    public static final double cTeleDriveDeadband = 0.2;
+    public static final double cTeleDriveDeadband = 0.25;
+    public static final double cTeleTurnDeadband = 0.25;
     public static final double cTurnDeadband = 0.8;
 
     public static class  Swerve {
@@ -110,10 +108,10 @@ public final class Constants
         public static final double cCoralizerP = 0.025;
         public static final double cCoralizerI = 0;
         public static final double cCoralizerD = 0;
-        public static final double cCoralizerG = 0.06;
-        public static final double cCoralizerMin = -1;
-        public static final double cCoralizerMax = 1;
-        public static final double cCoralizerDeadband = 1;
+        public static final double cCoralizerG = 0.04;
+        public static final double cCoralizerMin = -0.75;
+        public static final double cCoralizerMax = 0.75;
+        public static final double cCoralizerDeadband = 1.25;
 
         public static final double cCoralizerMinRotation = -90;
         public static final double cCoralizerMaxRotation = 90;
