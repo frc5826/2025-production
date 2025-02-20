@@ -4,6 +4,7 @@ import com.pathplanner.lib.path.PathConstraints;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import frc.robot.commands.swerve.pathing.PathFindThenAccuratePathCommand;
+import frc.robot.commands.swerve.pathing.PathOffsetThenAccurateCommand;
 import frc.robot.subsystems.CameraSubsystem;
 import frc.robot.subsystems.CoralizerSubsystem;
 import frc.robot.subsystems.ElevatorSubsystem;
@@ -14,7 +15,7 @@ public class AlignSourceCommandGroup extends SequentialCommandGroup {
                                    SwerveSubsystem s, ElevatorSubsystem e, CoralizerSubsystem c, CameraSubsystem ca) {
 
         addCommands(
-                new PathFindThenAccuratePathCommand(sourcePos, true, constraints, s, ca),
+                new PathOffsetThenAccurateCommand(sourcePos, constraints, 0.75, s),
                 new SourceCommandGroup(e, c)
         );
 

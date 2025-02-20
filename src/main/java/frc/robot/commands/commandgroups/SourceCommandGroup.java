@@ -14,7 +14,7 @@ public class SourceCommandGroup extends SequentialCommandGroup {
 
         addCommands(
                 new ElevatorPositionCommand(elevatorSubsystem, 0, ElevatorSubsystem.LevelTarget.NONE),
-                new CoralizerWristCommand(coralizerSubsystem, 68),
+                new CoralizerWristCommand(coralizerSubsystem, 80),
                 new CoralizerIntakeCommand(coralizerSubsystem, CoralizerIntakeCommand.IntakeDirection.IN)
         );
 

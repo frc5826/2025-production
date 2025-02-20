@@ -9,7 +9,7 @@ public class MathHelper {
     }
 
     public static Pose2d offsetPoseReverse(Pose2d pose, double offset) {
-        Translation2d translation = new Translation2d(offset, pose.getRotation().unaryMinus());
+        Translation2d translation = new Translation2d(offset, pose.getRotation().minus(new Rotation2d(Math.PI)));
 
         return new Pose2d(pose.getX() + translation.getX(),
                 pose.getY() + translation.getY(),
