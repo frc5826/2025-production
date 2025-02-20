@@ -9,8 +9,10 @@ public class MathHelper {
     }
 
     public static Pose2d offsetPoseReverse(Pose2d pose, double offset) {
-        return new Pose2d(pose.getX() + (offset * Math.cos(pose.getRotation().getRadians())),
-                pose.getY() + (offset * Math.sin(pose.getRotation().getRadians())),
+        Translation2d translation = new Translation2d(offset, pose.getRotation().unaryMinus());
+
+        return new Pose2d(pose.getX() + translation.getX(),
+                pose.getY() + translation.getY(),
                 pose.getRotation());
     }
 
