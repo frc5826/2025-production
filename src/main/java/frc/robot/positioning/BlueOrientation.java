@@ -47,22 +47,22 @@ public class BlueOrientation implements Orientation{
     public Pose2d getProcessor() { return new Pose2d(11.51, 7.47, Rotation2d.fromDegrees(90)); }
 
     @Override
-    public Pose2d getCoralStationLA() { return new Pose2d(0.76, 6.69, Rotation2d.fromDegrees(126)); }
+    public Pose2d getCoralStationLA() { return new Pose2d(0.76, 6.69, Rotation2d.fromDegrees(36)); }
 
     @Override
-    public Pose2d getCoralStationLB() { return new Pose2d(1.19, 7, Rotation2d.fromDegrees(126)); }
+    public Pose2d getCoralStationLB() { return new Pose2d(1.19, 7, Rotation2d.fromDegrees(36)); }
 
     @Override
-    public Pose2d getCoralStationLC() { return new Pose2d(1.63, 7.32, Rotation2d.fromDegrees(126)); }
+    public Pose2d getCoralStationLC() { return new Pose2d(1.63, 7.32, Rotation2d.fromDegrees(36)); }
 
     @Override
-    public Pose2d getCoralStationRA() { return new Pose2d(0.76, 1.34, Rotation2d.fromDegrees(-126)); }
+    public Pose2d getCoralStationRA() { return new Pose2d(0.76, 1.34, Rotation2d.fromDegrees(-36)); }
 
     @Override
-    public Pose2d getCoralStationRB() { return new Pose2d(1.19, 1.02, Rotation2d.fromDegrees(-126)); }
+    public Pose2d getCoralStationRB() { return new Pose2d(1.19, 1.02, Rotation2d.fromDegrees(-36)); }
 
     @Override
-    public Pose2d getCoralStationRC() { return new Pose2d(1.63, 0.71, Rotation2d.fromDegrees(-126)); }
+    public Pose2d getCoralStationRC() { return new Pose2d(1.63, 0.71, Rotation2d.fromDegrees(-36)); }
 
     @Override
     public double getStartOrientation() {
