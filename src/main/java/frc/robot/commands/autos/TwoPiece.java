@@ -23,10 +23,10 @@ public class TwoPiece extends SequentialCommandGroup {
                 new L4CommandGroup(e, c, s),
                 new DropoffCommandGroup(e, c, s)
         );
-
+        //TODO Fix This
         //Path to source and intake
         addCommands(
-                new AlignSourceCommandGroup(sourceGoal, fastConstraints, s, e, c)
+                //new AlignSourceCommandGroup(sourceGoal, fastConstraints, s, e, c)
         );
 
         //Path to reef and drop off
