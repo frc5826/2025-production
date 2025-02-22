@@ -54,6 +54,8 @@ public class RobotContainer {
 
     public final CoralizerSubsystem coralizerSubsystem = new CoralizerSubsystem();
 
+    DeferredLevelCommand deferredLevelCommand = new DeferredLevelCommand(elevatorSubsystem, coralizerSubsystem, swerveSubsystem);
+
     private Field2d field;
 
     public RobotContainer() {
@@ -110,8 +112,9 @@ public class RobotContainer {
 
         //tuning path pid
         PathConstraints constraints = new PathConstraints(1.25, 2, Math.PI * 2,  Math.PI * 2);
-        new Trigger(cXbox::getAButton).whileTrue(new PathToCommand(new Pose2d(1.25, 1.5, new Rotation2d(Math.PI)), 0, constraints, swerveSubsystem));
-        new Trigger(cXbox::getBButton).whileTrue(new PathToCommand(new Pose2d(1.25, 4, new Rotation2d(Math.PI)), 0, constraints, swerveSubsystem));
+//        new Trigger(cXbox::getAButton).whileTrue(new PathToCommand(new Pose2d(1.25, 1.5, new Rotation2d(Math.PI)), 0, constraints, swerveSubsystem));
+//        new Trigger(cXbox::getBButton).whileTrue(new PathToCommand(new Pose2d(1.25, 4, new Rotation2d(Math.PI)), 0, constraints, swerveSubsystem));
+        new Trigger(cXbox::getAButton).onTrue(deferredLevelCommand);
     }
 
     //TODO set real constraints and different constraints variable for Source Pickup :)
@@ -133,10 +136,14 @@ public class RobotContainer {
         //new Trigger(() -> cButtonBoard.getButtonPressed(11)).onTrue(new AutoGroundPickupCommand(elevatorSubsystem, coralizerSubsystem)); //TODO add a button for this
 
         //For Buttons 12-15, Starts at top white button and goes straight down
-        new Trigger(() -> cButtonBoard.getButtonPressed(12)).onTrue(new L4CommandGroup(elevatorSubsystem, coralizerSubsystem, swerveSubsystem));
-        new Trigger(() -> cButtonBoard.getButtonPressed(13)).onTrue(new L3CommandGroup(elevatorSubsystem, coralizerSubsystem));
-        new Trigger(() -> cButtonBoard.getButtonPressed(14)).onTrue(new L2CommandGroup(elevatorSubsystem, coralizerSubsystem));
-        new Trigger(() -> cButtonBoard.getButtonPressed(15)).onTrue(new L1CommandGroup(elevatorSubsystem, coralizerSubsystem));
+//        new Trigger(() -> cButtonBoard.getButtonPressed(12)).onTrue(new L4CommandGroup(elevatorSubsystem, coralizerSubsystem, swerveSubsystem));
+        new Trigger(() -> cButtonBoard.getButtonPressed(12)).onTrue(new InstantCommand(() -> {deferredLevelCommand.setTarget(DeferredLevelCommand.DeferredLevel.L4);}));
+//        new Trigger(() -> cButtonBoard.getButtonPressed(13)).onTrue(new L3CommandGroup(elevatorSubsystem, coralizerSubsystem));
+        new Trigger(() -> cButtonBoard.getButtonPressed(13)).onTrue(new InstantCommand(() -> {deferredLevelCommand.setTarget(DeferredLevelCommand.DeferredLevel.L3);}));
+//        new Trigger(() -> cButtonBoard.getButtonPressed(14)).onTrue(new L2CommandGroup(elevatorSubsystem, coralizerSubsystem));
+        new Trigger(() -> cButtonBoard.getButtonPressed(14)).onTrue(new InstantCommand(() -> {deferredLevelCommand.setTarget(DeferredLevelCommand.DeferredLevel.L2);}));
+//        new Trigger(() -> cButtonBoard.getButtonPressed(15)).onTrue(new L1CommandGroup(elevatorSubsystem, coralizerSubsystem));
+        new Trigger(() -> cButtonBoard.getButtonPressed(15)).onTrue(new InstantCommand(() -> {deferredLevelCommand.setTarget(DeferredLevelCommand.DeferredLevel.L1);}));
         //For Buttons 16-18, Starts at top right black button and goes left
         new Trigger(() -> cButtonBoard.getButtonPressed(16)).onTrue(new DropoffCommandGroup(elevatorSubsystem, coralizerSubsystem, swerveSubsystem));
         new Trigger(() -> cButtonBoard.getButtonPressed(17)).onTrue(new HomeCommandGroup(elevatorSubsystem, coralizerSubsystem));
