@@ -40,8 +40,19 @@ public class DeferredLevelCommand extends LoggedCommand {
     }
 
     @Override
+    public void execute() {
+        super.execute();
+        running.execute();
+    }
+
+    @Override
     public boolean isFinished() {
         return running.isFinished();
+    }
+
+    @Override
+    public void end(boolean interrupted) {
+        running.end(interrupted);
     }
 
     public void setTarget(DeferredLevel target) {
