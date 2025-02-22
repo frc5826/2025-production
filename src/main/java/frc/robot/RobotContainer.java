@@ -10,11 +10,9 @@ import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.wpilibj.PowerDistribution;
-import edu.wpi.first.wpilibj.shuffleboard.BuiltInLayouts;
-import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
-import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardLayout;
-import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
+import edu.wpi.first.wpilibj.shuffleboard.*;
 import edu.wpi.first.wpilibj.smartdashboard.Field2d;
+import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.commands.autos.Dumb;
@@ -27,6 +25,7 @@ import frc.robot.commands.swerve.CrabWalkCommand;
 import frc.robot.commands.swerve.DriveButtonCommand;
 import frc.robot.commands.swerve.pathing.PathOffsetThenAccurateCommand;
 import frc.robot.commands.swerve.pathing.PathToCommand;
+import frc.robot.positioning.Orientation;
 import frc.robot.subsystems.CameraSubsystem;
 import frc.robot.commands.swerve.pathing.AccuratePathCommand;
 import frc.robot.commands.swerve.pathing.PathFindCommand;
@@ -40,6 +39,8 @@ import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.commands.swerve.TeleopDriveCommand;
 import frc.robot.subsystems.SwerveSubsystem;
 import frc.robot.localization.Localization;
+
+import java.util.ArrayList;
 
 import static frc.robot.Constants.*;
 
@@ -69,6 +70,8 @@ public class RobotContainer {
         //Create elastic tabs
         field = new Field2d();
         setupFieldTab();
+
+        setupAutoTab();
     }
 
     public void prePeriodic(boolean teleop) {
@@ -149,7 +152,6 @@ public class RobotContainer {
         new Trigger(() -> cButtonBoard.getButtonPressed(17)).onTrue(new HomeCommandGroup(elevatorSubsystem, coralizerSubsystem));
         new Trigger(() -> cButtonBoard.getButtonPressed(18)).onTrue(new SourceCommandGroup(elevatorSubsystem, coralizerSubsystem));
         //For Buttons 19-21, Starts at middle right red button and goes left
-        //TODO fix
         new Trigger(() -> cButtonBoard.getButton(19)).whileTrue(new AlignSourceCommandGroup(FieldOrientation.getOrientation().getCoralStationLB(), constraints, swerveSubsystem, elevatorSubsystem, coralizerSubsystem));
         new Trigger(() -> cButtonBoard.getButton(20)).whileTrue(new AlignSourceCommandGroup(FieldOrientation.getOrientation().getCoralStationRB(), constraints, swerveSubsystem, elevatorSubsystem, coralizerSubsystem));
         new Trigger(() -> cButtonBoard.getButton(21)).whileTrue(new CoralizerIntakeCommand(coralizerSubsystem, CoralizerIntakeCommand.IntakeDirection.OUT));
@@ -163,6 +165,61 @@ public class RobotContainer {
 
     public void initZeroGyro() {
         swerveSubsystem.zeroOdoGyro(Math.toRadians(FieldOrientation.getOrientation().getStartOrientation()));
+    }
+
+    private void setupAutoTab() {
+        ShuffleboardTab autoTab = Shuffleboard.getTab("Auto");
+
+        SendableChooser<Pose2d> firstReef = new SendableChooser<Pose2d>();
+        SendableChooser<Pose2d> secondReef = new SendableChooser<Pose2d>();
+        SendableChooser<Boolean> dumb = new SendableChooser<Boolean>();
+
+        Orientation orientation = FieldOrientation.getOrientation();
+
+        dumb.addOption("Yes dumb", true);
+        dumb.addOption("No dumb", false);
+
+        autoTab.add("Dumb?", firstReef)
+                .withWidget(BuiltInWidgets.kComboBoxChooser)
+                .withSize(2, 2)
+                .withPosition(0, 0);
+
+        firstReef.addOption("A", orientation.getReefA());
+        firstReef.addOption("B", orientation.getReefB());
+        firstReef.addOption("C", orientation.getReefC());
+        firstReef.addOption("D", orientation.getReefD());
+        firstReef.addOption("E", orientation.getReefE());
+        firstReef.addOption("F", orientation.getReefF());
+        firstReef.addOption("G", orientation.getReefG());
+        firstReef.addOption("H", orientation.getReefH());
+        firstReef.addOption("I", orientation.getReefI());
+        firstReef.addOption("J", orientation.getReefJ());
+        firstReef.addOption("K", orientation.getReefK());
+        firstReef.addOption("L", orientation.getReefL());
+
+        autoTab.add("First reef target", firstReef)
+                .withWidget(BuiltInWidgets.kComboBoxChooser)
+                .withSize(2, 2)
+                .withPosition(2, 0);
+
+        secondReef.addOption("Nothing", new Pose2d());
+        secondReef.addOption("A", orientation.getReefA());
+        secondReef.addOption("B", orientation.getReefB());
+        secondReef.addOption("C", orientation.getReefC());
+        secondReef.addOption("D", orientation.getReefD());
+        secondReef.addOption("E", orientation.getReefE());
+        secondReef.addOption("F", orientation.getReefF());
+        secondReef.addOption("G", orientation.getReefG());
+        secondReef.addOption("H", orientation.getReefH());
+        secondReef.addOption("I", orientation.getReefI());
+        secondReef.addOption("J", orientation.getReefJ());
+        secondReef.addOption("K", orientation.getReefK());
+        secondReef.addOption("L", orientation.getReefL());
+
+        autoTab.add("Second reef target", secondReef)
+                .withWidget(BuiltInWidgets.kComboBoxChooser)
+                .withSize(2, 2)
+                .withPosition(4, 0);
     }
 
     public void updateField() {
