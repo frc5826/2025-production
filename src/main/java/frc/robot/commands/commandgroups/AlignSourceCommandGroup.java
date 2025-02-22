@@ -12,10 +12,10 @@ import frc.robot.subsystems.SwerveSubsystem;
 
 public class AlignSourceCommandGroup extends SequentialCommandGroup {
     public AlignSourceCommandGroup(Pose2d sourcePos, PathConstraints constraints,
-                                   SwerveSubsystem s, ElevatorSubsystem e, CoralizerSubsystem c, CameraSubsystem ca) {
+                                   SwerveSubsystem s, ElevatorSubsystem e, CoralizerSubsystem c) {
 
         addCommands(
-                new PathOffsetThenAccurateCommand(sourcePos, constraints, 0.75, s),
+                new PathOffsetThenAccurateCommand(sourcePos, constraints, 0.75, false, s),
                 new SourceCommandGroup(e, c)
         );
 

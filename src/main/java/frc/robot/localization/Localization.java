@@ -25,7 +25,7 @@ public class Localization {
 
     public Localization(CameraSubsystem cameraSubsystem) {
         kalmanFilter = new KalmanFilter(new MultivariateNormalDistribution(new double[]{0, 0, 0, 0, 0, 0, 0, 0, 0}, initCovar()));
-        this.measVar = new Variances(5, 1.2, 8, 4, 1.2, 8);
+        this.measVar = new Variances(30, 2, 10, 4, 2, 10);
         this.cameraSubsystem = cameraSubsystem;
         timer = new Timer();
     }
@@ -53,7 +53,7 @@ public class Localization {
 
             zOdo.setEntry(2, s.getAdjustedIMUContinuousAngle().getRadians()+angleDiff.getRadians());
 
-            ROdo.setEntry(2, 2, measVar.rPos());
+            ROdo.setEntry(2, 2, 20); //camera heading variance
 
             kalmanFilter.measure(ROdo, zOdo);
         }

@@ -13,7 +13,7 @@ public class L2CommandGroup extends SequentialCommandGroup {
 
          addCommands(
                  new CoralizerWristCommand(coralizerSubsystem, 75),
-                 new ElevatorPositionCommand(elevatorSubsystem, 0.44, ElevatorSubsystem.LevelTarget.L2),
+                 new ElevatorPositionCommand(elevatorSubsystem, 0.42, ElevatorSubsystem.LevelTarget.L2),
                  new CoralizerWristCommand(coralizerSubsystem, 35)
          );
     }

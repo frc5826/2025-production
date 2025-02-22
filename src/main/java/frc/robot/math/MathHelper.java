@@ -16,6 +16,14 @@ public class MathHelper {
                 pose.getRotation());
     }
 
+    public static Pose2d offsetPose(Pose2d pose, double offset, Rotation2d dir) {
+        Translation2d translation = new Translation2d(offset, pose.getRotation().minus(dir)); //TODO TEST
+
+        return new Pose2d(pose.getX() + translation.getX(),
+                pose.getY() + translation.getY(),
+                pose.getRotation());
+    }
+
     //TODO Yoink wut
     public static double clamp(double value, double min, double max) {
         // This unusual condition allows keeping only one branch

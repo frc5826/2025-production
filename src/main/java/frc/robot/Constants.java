@@ -71,15 +71,15 @@ public final class Constants
         public static final double cMaxVelocity = 5.05968; //DON'T CHANGE!!!!!!!!!!!!!!!!!!!!!!!
         public static final double cMaxAngularVelocity = 5;
 
-        public static final PIDConstants cDrivePID = new PIDConstants(1, 0, 0);
+        public static final PIDConstants cDrivePID = new PIDConstants(0.8, 0, 0);
         public static final PIDConstants cTurnPID = new PIDConstants(4, 0, 0);
 
         public static final double cHighSpeedMultiplier = 1;
         public static final double cLowSpeedMultiplier = 0.5;
     }
 
-    public static final double cLOFRejectionValue = 0.5;
-    public static final int cLOFk = 2;
+    public static final double cLOFRejectionValue = 0.3;
+    public static final int cLOFk = 3;
     public static final int cLOFTagLimit = 20;
 
     public static class BluePositions {
@@ -96,12 +96,12 @@ public final class Constants
         public static Pose2d reefK = new Pose2d(3.97, 5.25, Rotation2d.fromDegrees(-60));
         public static Pose2d reefL = new Pose2d(3.68, 5.09, Rotation2d.fromDegrees(-60));
         public static Pose2d processor = new Pose2d(11.51, 7.47, Rotation2d.fromDegrees(90));
-        public static Pose2d coralStationLA = new Pose2d(0.76, 6.69, Rotation2d.fromDegrees(126));
-        public static Pose2d coralStationLB = new Pose2d(1.19, 7, Rotation2d.fromDegrees(126));
-        public static Pose2d coralStationLC = new Pose2d(1.63, 7.32, Rotation2d.fromDegrees(126));
-        public static Pose2d coralStationRA = new Pose2d(0.76, 1.34, Rotation2d.fromDegrees(-126));
-        public static Pose2d coralStationRB = new Pose2d(1.19, 1.02, Rotation2d.fromDegrees(-126));
-        public static Pose2d coralStationRC = new Pose2d(1.63, 0.71, Rotation2d.fromDegrees(-126));
+        public static Pose2d coralStationLA = new Pose2d(0.76, 6.69, Rotation2d.fromDegrees(-144));
+        public static Pose2d coralStationLB = new Pose2d(1.19, 7, Rotation2d.fromDegrees(-144));
+        public static Pose2d coralStationLC = new Pose2d(1.63, 7.32, Rotation2d.fromDegrees(-144));
+        public static Pose2d coralStationRA = new Pose2d(0.76, 1.34, Rotation2d.fromDegrees(-36));
+        public static Pose2d coralStationRB = new Pose2d(1.19, 1.02, Rotation2d.fromDegrees(-36));
+        public static Pose2d coralStationRC = new Pose2d(1.63, 0.71, Rotation2d.fromDegrees(-36));
     }
 
     public static class Coralizer{
