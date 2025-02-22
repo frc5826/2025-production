@@ -34,7 +34,7 @@ public class ConditionalSequentialCommandGroup extends LoggedCommand {
         runningCommands = new ArrayList<>();
         currentCommandIndex = 0;
         if (!commands.isEmpty()){
-            for (ConditionallyActivatedCommand command : commands) { command.markFinished(true); }
+            for (ConditionallyActivatedCommand command : commands) { command.markFinished(true); command.markedRan(false);}
             commands.getFirst().getCommand().initialize();
             runningCommands.add(commands.getFirst());
         }
@@ -81,6 +81,7 @@ public class ConditionalSequentialCommandGroup extends LoggedCommand {
         private Command command;
         private BooleanSupplier condition;
         private boolean finished = false;
+        private boolean ran = false;
 
         public ConditionallyActivatedCommand(Command command, BooleanSupplier condition) {
             this.command = command;
@@ -95,6 +96,7 @@ public class ConditionalSequentialCommandGroup extends LoggedCommand {
         public boolean attemptInitialize(){
             if (condition.getAsBoolean()){
                 command.initialize();
+                ran = true;
                 return true;
             }
             return false;
@@ -105,14 +107,17 @@ public class ConditionalSequentialCommandGroup extends LoggedCommand {
         }
 
         public boolean isFinished(){
-            if (finished){
-                return true;
+            if(ran) {
+                if (finished) {
+                    return true;
+                }
+                if (command.isFinished() && !finished) {
+                    finished = true;
+                    end();
+                }
+                return command.isFinished();
             }
-            if (command.isFinished() && !finished){
-                finished = true;
-                end();
-            }
-            return command.isFinished();
+            return false;
         }
 
         public void end(){
@@ -121,6 +126,10 @@ public class ConditionalSequentialCommandGroup extends LoggedCommand {
 
         public void markFinished(boolean finished){
             this.finished = finished;
+        }
+
+        public void markedRan(boolean ran){
+            this.ran = ran;
         }
 
         public Command getCommand() {
