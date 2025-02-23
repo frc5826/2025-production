@@ -35,8 +35,8 @@ public class ConditionalSequentialCommandGroup extends LoggedCommand {
         currentCommandIndex = 0;
         if (!commands.isEmpty()){
             for (ConditionallyActivatedCommand command : commands) { command.markFinished(true); command.markedRan(false);}
-            commands.getFirst().getCommand().initialize();
-            runningCommands.add(commands.getFirst());
+            commands.get(0).getCommand().initialize();
+            runningCommands.add(commands.get(0));
         }
     }
 
@@ -63,7 +63,7 @@ public class ConditionalSequentialCommandGroup extends LoggedCommand {
     public boolean isFinished() {
         boolean finished = true;
         for (ConditionallyActivatedCommand runningCommand : runningCommands) {
-            if(!isFinished()){
+            if(!runningCommand.isFinished()){
                 finished = false;
             }
         }
