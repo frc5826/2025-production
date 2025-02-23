@@ -18,7 +18,7 @@ public class AlignSourceCommandGroup extends SequentialCommandGroup {
                                    SwerveSubsystem s, ElevatorSubsystem e, CoralizerSubsystem c) {
 
         addCommands(
-                new PathOffsetWrapper(sourcePos, constraints, 0.75, false, s),
+                new PathOffsetWrapper(sourcePos, constraints, 0.4, false, s),
                 new SourceCommandGroup(e, c)
         );
 

@@ -6,6 +6,7 @@
 package frc.robot;
 
 import com.pathplanner.lib.path.PathConstraints;
+import com.studica.frc.AHRS;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.wpilibj.PowerDistribution;
@@ -107,10 +108,10 @@ public class RobotContainer {
         new Trigger(() -> cXbox.getRightTriggerAxis() > 0.5).onTrue(new InstantCommand(() -> swerveSubsystem.setSpeedMultiplier(true)));
         new Trigger(() -> cXbox.getRightTriggerAxis() < 0.5).onTrue(new InstantCommand(() -> swerveSubsystem.setSpeedMultiplier(false)));
 
-        new Trigger(() -> cXbox.getPOV() == 0).whileTrue(new CrabWalkCommand(CrabWalkCommand.Direction.FRONT, 1, swerveSubsystem));
-        new Trigger(() -> cXbox.getPOV() == 90).whileTrue(new CrabWalkCommand(CrabWalkCommand.Direction.RIGHT, 1, swerveSubsystem));
-        new Trigger(() -> cXbox.getPOV() == 180).whileTrue(new CrabWalkCommand(CrabWalkCommand.Direction.BACK, 1, swerveSubsystem));
-        new Trigger(() -> cXbox.getPOV() == 270).whileTrue(new CrabWalkCommand(CrabWalkCommand.Direction.LEFT, 1, swerveSubsystem));
+        new Trigger(() -> cXbox.getPOV() == 0).whileTrue(new CrabWalkCommand(CrabWalkCommand.Direction.FRONT, swerveSubsystem));
+        new Trigger(() -> cXbox.getPOV() == 90).whileTrue(new CrabWalkCommand(CrabWalkCommand.Direction.RIGHT, swerveSubsystem));
+        new Trigger(() -> cXbox.getPOV() == 180).whileTrue(new CrabWalkCommand(CrabWalkCommand.Direction.BACK, swerveSubsystem));
+        new Trigger(() -> cXbox.getPOV() == 270).whileTrue(new CrabWalkCommand(CrabWalkCommand.Direction.LEFT, swerveSubsystem));
 
         new Trigger(cXbox::getRightBumperButton).whileTrue(new DriveButtonCommand(new ChassisSpeeds(0, 0, -0.7), swerveSubsystem));
         new Trigger(cXbox::getLeftBumperButton).whileTrue(new DriveButtonCommand(new ChassisSpeeds(0, 0, 0.7), swerveSubsystem));
@@ -126,18 +127,19 @@ public class RobotContainer {
     private void bindBoard() {
         PathConstraints constraints = new PathConstraints(1.25, 3, Math.PI * 2,  Math.PI * 2);
         //For Buttons 0-11, Starts at top left white button and goes clockwise around
-        new Trigger(() -> cButtonBoard.getButton(0)).whileTrue(new PathOffsetWrapper(FieldOrientation.getOrientation()::getReefH, constraints, 0.75, true, swerveSubsystem));
-        new Trigger(() -> cButtonBoard.getButton(1)).whileTrue(new PathOffsetWrapper(FieldOrientation.getOrientation()::getReefG, constraints, 0.75, true, swerveSubsystem));
-        new Trigger(() -> cButtonBoard.getButton(2)).whileTrue(new PathOffsetWrapper(FieldOrientation.getOrientation()::getReefF, constraints, 0.75, true, swerveSubsystem));
-        new Trigger(() -> cButtonBoard.getButton(3)).whileTrue(new PathOffsetWrapper(FieldOrientation.getOrientation()::getReefE, constraints, 0.75, true, swerveSubsystem));
-        new Trigger(() -> cButtonBoard.getButton(4)).whileTrue(new PathOffsetWrapper(FieldOrientation.getOrientation()::getReefD, constraints, 0.75, true, swerveSubsystem));
-        new Trigger(() -> cButtonBoard.getButton(5)).whileTrue(new PathOffsetWrapper(FieldOrientation.getOrientation()::getReefC, constraints, 0.75, true, swerveSubsystem));
-        new Trigger(() -> cButtonBoard.getButton(6)).whileTrue(new PathOffsetWrapper(FieldOrientation.getOrientation()::getReefB, constraints, 0.75, true, swerveSubsystem));
-        new Trigger(() -> cButtonBoard.getButton(7)).whileTrue(new PathOffsetWrapper(FieldOrientation.getOrientation()::getReefA, constraints, 0.75, true, swerveSubsystem));
-        new Trigger(() -> cButtonBoard.getButton(8)).whileTrue(new PathOffsetWrapper(FieldOrientation.getOrientation()::getReefL, constraints, 0.75, true, swerveSubsystem));
-        new Trigger(() -> cButtonBoard.getButton(9)).whileTrue(new PathOffsetWrapper(FieldOrientation.getOrientation()::getReefK, constraints, 0.75, true, swerveSubsystem));
-        new Trigger(() -> cButtonBoard.getButton(10)).whileTrue(new PathOffsetWrapper(FieldOrientation.getOrientation()::getReefJ, constraints, 0.75, true, swerveSubsystem));
-        new Trigger(() -> cButtonBoard.getButton(11)).whileTrue(new PathOffsetWrapper(FieldOrientation.getOrientation()::getReefI, constraints, 0.75, true, swerveSubsystem));
+        double offset = 0.5;
+        new Trigger(() -> cButtonBoard.getButton(0)).whileTrue(new PathOffsetWrapper(FieldOrientation.getOrientation()::getReefH, constraints, offset, true, swerveSubsystem));
+        new Trigger(() -> cButtonBoard.getButton(1)).whileTrue(new PathOffsetWrapper(FieldOrientation.getOrientation()::getReefG, constraints, offset, true, swerveSubsystem));
+        new Trigger(() -> cButtonBoard.getButton(2)).whileTrue(new PathOffsetWrapper(FieldOrientation.getOrientation()::getReefF, constraints, offset, true, swerveSubsystem));
+        new Trigger(() -> cButtonBoard.getButton(3)).whileTrue(new PathOffsetWrapper(FieldOrientation.getOrientation()::getReefE, constraints, offset, true, swerveSubsystem));
+        new Trigger(() -> cButtonBoard.getButton(4)).whileTrue(new PathOffsetWrapper(FieldOrientation.getOrientation()::getReefD, constraints, offset, true, swerveSubsystem));
+        new Trigger(() -> cButtonBoard.getButton(5)).whileTrue(new PathOffsetWrapper(FieldOrientation.getOrientation()::getReefC, constraints, offset, true, swerveSubsystem));
+        new Trigger(() -> cButtonBoard.getButton(6)).whileTrue(new PathOffsetWrapper(FieldOrientation.getOrientation()::getReefB, constraints, offset, true, swerveSubsystem));
+        new Trigger(() -> cButtonBoard.getButton(7)).whileTrue(new PathOffsetWrapper(FieldOrientation.getOrientation()::getReefA, constraints, offset, true, swerveSubsystem));
+        new Trigger(() -> cButtonBoard.getButton(8)).whileTrue(new PathOffsetWrapper(FieldOrientation.getOrientation()::getReefL, constraints, offset, true, swerveSubsystem));
+        new Trigger(() -> cButtonBoard.getButton(9)).whileTrue(new PathOffsetWrapper(FieldOrientation.getOrientation()::getReefK, constraints, offset, true, swerveSubsystem));
+        new Trigger(() -> cButtonBoard.getButton(10)).whileTrue(new PathOffsetWrapper(FieldOrientation.getOrientation()::getReefJ, constraints, offset, true, swerveSubsystem));
+        new Trigger(() -> cButtonBoard.getButton(11)).whileTrue(new PathOffsetWrapper(FieldOrientation.getOrientation()::getReefI, constraints, offset, true, swerveSubsystem));
         //new Trigger(() -> cButtonBoard.getButtonPressed(11)).onTrue(new AutoGroundPickupCommand(elevatorSubsystem, coralizerSubsystem)); //TODO add a button for this
 
         //For Buttons 12-15, Starts at top white button and goes straight down

@@ -1,5 +1,6 @@
 package frc.robot.localization;
 
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import org.apache.commons.math3.distribution.MultivariateNormalDistribution;
 import org.apache.commons.math3.linear.MatrixUtils;
 import org.apache.commons.math3.linear.RealMatrix;
@@ -46,6 +47,7 @@ class KalmanFilter {
     }
 
     private void move(double deltaTime, RealMatrix B, RealVector u, RealMatrix Q) {
+        SmartDashboard.putNumber("Kalman filter deltatime", deltaTime);
         RealMatrix F = getF(deltaTime);
         x = F.operate(x).add(B.operate(u));
         P = F.multiply(P).multiply(F.transpose()).add(Q);

@@ -12,10 +12,9 @@ public class CrabWalkCommand extends LoggedCommand {
     private ChassisSpeeds speeds;
     private double speed;
 
-    public CrabWalkCommand(Direction direction, double speed, SwerveSubsystem swerveSubsystem) {
+    public CrabWalkCommand(Direction direction, SwerveSubsystem swerveSubsystem) {
         this.swerveSubsystem = swerveSubsystem;
         this.direction = direction;
-        this.speed = speed;
     }
 
     @Override
@@ -26,7 +25,7 @@ public class CrabWalkCommand extends LoggedCommand {
         double frontback = 0;
 
         double team = DriverStation.getAlliance().equals(DriverStation.Alliance.Blue) ? 1 : -1;
-        double field = (Math.abs(swerveSubsystem.getLocalizationPose().getRotation().getDegrees()) > 90) ? -1 : 1;
+        double field = (Math.abs(swerveSubsystem.getLocalizationPose().getRotation().getDegrees()) > 90) ? 1 : -1;
 
         if (direction == Direction.RIGHT || direction == Direction.LEFT) {
             rightleft = (direction == Direction.RIGHT) ? -1 : 1;
@@ -34,13 +33,14 @@ public class CrabWalkCommand extends LoggedCommand {
             frontback = (direction == Direction.FRONT) ? 1 : -1;
         }
 
-        speeds = new ChassisSpeeds(speed * frontback, speed * field * rightleft * team, 0);
+        speeds = new ChassisSpeeds(frontback, field * rightleft * team, 0);
     }
 
     @Override
     public void execute() {
         super.execute();
-        swerveSubsystem.driveRobotOriented(speeds);
+        speed = swerveSubsystem.getCrabSpeedMult();
+        swerveSubsystem.driveRobotOriented(speeds.times(speed));
     }
 
     @Override

@@ -99,6 +99,7 @@ public class CameraSystem {
                             SmartDashboard.putNumber("Cameras/" + camera.getName() + "/x", robotPose.getX());
                             SmartDashboard.putNumber("Cameras/" + camera.getName() + "/y", robotPose.getY());
                             SmartDashboard.putNumber("Cameras/" + camera.getName() + "/yaw", robotPose.getRotation().getZ());
+                            SmartDashboard.putNumber("Cameras/" + camera.getName() + "/time_stamp", result.getTimestampSeconds());
                             SmartDashboard.putNumber("Ambiguity", target.getPoseAmbiguity());
 
                             results.add(robotPose);

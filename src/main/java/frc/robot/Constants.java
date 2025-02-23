@@ -76,6 +76,8 @@ public final class Constants
 
         public static final double cHighSpeedMultiplier = 1;
         public static final double cLowSpeedMultiplier = 0.5;
+        public static final double cHighCrabSpeedMult = 1;
+        public static final double cLowCrabSpeedMult = 0.5;
     }
 
     public static final double cLOFRejectionValue = 0.3;

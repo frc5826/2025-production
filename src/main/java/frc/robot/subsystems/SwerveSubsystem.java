@@ -26,13 +26,14 @@ import static frc.robot.Constants.Swerve.*;
 
 public class SwerveSubsystem extends LoggedSubsystem {
 
-    private final SwerveDrive swerveDrive;
+    public final SwerveDrive swerveDrive;
 
     private double maximumSpeed = cMaxVelocity;
 
     private Localization localization;
 
     private double speedMultiplier;
+    private double crabSpeedMult;
 
     private AHRS navX;
 
@@ -61,6 +62,7 @@ public class SwerveSubsystem extends LoggedSubsystem {
         this.localization = localization;
 
         speedMultiplier = cLowSpeedMultiplier;
+        crabSpeedMult = cLowCrabSpeedMult;
 
         navX = (AHRS)swerveDrive.getGyro().getIMU();
 
@@ -91,9 +93,12 @@ public class SwerveSubsystem extends LoggedSubsystem {
 
     public void setSpeedMultiplier(boolean fast) {
         speedMultiplier = fast ? cHighSpeedMultiplier : cLowSpeedMultiplier;
+        crabSpeedMult = fast ? cHighCrabSpeedMult : cLowCrabSpeedMult;
     }
 
     public double getSpeedMultiplier() { return speedMultiplier; }
+
+    public double getCrabSpeedMult() { return crabSpeedMult; }
 
     public ChassisSpeeds getOdoFieldVel() {
         ChassisSpeeds vel = swerveDrive.getRobotVelocity();
