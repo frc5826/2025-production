@@ -12,6 +12,7 @@ import edu.wpi.first.wpilibj.PowerDistribution;
 import edu.wpi.first.wpilibj.shuffleboard.*;
 import edu.wpi.first.wpilibj.smartdashboard.Field2d;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.commands.autos.AutoCommandGroup;
 import frc.robot.commands.autos.Dumb;
@@ -104,10 +105,10 @@ public class RobotContainer {
         new Trigger(() -> cXbox.getRightTriggerAxis() > 0.5).onTrue(new InstantCommand(() -> swerveSubsystem.setSpeedMultiplier(true)));
         new Trigger(() -> cXbox.getRightTriggerAxis() < 0.5).onTrue(new InstantCommand(() -> swerveSubsystem.setSpeedMultiplier(false)));
 
-        new Trigger(() -> cXbox.getPOV() == 0).whileTrue(new CrabWalkCommand(CrabWalkCommand.Direction.FRONT, 0.35, swerveSubsystem));
-        new Trigger(() -> cXbox.getPOV() == 90).whileTrue(new CrabWalkCommand(CrabWalkCommand.Direction.RIGHT, 0.35, swerveSubsystem));
-        new Trigger(() -> cXbox.getPOV() == 180).whileTrue(new CrabWalkCommand(CrabWalkCommand.Direction.BACK, 0.35, swerveSubsystem));
-        new Trigger(() -> cXbox.getPOV() == 270).whileTrue(new CrabWalkCommand(CrabWalkCommand.Direction.LEFT, 0.35, swerveSubsystem));
+        new Trigger(() -> cXbox.getPOV() == 0).whileTrue(new CrabWalkCommand(CrabWalkCommand.Direction.FRONT, 1, swerveSubsystem));
+        new Trigger(() -> cXbox.getPOV() == 90).whileTrue(new CrabWalkCommand(CrabWalkCommand.Direction.RIGHT, 1, swerveSubsystem));
+        new Trigger(() -> cXbox.getPOV() == 180).whileTrue(new CrabWalkCommand(CrabWalkCommand.Direction.BACK, 1, swerveSubsystem));
+        new Trigger(() -> cXbox.getPOV() == 270).whileTrue(new CrabWalkCommand(CrabWalkCommand.Direction.LEFT, 1, swerveSubsystem));
 
         new Trigger(cXbox::getRightBumperButton).whileTrue(new DriveButtonCommand(new ChassisSpeeds(0, 0, -0.7), swerveSubsystem));
         new Trigger(cXbox::getLeftBumperButton).whileTrue(new DriveButtonCommand(new ChassisSpeeds(0, 0, 0.7), swerveSubsystem));
@@ -228,6 +229,7 @@ public class RobotContainer {
 
         dumb.addOption("Yes dumb", true);
         dumb.addOption("No dumb", false);
+        dumb.setDefaultOption("No dumb", false);
 
         autoTab.add("Dumb?", dumb)
                 .withWidget(BuiltInWidgets.kComboBoxChooser)
@@ -250,11 +252,13 @@ public class RobotContainer {
             reefLocation.addOption("J", orientation.getReefJ());
             reefLocation.addOption("K", orientation.getReefK());
             reefLocation.addOption("L", orientation.getReefL());
+            reefLocation.setDefaultOption("None", new Pose2d());
             reefLevel.addOption("None", ReefPosition.ReefLevel.NONE);
             reefLevel.addOption("L1", ReefPosition.ReefLevel.L1);
             reefLevel.addOption("L2", ReefPosition.ReefLevel.L2);
             reefLevel.addOption("L3", ReefPosition.ReefLevel.L3);
             reefLevel.addOption("L4", ReefPosition.ReefLevel.L4);
+            reefLevel.setDefaultOption("None", ReefPosition.ReefLevel.NONE);
 
             autoTab.add(("Position " + (i + 1)), reefLocation)
                 .withWidget(BuiltInWidgets.kComboBoxChooser)
