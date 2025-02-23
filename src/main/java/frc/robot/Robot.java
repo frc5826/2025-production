@@ -58,6 +58,8 @@ public class Robot extends TimedRobot
     {
         robotContainer.initZeroGyro();
 
+        autonomousCommand = robotContainer.getAutoCommand();
+
         if (autonomousCommand != null)
         {
             autonomousCommand.schedule();

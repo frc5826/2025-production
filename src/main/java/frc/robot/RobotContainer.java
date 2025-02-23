@@ -7,24 +7,21 @@ package frc.robot;
 
 import com.pathplanner.lib.path.PathConstraints;
 import edu.wpi.first.math.geometry.Pose2d;
-import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.wpilibj.PowerDistribution;
 import edu.wpi.first.wpilibj.shuffleboard.*;
 import edu.wpi.first.wpilibj.smartdashboard.Field2d;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
+import frc.robot.commands.autos.AutoCommandGroup;
 import frc.robot.commands.autos.Dumb;
 import frc.robot.commands.commandgroups.*;
 import frc.robot.commands.coralizer.CoralizerIntakeCommand;
-import frc.robot.commands.coralizer.CoralizerReWristCommand;
-import frc.robot.commands.elevator.ElevatorPositionCommand;
-import frc.robot.commands.elevator.ElevatorRepositionCommand;
 import frc.robot.commands.swerve.CrabWalkCommand;
 import frc.robot.commands.swerve.DriveButtonCommand;
 import frc.robot.commands.swerve.pathing.*;
 import frc.robot.positioning.Orientation;
+import frc.robot.positioning.ReefPosition;
 import frc.robot.subsystems.CameraSubsystem;
 import frc.robot.positioning.FieldOrientation;
 import frc.robot.subsystems.CoralizerSubsystem;
@@ -38,6 +35,7 @@ import frc.robot.subsystems.SwerveSubsystem;
 import frc.robot.localization.Localization;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import static frc.robot.Constants.*;
 
@@ -55,6 +53,10 @@ public class RobotContainer {
     DeferredLevelCommand deferredLevelCommand = new DeferredLevelCommand(elevatorSubsystem, coralizerSubsystem, swerveSubsystem);
 
     private Field2d field;
+
+    List<SendableChooser<Pose2d>> reefLocations = new ArrayList<>();
+    List<SendableChooser<ReefPosition.ReefLevel>> reefLevels = new ArrayList<>();
+    SendableChooser<Boolean> dumb = new SendableChooser<Boolean>();
 
     public RobotContainer() {
         DataLogManager.start("/U/logs");
@@ -92,9 +94,9 @@ public class RobotContainer {
 
     }
 
-    public Command getAutoCommand() {
-        return new Dumb(swerveSubsystem);
-    }
+//    public Command getAutoCommand() {
+//        return new Dumb(swerveSubsystem);
+//    }
 
     private void bindXbox() {
         //new Trigger(cXbox::getBackButtonPressed).onTrue(new InstantCommand(swerveSubsystem::resetDriveGyro)); //TODO zero gyro command
@@ -164,60 +166,108 @@ public class RobotContainer {
         swerveSubsystem.zeroOdoGyro(Math.toRadians(FieldOrientation.getOrientation().getStartOrientation()));
     }
 
-    private void setupAutoTab() {
-        ShuffleboardTab autoTab = Shuffleboard.getTab("Auto");
+//    private void setupAutoTab() {
+//        ShuffleboardTab autoTab = Shuffleboard.getTab("Auto");
+//
+//        SendableChooser<Pose2d> firstReef = new SendableChooser<Pose2d>();
+//        SendableChooser<Pose2d> secondReef = new SendableChooser<Pose2d>();
+//        SendableChooser<Boolean> dumb = new SendableChooser<Boolean>();
+//
+//        Orientation orientation = FieldOrientation.getOrientation();
+//
+//        dumb.addOption("Yes dumb", true);
+//        dumb.addOption("No dumb", false);
+//
+//        autoTab.add("Dumb?", firstReef)
+//                .withWidget(BuiltInWidgets.kComboBoxChooser)
+//                .withSize(2, 2)
+//                .withPosition(0, 0);
+//
+//        //TODO these are not initialized yet. Maybe use orientation::getReefA
+//        firstReef.addOption("A", orientation.getReefA());
+//        firstReef.addOption("B", orientation.getReefB());
+//        firstReef.addOption("C", orientation.getReefC());
+//        firstReef.addOption("D", orientation.getReefD());
+//        firstReef.addOption("E", orientation.getReefE());
+//        firstReef.addOption("F", orientation.getReefF());
+//        firstReef.addOption("G", orientation.getReefG());
+//        firstReef.addOption("H", orientation.getReefH());
+//        firstReef.addOption("I", orientation.getReefI());
+//        firstReef.addOption("J", orientation.getReefJ());
+//        firstReef.addOption("K", orientation.getReefK());
+//        firstReef.addOption("L", orientation.getReefL());
+//
+//        autoTab.add("First reef target", firstReef)
+//                .withWidget(BuiltInWidgets.kComboBoxChooser)
+//                .withSize(2, 2)
+//                .withPosition(2, 0);
+//
+//        secondReef.addOption("Nothing", new Pose2d());
+//        secondReef.addOption("A", orientation.getReefA());
+//        secondReef.addOption("B", orientation.getReefB());
+//        secondReef.addOption("C", orientation.getReefC());
+//        secondReef.addOption("D", orientation.getReefD());
+//        secondReef.addOption("E", orientation.getReefE());
+//        secondReef.addOption("F", orientation.getReefF());
+//        secondReef.addOption("G", orientation.getReefG());
+//        secondReef.addOption("H", orientation.getReefH());
+//        secondReef.addOption("I", orientation.getReefI());
+//        secondReef.addOption("J", orientation.getReefJ());
+//        secondReef.addOption("K", orientation.getReefK());
+//        secondReef.addOption("L", orientation.getReefL());
+//
+//        autoTab.add("Second reef target", secondReef)
+//                .withWidget(BuiltInWidgets.kComboBoxChooser)
+//                .withSize(2, 2)
+//                .withPosition(4, 0);
+//    }
 
-        SendableChooser<Pose2d> firstReef = new SendableChooser<Pose2d>();
-        SendableChooser<Pose2d> secondReef = new SendableChooser<Pose2d>();
-        SendableChooser<Boolean> dumb = new SendableChooser<Boolean>();
-
+    private void setupAutoTab(){
         Orientation orientation = FieldOrientation.getOrientation();
+        ShuffleboardTab autoTab = Shuffleboard.getTab("Auto");
 
         dumb.addOption("Yes dumb", true);
         dumb.addOption("No dumb", false);
 
-        autoTab.add("Dumb?", firstReef)
+        autoTab.add("Dumb?", dumb)
                 .withWidget(BuiltInWidgets.kComboBoxChooser)
                 .withSize(2, 2)
-                .withPosition(0, 0);
+                .withPosition(0, 3);
 
-        //TODO these are not initialized yet. Maybe use orientation::getReefA
-        firstReef.addOption("A", orientation.getReefA());
-        firstReef.addOption("B", orientation.getReefB());
-        firstReef.addOption("C", orientation.getReefC());
-        firstReef.addOption("D", orientation.getReefD());
-        firstReef.addOption("E", orientation.getReefE());
-        firstReef.addOption("F", orientation.getReefF());
-        firstReef.addOption("G", orientation.getReefG());
-        firstReef.addOption("H", orientation.getReefH());
-        firstReef.addOption("I", orientation.getReefI());
-        firstReef.addOption("J", orientation.getReefJ());
-        firstReef.addOption("K", orientation.getReefK());
-        firstReef.addOption("L", orientation.getReefL());
+        for (int i = 0; i < 4; i++) {
+            SendableChooser<Pose2d> reefLocation = new SendableChooser<>();
+            SendableChooser<ReefPosition.ReefLevel> reefLevel = new SendableChooser<>();
+            reefLocation.addOption("None", new Pose2d());
+            reefLocation.addOption("A", orientation.getReefA());
+            reefLocation.addOption("B", orientation.getReefB());
+            reefLocation.addOption("C", orientation.getReefC());
+            reefLocation.addOption("D", orientation.getReefD());
+            reefLocation.addOption("E", orientation.getReefE());
+            reefLocation.addOption("F", orientation.getReefF());
+            reefLocation.addOption("G", orientation.getReefG());
+            reefLocation.addOption("H", orientation.getReefH());
+            reefLocation.addOption("I", orientation.getReefI());
+            reefLocation.addOption("J", orientation.getReefJ());
+            reefLocation.addOption("K", orientation.getReefK());
+            reefLocation.addOption("L", orientation.getReefL());
+            reefLevel.addOption("None", ReefPosition.ReefLevel.NONE);
+            reefLevel.addOption("L1", ReefPosition.ReefLevel.L1);
+            reefLevel.addOption("L2", ReefPosition.ReefLevel.L2);
+            reefLevel.addOption("L3", ReefPosition.ReefLevel.L3);
+            reefLevel.addOption("L4", ReefPosition.ReefLevel.L4);
 
-        autoTab.add("First reef target", firstReef)
+            autoTab.add(("Position " + (i + 1)), reefLocation)
                 .withWidget(BuiltInWidgets.kComboBoxChooser)
-                .withSize(2, 2)
-                .withPosition(2, 0);
+                .withSize(1, 1)
+                .withPosition(i, 0);
+            autoTab.add(("Level " + (i + 1)), reefLevel)
+                    .withWidget(BuiltInWidgets.kComboBoxChooser)
+                    .withSize(1, 1)
+                    .withPosition(i, 1);
 
-        secondReef.addOption("Nothing", new Pose2d());
-        secondReef.addOption("A", orientation.getReefA());
-        secondReef.addOption("B", orientation.getReefB());
-        secondReef.addOption("C", orientation.getReefC());
-        secondReef.addOption("D", orientation.getReefD());
-        secondReef.addOption("E", orientation.getReefE());
-        secondReef.addOption("F", orientation.getReefF());
-        secondReef.addOption("G", orientation.getReefG());
-        secondReef.addOption("H", orientation.getReefH());
-        secondReef.addOption("I", orientation.getReefI());
-        secondReef.addOption("J", orientation.getReefJ());
-        secondReef.addOption("K", orientation.getReefK());
-        secondReef.addOption("L", orientation.getReefL());
-
-        autoTab.add("Second reef target", secondReef)
-                .withWidget(BuiltInWidgets.kComboBoxChooser)
-                .withSize(2, 2)
-                .withPosition(4, 0);
+            reefLocations.add(reefLocation);
+            reefLevels.add(reefLevel);
+        }
     }
 
     public void updateField() {
@@ -254,6 +304,22 @@ public class RobotContainer {
 //        inputs.add("Velocity", swerveSubsystem.getOdoFieldVel());
 //        inputs.add("Adjusted gyro angle", swerveSubsystem.getAdjustedIMUContinuousAngle());
 //        inputs.add("Cam pose", cameraSubsystem.getCameraMeasurements());
+    }
+
+    public Command getAutoCommand(){
+        if (dumb.getSelected()){
+            return new Dumb(swerveSubsystem);
+        }
+        List<ReefPosition> reefPositions = new ArrayList<>();
+        for (int i = 0; i < 4; i++) {
+            Pose2d reefLocation = reefLocations.get(i).getSelected();
+            ReefPosition.ReefLevel reefLevel = reefLevels.get(i).getSelected();
+            if (!reefLocation.equals(new Pose2d()) && !reefLevel.equals(ReefPosition.ReefLevel.NONE)){
+                reefPositions.add(new ReefPosition(reefLocation, reefLevel));
+            }
+        }
+
+        return new AutoCommandGroup(elevatorSubsystem, coralizerSubsystem, swerveSubsystem, reefPositions);
     }
 
 }
