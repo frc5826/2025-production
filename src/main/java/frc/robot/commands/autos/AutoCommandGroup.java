@@ -1,6 +1,7 @@
 package frc.robot.commands.autos;
 
 import com.pathplanner.lib.path.PathConstraints;
+import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import frc.robot.commands.commandgroups.AlignSourceCommandGroup;
 import frc.robot.positioning.ReefPosition;
@@ -10,6 +11,7 @@ import frc.robot.subsystems.SwerveSubsystem;
 
 import java.util.Arrays;
 import java.util.List;
+import java.util.function.Supplier;
 
 import static frc.robot.positioning.FieldOrientation.getOrientation;
 
@@ -19,17 +21,17 @@ public class AutoCommandGroup extends SequentialCommandGroup {
     PathConstraints fastConstraints = new PathConstraints(2, 3, Math.PI * 3, Math.PI * 4);
 
 
-    public AutoCommandGroup(ElevatorSubsystem e, CoralizerSubsystem c, SwerveSubsystem s, List<ReefPosition> reefPositions){
+    public AutoCommandGroup(ElevatorSubsystem e, CoralizerSubsystem c, SwerveSubsystem s, Supplier<Pose2d> station, List<ReefPosition> reefPositions){
         if (getOrientation().isValid() && !reefPositions.isEmpty()){
             addCommands(new OnePiece(reefPositions.get(0), s, e, c));
             reefPositions.remove(0);
             for (ReefPosition reefPosition : reefPositions){
                 addCommands(
-                        new AlignSourceCommandGroup(getOrientation()::getCoralStationRB, fastConstraints, s, e, c),
+                        new AlignSourceCommandGroup(station, fastConstraints, s, e, c),
                         new OnePiece(reefPosition, s, e, c)
                 );
             }
-            addCommands(new AlignSourceCommandGroup(getOrientation()::getCoralStationRB, fastConstraints, s, e, c));
+            addCommands(new AlignSourceCommandGroup(station, fastConstraints, s, e, c));
         }
     }
 

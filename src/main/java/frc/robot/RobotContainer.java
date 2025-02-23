@@ -37,6 +37,7 @@ import frc.robot.localization.Localization;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.function.Supplier;
 
 import static frc.robot.Constants.*;
 
@@ -57,7 +58,8 @@ public class RobotContainer {
 
     List<SendableChooser<Pose2d>> reefLocations = new ArrayList<>();
     List<SendableChooser<ReefPosition.ReefLevel>> reefLevels = new ArrayList<>();
-    SendableChooser<Boolean> dumb = new SendableChooser<Boolean>();
+    SendableChooser<Boolean> dumb = new SendableChooser<>();
+    SendableChooser<Supplier<Pose2d>> autoStationPosition = new SendableChooser<>();
 
     public RobotContainer() {
         DataLogManager.start("/U/logs");
@@ -236,6 +238,19 @@ public class RobotContainer {
                 .withSize(2, 2)
                 .withPosition(0, 3);
 
+        autoStationPosition.addOption("LA", orientation::getCoralStationLA);
+        autoStationPosition.addOption("LB", orientation::getCoralStationLB);
+        autoStationPosition.addOption("LC", orientation::getCoralStationLC);
+        autoStationPosition.addOption("RA", orientation::getCoralStationRA);
+        autoStationPosition.addOption("RB", orientation::getCoralStationRB);
+        autoStationPosition.addOption("RC", orientation::getCoralStationRC);
+        autoStationPosition.setDefaultOption("RB", orientation::getCoralStationRB);
+
+        autoTab.add("Coral Station Pos", autoStationPosition)
+                .withWidget(BuiltInWidgets.kComboBoxChooser)
+                .withSize(2, 2)
+                .withPosition(2, 3);
+
         for (int i = 0; i < 4; i++) {
             SendableChooser<Pose2d> reefLocation = new SendableChooser<>();
             SendableChooser<ReefPosition.ReefLevel> reefLevel = new SendableChooser<>();
@@ -323,7 +338,7 @@ public class RobotContainer {
             }
         }
 
-        return new AutoCommandGroup(elevatorSubsystem, coralizerSubsystem, swerveSubsystem, reefPositions);
+        return new AutoCommandGroup(elevatorSubsystem, coralizerSubsystem, swerveSubsystem, autoStationPosition.getSelected(), reefPositions);
     }
 
 }
