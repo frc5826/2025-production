@@ -75,8 +75,8 @@ public class RobotContainer {
 
     public void prePeriodic(boolean teleop) {
 
-//        SmartDashboard.putNumber("Adjusted angle", swerveSubsystem.getAdjustedIMUContinuousAngle().getDegrees());
-//        SmartDashboard.putNumber("Not adjusted angle", swerveSubsystem.getIMUContinuousAngle().getDegrees());
+        SmartDashboard.putNumber("Adjusted angle", swerveSubsystem.getAdjustedIMUContinuousAngle().getDegrees());
+        SmartDashboard.putNumber("Not adjusted angle", swerveSubsystem.getIMUContinuousAngle().getDegrees());
 
         if (!swerveSubsystem.getOrientation().equals(FieldOrientation.getOrientation())) {
             swerveSubsystem.setOrientation(FieldOrientation.getOrientation());
@@ -116,7 +116,7 @@ public class RobotContainer {
         PathConstraints constraints = new PathConstraints(1.25, 2, Math.PI * 2,  Math.PI * 2);
 //        new Trigger(cXbox::getAButton).whileTrue(new PathToCommand(new Pose2d(1.25, 1.5, new Rotation2d(Math.PI)), 0, constraints, swerveSubsystem));
 //        new Trigger(cXbox::getBButton).whileTrue(new PathToCommand(new Pose2d(1.25, 4, new Rotation2d(Math.PI)), 0, constraints, swerveSubsystem));
-        new Trigger(cXbox::getAButton).onTrue(deferredLevelCommand);
+        //new Trigger(cXbox::getAButton).onTrue(deferredLevelCommand);
     }
 
     //TODO set real constraints and different constraints variable for Source Pickup :)
@@ -155,8 +155,8 @@ public class RobotContainer {
         new Trigger(() -> cButtonBoard.getButton(20)).whileTrue(new AlignSourceCommandGroup(FieldOrientation.getOrientation()::getCoralStationRB, constraints, swerveSubsystem, elevatorSubsystem, coralizerSubsystem));
         new Trigger(() -> cButtonBoard.getButton(21)).whileTrue(new CoralizerIntakeCommand(coralizerSubsystem, CoralizerIntakeCommand.IntakeDirection.OUT));
         //For Buttons 22-24, Starts at bottom right white button and goes left
-        new Trigger(() -> cButtonBoard.getButtonPressed(22)).onTrue(new DealgifyL2CommandGroup(elevatorSubsystem, coralizerSubsystem));
-        new Trigger(() -> cButtonBoard.getButtonPressed(23)).onTrue(new DealgifyL3CommandGroup(elevatorSubsystem, coralizerSubsystem));
+        new Trigger(() -> cButtonBoard.getButtonPressed(22)).onTrue(new DealgifyL2CommandGroup(elevatorSubsystem, coralizerSubsystem, swerveSubsystem));
+        new Trigger(() -> cButtonBoard.getButtonPressed(23)).onTrue(new DealgifyL3CommandGroup(elevatorSubsystem, coralizerSubsystem, swerveSubsystem));
         new Trigger(() -> cButtonBoard.getButton(24)).whileTrue(new CoralizerIntakeCommand(coralizerSubsystem, CoralizerIntakeCommand.IntakeDirection.IN));
         //Ground pickup
         //new Trigger(() -> cButtonBoard.getButtonPressed(25)).onTrue(new AutoGroundPickupCommand(elevatorSubsystem, coralizerSubsystem));

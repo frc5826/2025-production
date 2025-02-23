@@ -17,6 +17,7 @@ public class CoralizerSubsystem extends LoggedSubsystem{
 
     private SparkMax intakeMotor;
     private SparkMax wristMotor;
+    private boolean shouldHold;
 
     private PID pid;
 
@@ -24,6 +25,7 @@ public class CoralizerSubsystem extends LoggedSubsystem{
 
     public CoralizerSubsystem() {
 
+        shouldHold = false;
         intakeMotor = new SparkMax(4, SparkLowLevel.MotorType.kBrushless);
         wristMotor = new SparkMax(3, SparkLowLevel.MotorType.kBrushless);
         pid = new PID(cCoralizerP, cCoralizerI, cCoralizerD, cCoralizerMax, cCoralizerMin, cCoralizerDeadband, this::getRotation);
@@ -43,6 +45,14 @@ public class CoralizerSubsystem extends LoggedSubsystem{
 
     @Override
     public void periodic() {
+        if (shouldHold){
+            if (hasCoral()){
+                setIntakeSpeed(0.1);
+            }
+            else {
+                setIntakeSpeed(1);
+            }
+        }
         double speed = pid.calculate() + cCoralizerG * Math.cos(getRotation() * (Math.PI/180));
         wristMotor.set(speed);
         SmartDashboard.putNumber("coralizer/Encoder", getRotation());
@@ -76,4 +86,11 @@ public class CoralizerSubsystem extends LoggedSubsystem{
         return intakeMotor.getForwardLimitSwitch().isPressed();
     }
 
+    public boolean isShouldHold() {
+        return shouldHold;
+    }
+
+    public void setShouldHold(boolean shouldHold) {
+        this.shouldHold = shouldHold;
+    }
 }
