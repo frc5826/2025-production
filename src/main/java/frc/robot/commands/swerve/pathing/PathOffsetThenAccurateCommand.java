@@ -25,7 +25,7 @@ public class PathOffsetThenAccurateCommand extends SequentialCommandGroup {
         addCommands(
                 new PathFindCommand(offsetGoal, constraints, s),
                 new PathToTwoPosesCommand(offsetGoal, goal, 0, slowConstraints, s),
-                new AccuratePathCommand(goal, s)
+                new AccuratePathCommand(goal, 2, s)
         );
 
     }

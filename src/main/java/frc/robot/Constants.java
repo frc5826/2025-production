@@ -67,6 +67,8 @@ public final class Constants
     public static final double cTeleTurnDeadband = 0.25;
     public static final double cTurnDeadband = 0.8;
 
+    public static final double cL4offset = 0.6;
+
     public static class  Swerve {
         public static final double cMaxVelocity = 5.05968; //DON'T CHANGE!!!!!!!!!!!!!!!!!!!!!!!
         public static final double cMaxAngularVelocity = 5;

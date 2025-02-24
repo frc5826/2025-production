@@ -26,13 +26,13 @@ public class AccuratePathCommand extends LoggedCommand {
     private final PID pidY = new PID(drivePID, 1, 0.2, 0.01, () -> getPose().getY());
     private final PID pidR = new PID(Constants.Swerve.cTurnPID, Math.PI, 0.01, 0.05, () -> goal.getRotation().minus(swerveSubsystem.getLocalizationPose().getRotation()).getRadians());
 
-    public AccuratePathCommand(Pose2d goal, SwerveSubsystem swerveSubsystem) {
+    public AccuratePathCommand(Pose2d goal, double timeOut, SwerveSubsystem swerveSubsystem) {
         this.swerveSubsystem = swerveSubsystem;
 
         this.goal = goal;
 
         timer = new Timer();
-        timeEnd = 2;
+        timeEnd = timeOut;
 
         addRequirements(swerveSubsystem);
     }
