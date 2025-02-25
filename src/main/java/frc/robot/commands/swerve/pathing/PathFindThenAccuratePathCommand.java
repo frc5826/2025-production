@@ -27,7 +27,7 @@ public class PathFindThenAccuratePathCommand extends SequentialCommandGroup {
 
         addCommands(
                 new PathFindCommand(goal, constraints, s),
-                new AccuratePathCommand(goal, 2, s)
+                new AccuratePathCommand(goal, 2, true, s)
         );
     }
 

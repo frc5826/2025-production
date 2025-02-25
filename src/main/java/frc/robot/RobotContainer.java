@@ -25,6 +25,7 @@ import frc.robot.commands.coralizer.CoralizerIntakeCommand;
 import frc.robot.commands.swerve.CrabWalkCommand;
 import frc.robot.commands.swerve.DriveButtonCommand;
 import frc.robot.commands.swerve.pathing.*;
+import frc.robot.math.MathHelper;
 import frc.robot.positioning.Orientation;
 import frc.robot.positioning.ReefPosition;
 import frc.robot.subsystems.CameraSubsystem;
@@ -81,7 +82,6 @@ public class RobotContainer {
     }
 
     public void prePeriodic(boolean teleop) {
-
         SmartDashboard.putNumber("Adjusted angle", swerveSubsystem.getAdjustedIMUContinuousAngle().getDegrees());
         SmartDashboard.putNumber("Not adjusted angle", swerveSubsystem.getIMUContinuousAngle().getDegrees());
 
@@ -128,7 +128,7 @@ public class RobotContainer {
 
     //TODO set real constraints and different constraints variable for Source Pickup :)
     private void bindBoard() {
-        PathConstraints constraints = new PathConstraints(1.25, 3, Math.PI * 2,  Math.PI * 2);
+        PathConstraints constraints = new PathConstraints(1.5, 3, Math.PI * 2,  Math.PI * 2);
         //For Buttons 0-11, Starts at top left white button and goes clockwise around
         double offset = 0.5;
         new Trigger(() -> cButtonBoard.getButton(0)).whileTrue(new PathOffsetWrapper(FieldOrientation.getOrientation()::getReefH, constraints, offset, true, swerveSubsystem));

@@ -49,9 +49,9 @@ public class OnePiece extends SequentialCommandGroup {
             case L4 -> levelCommand = new L4NoSwerveCommandGroup(e, c);
         }
         accuratePathCommand = levelCommand.equals(new L4NoSwerveCommandGroup(e, c)) ?
-                new AccuratePathCommand(MathHelper.offsetPoseReverse(reefGoal.getPosition(), cL4offset), 2, s) :
-                new AccuratePathCommand(reefGoal.getPosition(), 2, s);
-        
+                new AccuratePathCommand(MathHelper.offsetPoseReverse(reefGoal.getPosition(), cL4offset), 2, false, s) :
+                new AccuratePathCommand(reefGoal.getPosition(), 2, false, s);
+
         addCommands( //Align while raising elevator
                 Commands.deadline(
                         new PathToTwoPosesCommand(offsetGoal, reefGoal.getPosition(), 0, slowConstraints, s),

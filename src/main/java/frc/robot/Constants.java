@@ -67,7 +67,7 @@ public final class Constants
     public static final double cTeleTurnDeadband = 0.25;
     public static final double cTurnDeadband = 0.8;
 
-    public static final double cL4offset = 0.6;
+    public static final double cL4offset = 0.03;
 
     public static class  Swerve {
         public static final double cMaxVelocity = 5.05968; //DON'T CHANGE!!!!!!!!!!!!!!!!!!!!!!!
@@ -89,7 +89,7 @@ public final class Constants
     public static class BluePositions {
         public static Pose2d reefA = new Pose2d(3.16, 4.19, Rotation2d.fromDegrees(0));
         public static Pose2d reefB = new Pose2d(3.16, 3.86, Rotation2d.fromDegrees(0));
-        public static Pose2d reefC = new Pose2d(3.68, 2.96, Rotation2d.fromDegrees(60));
+        public static Pose2d reefC = new Pose2d(3.69, 2.97, Rotation2d.fromDegrees(60));
         public static Pose2d reefD = new Pose2d(3.97, 2.80, Rotation2d.fromDegrees(60));
         public static Pose2d reefE = new Pose2d(5.00, 2.80, Rotation2d.fromDegrees(120));
         public static Pose2d reefF = new Pose2d(5.30, 2.96, Rotation2d.fromDegrees(120));

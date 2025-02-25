@@ -10,9 +10,11 @@ import frc.robot.math.PID;
 import frc.robot.subsystems.CameraSubsystem;
 import frc.robot.subsystems.SwerveSubsystem;
 
+import java.util.function.Supplier;
+
 public class AccuratePathCommand extends LoggedCommand {
 
-    private Pose2d goal;
+    private Supplier<Pose2d> goalSupplier;
 
     private SwerveSubsystem swerveSubsystem;
 
@@ -21,18 +23,26 @@ public class AccuratePathCommand extends LoggedCommand {
     private Timer timer;
     private double timeEnd;
 
+    private boolean turn;
+
     private final PIDConstants drivePID = new PIDConstants(2.5, 0.1, 0.1);
     private final PID pidX = new PID(drivePID, 1, 0.2, 0.01, () -> getPose().getX());
     private final PID pidY = new PID(drivePID, 1, 0.2, 0.01, () -> getPose().getY());
-    private final PID pidR = new PID(Constants.Swerve.cTurnPID, Math.PI, 0.01, 0.05, () -> goal.getRotation().minus(swerveSubsystem.getLocalizationPose().getRotation()).getRadians());
+    private final PID pidR = new PID(Constants.Swerve.cTurnPID, Math.PI, 0.01, 0.05, () -> goalSupplier.get().getRotation().minus(swerveSubsystem.getLocalizationPose().getRotation()).getRadians());
 
-    public AccuratePathCommand(Pose2d goal, double timeOut, SwerveSubsystem swerveSubsystem) {
+    public AccuratePathCommand(Pose2d goal, double timeOut, boolean turn, SwerveSubsystem swerveSubsystem) {
+        this(() -> goal, timeOut, turn, swerveSubsystem);
+    }
+
+    public AccuratePathCommand(Supplier<Pose2d> goal, double timeOut, boolean turn, SwerveSubsystem swerveSubsystem) {
         this.swerveSubsystem = swerveSubsystem;
 
-        this.goal = goal;
+        this.goalSupplier = goal;
 
         timer = new Timer();
         timeEnd = timeOut;
+
+        this.turn = turn;
 
         addRequirements(swerveSubsystem);
     }
@@ -47,13 +57,13 @@ public class AccuratePathCommand extends LoggedCommand {
 
         finished = false;
 
-        if (goal.getTranslation().getDistance(swerveSubsystem.getLocalizationPose().getTranslation()) >= 1) {
+        if (goalSupplier.get().getTranslation().getDistance(swerveSubsystem.getLocalizationPose().getTranslation()) >= 1) {
             System.err.println("AccuratePathCommand - cannot accept values further than 1m from current pose");
             finished = true;
         }
 
-        pidX.setGoal(goal.getX());
-        pidY.setGoal(goal.getY());
+        pidX.setGoal(goalSupplier.get().getX());
+        pidY.setGoal(goalSupplier.get().getY());
         pidR.setGoal(0);
 
         timer.restart();
@@ -65,7 +75,17 @@ public class AccuratePathCommand extends LoggedCommand {
         pidY.calculate();
         pidR.calculate();
 
-        ChassisSpeeds speeds = new ChassisSpeeds(pidX.getOutput(), pidY.getOutput(), pidR.getOutput());
+        System.out.println("goal: " + goalSupplier.get());
+        System.out.println("current pose: " + getPose());
+
+        ChassisSpeeds speeds;
+
+        if (turn) {
+            speeds = new ChassisSpeeds(pidX.getOutput(), pidY.getOutput(), pidR.getOutput());
+        } else {
+            speeds = new ChassisSpeeds(pidX.getOutput(), pidY.getOutput(), 0);
+        }
+
         swerveSubsystem.driveFieldOriented(speeds);
 
         if (Math.abs(pidX.getError()) <= pidX.getDeadband() &&
@@ -84,6 +104,8 @@ public class AccuratePathCommand extends LoggedCommand {
     @Override
     public void end(boolean interrupted) {
         super.end(interrupted);
+
+        swerveSubsystem.driveRobotOriented(new ChassisSpeeds(0, 0, 0));
 
         timer.reset();
         finished = false;

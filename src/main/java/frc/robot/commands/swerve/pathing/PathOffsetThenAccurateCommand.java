@@ -20,12 +20,12 @@ public class PathOffsetThenAccurateCommand extends SequentialCommandGroup {
             offsetGoal = MathHelper.offsetPose(goal, offset, new Rotation2d(-Math.PI / 2));
         }
 
-        PathConstraints slowConstraints = new PathConstraints(0.3, 1, Math.PI, Math.PI * 2);
+        PathConstraints slowConstraints = new PathConstraints(0.4, 1, Math.PI, Math.PI * 2);
 
         addCommands(
                 new PathFindCommand(offsetGoal, constraints, s),
                 new PathToTwoPosesCommand(offsetGoal, goal, 0, slowConstraints, s),
-                new AccuratePathCommand(goal, 2, s)
+                new AccuratePathCommand(goal, 2, true, s)
         );
 
     }
