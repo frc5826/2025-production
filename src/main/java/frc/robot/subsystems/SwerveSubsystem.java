@@ -108,7 +108,10 @@ public class SwerveSubsystem extends LoggedSubsystem {
         return vel;
     }
 
-    //TODO test
+    public ChassisSpeeds getOdoRobotVel() {
+        return swerveDrive.getRobotVelocity();
+    }
+
     public void driveFieldOriented(ChassisSpeeds velocity) {
         swerveDrive.drive(ChassisSpeeds.fromFieldRelativeSpeeds(velocity, getAdjustedIMUContinuousAngle()));
     }

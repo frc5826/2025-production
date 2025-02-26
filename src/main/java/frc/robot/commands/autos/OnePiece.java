@@ -10,10 +10,7 @@ import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import frc.robot.commands.commandgroups.*;
 import frc.robot.commands.commandgroups.reef.*;
 import frc.robot.commands.swerve.MoveTimeCommand;
-import frc.robot.commands.swerve.pathing.AccuratePathCommand;
-import frc.robot.commands.swerve.pathing.PathFindCommand;
-import frc.robot.commands.swerve.pathing.PathOffsetThenAccurateCommand;
-import frc.robot.commands.swerve.pathing.PathToTwoPosesCommand;
+import frc.robot.commands.swerve.pathing.*;
 import frc.robot.math.MathHelper;
 import frc.robot.positioning.ReefPosition;
 import frc.robot.subsystems.CoralizerSubsystem;
@@ -21,7 +18,10 @@ import frc.robot.subsystems.ElevatorSubsystem;
 import frc.robot.subsystems.SwerveSubsystem;
 
 import java.util.function.BooleanSupplier;
+import java.util.function.Supplier;
 
+import static frc.robot.Constants.BluePositions.cRobotLength;
+import static frc.robot.Constants.BluePositions.reefG;
 import static frc.robot.Constants.cL4offset;
 
 public class OnePiece extends SequentialCommandGroup {
@@ -31,14 +31,13 @@ public class OnePiece extends SequentialCommandGroup {
         PathConstraints fastConstraints = new PathConstraints(2, 3, Math.PI * 3, Math.PI * 4);
 
         Command levelCommand = new L4CommandGroup(e, c, s);
-        Command accuratePathCommand;
-        boolean L4;
+
+        Pose2d offsetReefPose = MathHelper.offsetPoseReverse(reefGoal.getPosition(), 0.6 + (cRobotLength / 2));
+        Pose2d goalReefPose = MathHelper.offsetPoseReverse(reefGoal.getPosition(), (cRobotLength / 2) - 0.02);
 
         //Path find
-        //addCommands(new PathOffsetThenAccurateCommand(reefGoal.getPosition(), fastConstraints, 0.5, true, s));
-        Pose2d offsetGoal = MathHelper.offsetPoseReverse(reefGoal.getPosition(), 0.5);
         addCommands(
-                new PathFindCommand(offsetGoal, fastConstraints, s)
+                new PathFindCommand(offsetReefPose, fastConstraints, s)
         );
 
         //Choose level command
@@ -48,17 +47,14 @@ public class OnePiece extends SequentialCommandGroup {
             case L3 -> levelCommand = new L3CommandGroup(e, c);
             case L4 -> levelCommand = new L4NoSwerveCommandGroup(e, c);
         }
-        accuratePathCommand = levelCommand.equals(new L4NoSwerveCommandGroup(e, c)) ?
-                new AccuratePathCommand(MathHelper.offsetPoseReverse(reefGoal.getPosition(), cL4offset), 2, false, s) :
-                new AccuratePathCommand(reefGoal.getPosition(), 2, false, s);
 
         addCommands( //Align while raising elevator
                 Commands.deadline(
-                        new PathToTwoPosesCommand(offsetGoal, reefGoal.getPosition(), 0, slowConstraints, s),
+                        new PathToTwoPosesCommand(offsetReefPose, goalReefPose, 0, slowConstraints, s),
                         levelCommand
                 ),
                 Commands.parallel(
-                        accuratePathCommand,
+                        new AccuratePathCommand(goalReefPose, 2, true, s),
                         levelCommand
                 )
         );

@@ -5,11 +5,13 @@
 
 package frc.robot;
 
+import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.PowerDistribution;
 import com.pathplanner.lib.config.PIDConstants;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj.XboxController;
+import frc.robot.math.MathHelper;
 import frc.robot.subsystems.ButtonBoard;
 
 /**
@@ -87,18 +89,39 @@ public final class Constants
     public static final int cLOFTagLimit = 20;
 
     public static class BluePositions {
-        public static Pose2d reefA = new Pose2d(3.16, 4.19, Rotation2d.fromDegrees(0));
-        public static Pose2d reefB = new Pose2d(3.16, 3.86, Rotation2d.fromDegrees(0));
-        public static Pose2d reefC = new Pose2d(3.69, 2.97, Rotation2d.fromDegrees(60));
-        public static Pose2d reefD = new Pose2d(3.97, 2.80, Rotation2d.fromDegrees(60));
-        public static Pose2d reefE = new Pose2d(5.00, 2.80, Rotation2d.fromDegrees(120));
-        public static Pose2d reefF = new Pose2d(5.30, 2.96, Rotation2d.fromDegrees(120));
-        public static Pose2d reefG = new Pose2d(5.82, 3.86, Rotation2d.fromDegrees(180));
-        public static Pose2d reefH = new Pose2d(5.82, 4.19, Rotation2d.fromDegrees(180));
-        public static Pose2d reefI = new Pose2d(5.30, 5.09, Rotation2d.fromDegrees(-120));
-        public static Pose2d reefJ = new Pose2d(5.00, 5.25, Rotation2d.fromDegrees(-120));
-        public static Pose2d reefK = new Pose2d(3.97, 5.25, Rotation2d.fromDegrees(-60));
-        public static Pose2d reefL = new Pose2d(3.68, 5.09, Rotation2d.fromDegrees(-60));
+        public static final double cRobotLength = Units.inchesToMeters(30 + 7);
+        public static final double cPipeApart = Units.inchesToMeters(13);
+
+//        public static Pose2d reefA = new Pose2d(3.16, 4.19, Rotation2d.fromDegrees(0));
+//        public static Pose2d reefB = new Pose2d(3.16, 3.86, Rotation2d.fromDegrees(0));
+//        public static Pose2d reefC = new Pose2d(3.69, 2.97, Rotation2d.fromDegrees(60));
+//        public static Pose2d reefD = new Pose2d(3.97, 2.80, Rotation2d.fromDegrees(60));
+//        public static Pose2d reefE = new Pose2d(5.00, 2.80, Rotation2d.fromDegrees(120));
+//        public static Pose2d reefF = new Pose2d(5.30, 2.96, Rotation2d.fromDegrees(120));
+//        public static Pose2d reefG = new Pose2d(5.82, 3.86, Rotation2d.fromDegrees(180));
+//        public static Pose2d reefH = new Pose2d(5.82, 4.19, Rotation2d.fromDegrees(180));
+//        public static Pose2d reefI = new Pose2d(5.30, 5.09, Rotation2d.fromDegrees(-120));
+//        public static Pose2d reefJ = new Pose2d(5.00, 5.25, Rotation2d.fromDegrees(-120));
+//        public static Pose2d reefK = new Pose2d(3.97, 5.25, Rotation2d.fromDegrees(-60));
+//        public static Pose2d reefL = new Pose2d(3.68, 5.09, Rotation2d.fromDegrees(-60));
+        public static Pose2d reefSideAB = new Pose2d(Units.inchesToMeters(144), Units.inchesToMeters(158.5), Rotation2d.fromDegrees(180 - 180));
+        public static Pose2d reefSideCD = new Pose2d(Units.inchesToMeters(160.39), Units.inchesToMeters(130.17), Rotation2d.fromDegrees(240 - 180));
+        public static Pose2d reefSideEF = new Pose2d(Units.inchesToMeters(193.1), Units.inchesToMeters(130.17), Rotation2d.fromDegrees(300 - 180));
+        public static Pose2d reefSideGH = new Pose2d(Units.inchesToMeters(209.49), Units.inchesToMeters(158.5), Rotation2d.fromDegrees(0 - 180));
+        public static Pose2d reefSideIJ = new Pose2d(Units.inchesToMeters(193.1), Units.inchesToMeters(186.83), Rotation2d.fromDegrees(60 - 180));
+        public static Pose2d reefSideKL = new Pose2d(Units.inchesToMeters(160.39), Units.inchesToMeters(186.83), Rotation2d.fromDegrees(120 - 180));
+        public static Pose2d reefA = MathHelper.offsetPose(reefSideAB, cPipeApart / 2, new Rotation2d(-Math.PI / 2));
+        public static Pose2d reefB = MathHelper.offsetPose(reefSideAB, cPipeApart / 2, new Rotation2d(Math.PI / 2));
+        public static Pose2d reefC = MathHelper.offsetPose(reefSideCD, cPipeApart / 2, new Rotation2d(-Math.PI / 2));
+        public static Pose2d reefD = MathHelper.offsetPose(reefSideCD, cPipeApart / 2, new Rotation2d(Math.PI / 2));
+        public static Pose2d reefE = MathHelper.offsetPose(reefSideEF, cPipeApart / 2, new Rotation2d(-Math.PI / 2));
+        public static Pose2d reefF = MathHelper.offsetPose(reefSideEF, cPipeApart / 2, new Rotation2d(Math.PI / 2));
+        public static Pose2d reefG = MathHelper.offsetPose(reefSideGH, cPipeApart / 2, new Rotation2d(-Math.PI / 2));
+        public static Pose2d reefH = MathHelper.offsetPose(reefSideGH, cPipeApart / 2, new Rotation2d(Math.PI / 2));
+        public static Pose2d reefI = MathHelper.offsetPose(reefSideIJ, cPipeApart / 2, new Rotation2d(-Math.PI / 2));
+        public static Pose2d reefJ = MathHelper.offsetPose(reefSideIJ, cPipeApart / 2, new Rotation2d(Math.PI / 2));
+        public static Pose2d reefK = MathHelper.offsetPose(reefSideKL, cPipeApart / 2, new Rotation2d(-Math.PI / 2));
+        public static Pose2d reefL = MathHelper.offsetPose(reefSideKL, cPipeApart / 2, new Rotation2d(Math.PI / 2));
         public static Pose2d processor = new Pose2d(11.51, 7.47, Rotation2d.fromDegrees(90));
         public static Pose2d coralStationLA = new Pose2d(0.76, 6.69, Rotation2d.fromDegrees(-144));
         public static Pose2d coralStationLB = new Pose2d(1.19, 7, Rotation2d.fromDegrees(-144));

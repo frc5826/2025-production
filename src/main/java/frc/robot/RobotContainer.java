@@ -45,6 +45,7 @@ import java.util.List;
 import java.util.function.Supplier;
 
 import static frc.robot.Constants.*;
+import static frc.robot.Constants.BluePositions.*;
 
 public class RobotContainer {
 
@@ -101,10 +102,6 @@ public class RobotContainer {
 
     }
 
-//    public Command getAutoCommand() {
-//        return new Dumb(swerveSubsystem);
-//    }
-
     private void bindXbox() {
         //new Trigger(cXbox::getBackButtonPressed).onTrue(new InstantCommand(swerveSubsystem::resetDriveGyro)); //TODO zero gyro command
 
@@ -118,12 +115,6 @@ public class RobotContainer {
 
         new Trigger(cXbox::getRightBumperButton).whileTrue(new DriveButtonCommand(new ChassisSpeeds(0, 0, -0.7), swerveSubsystem));
         new Trigger(cXbox::getLeftBumperButton).whileTrue(new DriveButtonCommand(new ChassisSpeeds(0, 0, 0.7), swerveSubsystem));
-
-        //tuning path pid
-        PathConstraints constraints = new PathConstraints(1.25, 2, Math.PI * 2,  Math.PI * 2);
-//        new Trigger(cXbox::getAButton).whileTrue(new PathToCommand(new Pose2d(1.25, 1.5, new Rotation2d(Math.PI)), 0, constraints, swerveSubsystem));
-//        new Trigger(cXbox::getBButton).whileTrue(new PathToCommand(new Pose2d(1.25, 4, new Rotation2d(Math.PI)), 0, constraints, swerveSubsystem));
-        //new Trigger(cXbox::getAButton).onTrue(deferredLevelCommand);
     }
 
     //TODO set real constraints and different constraints variable for Source Pickup :)
@@ -144,6 +135,10 @@ public class RobotContainer {
         new Trigger(() -> cButtonBoard.getButton(10)).whileTrue(new PathOffsetWrapper(FieldOrientation.getOrientation()::getReefJ, constraints, offset, true, swerveSubsystem));
         new Trigger(() -> cButtonBoard.getButton(11)).whileTrue(new PathOffsetWrapper(FieldOrientation.getOrientation()::getReefI, constraints, offset, true, swerveSubsystem));
         //new Trigger(() -> cButtonBoard.getButtonPressed(11)).onTrue(new AutoGroundPickupCommand(elevatorSubsystem, coralizerSubsystem)); //TODO add a button for this
+
+        //TODO new align stuff test :D
+        new Trigger(() -> cButtonBoard.getButton(5)).whileTrue(new AlignReefCommand(reefSideCD, reefC, swerveSubsystem::getLocalizationPose, constraints, swerveSubsystem));
+        new Trigger(() -> cButtonBoard.getButton(4)).whileTrue(new AlignReefCommand(reefSideCD, reefD, swerveSubsystem::getLocalizationPose, constraints, swerveSubsystem));
 
         //For Buttons 12-15, Starts at top white button and goes straight down
         new Trigger(() -> cButtonBoard.getButtonPressed(12)).onTrue(new L4CommandGroup(elevatorSubsystem, coralizerSubsystem, swerveSubsystem));

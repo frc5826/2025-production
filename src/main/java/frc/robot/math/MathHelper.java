@@ -24,6 +24,12 @@ public class MathHelper {
                 pose.getRotation());
     }
 
+    public static double getAlignYDiff(Pose2d alignPose, Pose2d reefPose) {
+        double angle = alignPose.getRotation().minus(getAngleAtoB(alignPose, reefPose)).getRadians();
+        double h = alignPose.getTranslation().getDistance(reefPose.getTranslation());
+        return h * Math.sin(angle);
+    }
+
     //TODO Yoink wut
     public static double clamp(double value, double min, double max) {
         // This unusual condition allows keeping only one branch

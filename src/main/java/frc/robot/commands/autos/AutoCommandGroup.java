@@ -28,7 +28,7 @@ public class AutoCommandGroup extends SequentialCommandGroup {
             for (ReefPosition reefPosition : reefPositions){
                 addCommands(
                         new AlignSourceCommandGroup(station, fastConstraints, s, e, c),
-                        new OnePiece(reefPosition, s, e, c)
+                        new OnePiece(reefPosition, s, e, c) //TODO add reef side pose
                 );
             }
             addCommands(new AlignSourceCommandGroup(station, fastConstraints, s, e, c));
