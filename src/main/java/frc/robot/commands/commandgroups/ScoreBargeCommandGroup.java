@@ -10,11 +10,11 @@ import frc.robot.subsystems.ElevatorSubsystem;
 public class ScoreBargeCommandGroup extends SequentialCommandGroup {
 
     public ScoreBargeCommandGroup(ElevatorSubsystem elevatorSubsystem, CoralizerSubsystem coralizerSubsystem){
-
-        new ElevatorPositionCommand(elevatorSubsystem, 1.71, ElevatorSubsystem.LevelTarget.NONE);
-        new CoralizerWristCommand(coralizerSubsystem, 45);
-        new CoralizerIntakeCommand(coralizerSubsystem, CoralizerIntakeCommand.IntakeDirection.SHOOT);
-
+        addCommands(
+        new ElevatorPositionCommand(elevatorSubsystem, 1.71, ElevatorSubsystem.LevelTarget.NONE),
+        new CoralizerWristCommand(coralizerSubsystem, 45),
+        new CoralizerIntakeCommand(coralizerSubsystem, CoralizerIntakeCommand.IntakeDirection.SHOOT)
+        );
 
     }
 
