@@ -47,6 +47,24 @@ public class BlueOrientation implements Orientation{
     public Pose2d getReefL() { return reefL; }
 
     @Override
+    public Pose2d getReefSideAB() { return reefSideAB; }
+
+    @Override
+    public Pose2d getReefSideCD() { return reefSideCD; }
+
+    @Override
+    public Pose2d getReefSideEF() { return reefSideEF; }
+
+    @Override
+    public Pose2d getReefSideGH() { return reefSideGH; }
+
+    @Override
+    public Pose2d getReefSideIJ() { return reefSideIJ; }
+
+    @Override
+    public Pose2d getReefSideKL() { return reefSideKL; }
+
+    @Override
     public Pose2d getProcessor() { return processor; }
 
     @Override

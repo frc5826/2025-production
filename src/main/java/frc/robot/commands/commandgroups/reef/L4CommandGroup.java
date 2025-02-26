@@ -20,7 +20,7 @@ import static frc.robot.Constants.cL4offset;
 
 public class L4CommandGroup extends SequentialCommandGroup {
 
-    public L4CommandGroup(ElevatorSubsystem elevatorSubsystem, CoralizerSubsystem coralizerSubsystem, SwerveSubsystem swerveSubsystem) {
+    public L4CommandGroup(ElevatorSubsystem elevatorSubsystem, CoralizerSubsystem coralizerSubsystem) {
 
          addCommands(
                  new CoralizerWristCommand(coralizerSubsystem, 75),

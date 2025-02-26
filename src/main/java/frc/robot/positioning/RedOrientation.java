@@ -47,6 +47,24 @@ public class RedOrientation implements Orientation {
     public Pose2d getReefL() { return FlippingUtil.flipFieldPose(reefL); }
 
     @Override
+    public Pose2d getReefSideAB() { return FlippingUtil.flipFieldPose(reefSideAB); }
+
+    @Override
+    public Pose2d getReefSideCD() { return FlippingUtil.flipFieldPose(reefSideCD); }
+
+    @Override
+    public Pose2d getReefSideEF() { return FlippingUtil.flipFieldPose(reefSideEF); }
+
+    @Override
+    public Pose2d getReefSideGH() { return FlippingUtil.flipFieldPose(reefSideGH); }
+
+    @Override
+    public Pose2d getReefSideIJ() { return FlippingUtil.flipFieldPose(reefSideIJ); }
+
+    @Override
+    public Pose2d getReefSideKL() { return FlippingUtil.flipFieldPose(reefSideKL); }
+
+    @Override
     public Pose2d getProcessor() { return FlippingUtil.flipFieldPose(processor); }
 
     @Override

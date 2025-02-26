@@ -2,6 +2,9 @@ package frc.robot.positioning;
 
 import edu.wpi.first.math.geometry.Pose2d;
 
+import static frc.robot.Constants.BluePositions.*;
+import static frc.robot.Constants.BluePositions.reefSideKL;
+
 public class UnknownOrientation implements Orientation {
 
     protected UnknownOrientation() {}
@@ -41,6 +44,24 @@ public class UnknownOrientation implements Orientation {
 
     @Override
     public Pose2d getReefL() { return null; }
+
+    @Override
+    public Pose2d getReefSideAB() { return null; }
+
+    @Override
+    public Pose2d getReefSideCD() { return null; }
+
+    @Override
+    public Pose2d getReefSideEF() { return null; }
+
+    @Override
+    public Pose2d getReefSideGH() { return null; }
+
+    @Override
+    public Pose2d getReefSideIJ() { return null; }
+
+    @Override
+    public Pose2d getReefSideKL() { return null; }
 
     @Override
     public Pose2d getProcessor() { return null; }

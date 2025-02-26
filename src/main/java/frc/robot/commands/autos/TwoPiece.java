@@ -19,7 +19,7 @@ public class TwoPiece extends SequentialCommandGroup {
         //Path to reef and drop off
         addCommands(
                 new PathOffsetThenAccurateCommand(firstGoal, fastConstraints, 0.75, true, s),
-                new L4CommandGroup(e, c, s),
+                new L4CommandGroup(e, c),
                 new DropoffCommandGroup(e, c, s)
         );
         //TODO Fix This
@@ -31,7 +31,7 @@ public class TwoPiece extends SequentialCommandGroup {
         //Path to reef and drop off
         addCommands(
                 new PathOffsetThenAccurateCommand(secondGoal, fastConstraints, 0.75, true, s),
-                new L4CommandGroup(e, c, s),
+                new L4CommandGroup(e, c),
                 new DropoffCommandGroup(e, c, s)
         );
 

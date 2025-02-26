@@ -16,11 +16,7 @@ public class Test {
 //        System.out.println(diff);
 //        System.out.println(cPipeApart / 2);
 
-        Pose2d offsetReefPose = MathHelper.offsetPoseReverse(Constants.BluePositions.reefSideAB, 0.6 + (cRobotLength / 2));
-        Pose2d againstReefPose = MathHelper.offsetPoseReverse(Constants.BluePositions.reefSideAB, (cRobotLength / 2));
 
-        System.out.println("offset: " + offsetReefPose);
-        System.out.println("against: " + againstReefPose);
     }
 
 }

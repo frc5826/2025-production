@@ -123,11 +123,17 @@ public final class Constants
         public static Pose2d reefK = MathHelper.offsetPose(reefSideKL, cPipeApart / 2, new Rotation2d(-Math.PI / 2));
         public static Pose2d reefL = MathHelper.offsetPose(reefSideKL, cPipeApart / 2, new Rotation2d(Math.PI / 2));
         public static Pose2d processor = new Pose2d(11.51, 7.47, Rotation2d.fromDegrees(90));
+//        public static Pose2d coralStationLA = new Pose2d(0.76, 6.69, Rotation2d.fromDegrees(-144));
+//        public static Pose2d coralStationLB = new Pose2d(1.19, 7, Rotation2d.fromDegrees(-144));
+//        public static Pose2d coralStationLC = new Pose2d(1.63, 7.32, Rotation2d.fromDegrees(-144));
+//        public static Pose2d coralStationRA = new Pose2d(0.76, 1.34, Rotation2d.fromDegrees(-36));
+//        public static Pose2d coralStationRB = new Pose2d(1.19, 1.02, Rotation2d.fromDegrees(-36));
+//        public static Pose2d coralStationRC = new Pose2d(1.63, 0.71, Rotation2d.fromDegrees(-36));
         public static Pose2d coralStationLA = new Pose2d(0.76, 6.69, Rotation2d.fromDegrees(-144));
-        public static Pose2d coralStationLB = new Pose2d(1.19, 7, Rotation2d.fromDegrees(-144));
+        public static Pose2d coralStationLB = new Pose2d(Units.inchesToMeters(33.51), Units.inchesToMeters(291.2), Rotation2d.fromDegrees(-144));
         public static Pose2d coralStationLC = new Pose2d(1.63, 7.32, Rotation2d.fromDegrees(-144));
         public static Pose2d coralStationRA = new Pose2d(0.76, 1.34, Rotation2d.fromDegrees(-36));
-        public static Pose2d coralStationRB = new Pose2d(1.19, 1.02, Rotation2d.fromDegrees(-36));
+        public static Pose2d coralStationRB = new Pose2d(Units.inchesToMeters(33.51), Units.inchesToMeters(25.8), Rotation2d.fromDegrees(-36));
         public static Pose2d coralStationRC = new Pose2d(1.63, 0.71, Rotation2d.fromDegrees(-36));
     }
 

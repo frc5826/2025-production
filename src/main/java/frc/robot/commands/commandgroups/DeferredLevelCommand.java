@@ -24,7 +24,7 @@ public class DeferredLevelCommand extends LoggedCommand {
         l1CommandGroup = new L1CommandGroup(e, c);
         l2CommandGroup = new L2CommandGroup(e, c);
         l3CommandGroup = new L3CommandGroup(e, c);
-        l4CommandGroup = new L4CommandGroup(e, c, s);
+        l4CommandGroup = new L4CommandGroup(e, c);
         target = DeferredLevel.NONE;
     }
 

@@ -126,8 +126,8 @@ public class RobotContainer {
         new Trigger(() -> cButtonBoard.getButton(1)).whileTrue(new PathOffsetWrapper(FieldOrientation.getOrientation()::getReefG, constraints, offset, true, swerveSubsystem));
         new Trigger(() -> cButtonBoard.getButton(2)).whileTrue(new PathOffsetWrapper(FieldOrientation.getOrientation()::getReefF, constraints, offset, true, swerveSubsystem));
         new Trigger(() -> cButtonBoard.getButton(3)).whileTrue(new PathOffsetWrapper(FieldOrientation.getOrientation()::getReefE, constraints, offset, true, swerveSubsystem));
-        new Trigger(() -> cButtonBoard.getButton(4)).whileTrue(new PathOffsetWrapper(FieldOrientation.getOrientation()::getReefD, constraints, offset, true, swerveSubsystem));
-        new Trigger(() -> cButtonBoard.getButton(5)).whileTrue(new PathOffsetWrapper(FieldOrientation.getOrientation()::getReefC, constraints, offset, true, swerveSubsystem));
+        //new Trigger(() -> cButtonBoard.getButton(4)).whileTrue(new PathOffsetWrapper(FieldOrientation.getOrientation()::getReefD, constraints, offset, true, swerveSubsystem));
+        //new Trigger(() -> cButtonBoard.getButton(5)).whileTrue(new PathOffsetWrapper(FieldOrientation.getOrientation()::getReefC, constraints, offset, true, swerveSubsystem));
         new Trigger(() -> cButtonBoard.getButton(6)).whileTrue(new PathOffsetWrapper(FieldOrientation.getOrientation()::getReefB, constraints, offset, true, swerveSubsystem));
         new Trigger(() -> cButtonBoard.getButton(7)).whileTrue(new PathOffsetWrapper(FieldOrientation.getOrientation()::getReefA, constraints, offset, true, swerveSubsystem));
         new Trigger(() -> cButtonBoard.getButton(8)).whileTrue(new PathOffsetWrapper(FieldOrientation.getOrientation()::getReefL, constraints, offset, true, swerveSubsystem));
@@ -137,11 +137,11 @@ public class RobotContainer {
         //new Trigger(() -> cButtonBoard.getButtonPressed(11)).onTrue(new AutoGroundPickupCommand(elevatorSubsystem, coralizerSubsystem)); //TODO add a button for this
 
         //TODO new align stuff test :D
-        new Trigger(() -> cButtonBoard.getButton(5)).whileTrue(new AlignReefCommand(reefSideCD, reefC, swerveSubsystem::getLocalizationPose, constraints, swerveSubsystem));
-        new Trigger(() -> cButtonBoard.getButton(4)).whileTrue(new AlignReefCommand(reefSideCD, reefD, swerveSubsystem::getLocalizationPose, constraints, swerveSubsystem));
+        new Trigger(() -> cButtonBoard.getButton(5)).whileTrue(new AlignReefCommand(FieldOrientation.getOrientation().getReefSideCD(), FieldOrientation.getOrientation().getReefC(), constraints, swerveSubsystem));
+        new Trigger(() -> cButtonBoard.getButton(4)).whileTrue(new AlignReefCommand(FieldOrientation.getOrientation().getReefSideCD(), FieldOrientation.getOrientation().getReefD(), constraints, swerveSubsystem));
 
         //For Buttons 12-15, Starts at top white button and goes straight down
-        new Trigger(() -> cButtonBoard.getButtonPressed(12)).onTrue(new L4CommandGroup(elevatorSubsystem, coralizerSubsystem, swerveSubsystem));
+        new Trigger(() -> cButtonBoard.getButtonPressed(12)).onTrue(new L4CommandGroup(elevatorSubsystem, coralizerSubsystem));
 //        new Trigger(() -> cButtonBoard.getButtonPressed(12)).onTrue(new InstantCommand(() -> {deferredLevelCommand.setTarget(DeferredLevelCommand.DeferredLevel.L4);}));
         new Trigger(() -> cButtonBoard.getButtonPressed(13)).onTrue(new L3CommandGroup(elevatorSubsystem, coralizerSubsystem));
 //        new Trigger(() -> cButtonBoard.getButtonPressed(13)).onTrue(new InstantCommand(() -> {deferredLevelCommand.setTarget(DeferredLevelCommand.DeferredLevel.L3);}));

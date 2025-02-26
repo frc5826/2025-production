@@ -17,12 +17,9 @@ import frc.robot.subsystems.CoralizerSubsystem;
 import frc.robot.subsystems.ElevatorSubsystem;
 import frc.robot.subsystems.SwerveSubsystem;
 
-import java.util.function.BooleanSupplier;
 import java.util.function.Supplier;
 
 import static frc.robot.Constants.BluePositions.cRobotLength;
-import static frc.robot.Constants.BluePositions.reefG;
-import static frc.robot.Constants.cL4offset;
 
 public class OnePiece extends SequentialCommandGroup {
     public OnePiece(ReefPosition reefGoal, SwerveSubsystem s, ElevatorSubsystem e, CoralizerSubsystem c) {
@@ -30,7 +27,7 @@ public class OnePiece extends SequentialCommandGroup {
         PathConstraints slowConstraints = new PathConstraints(1, 2, Math.PI * 1.5, Math.PI * 2);
         PathConstraints fastConstraints = new PathConstraints(2, 3, Math.PI * 3, Math.PI * 4);
 
-        Command levelCommand = new L4CommandGroup(e, c, s);
+        Supplier<Command> levelCommand = () -> new L4CommandGroup(e, c);
 
         Pose2d offsetReefPose = MathHelper.offsetPoseReverse(reefGoal.getPosition(), 0.6 + (cRobotLength / 2));
         Pose2d goalReefPose = MathHelper.offsetPoseReverse(reefGoal.getPosition(), (cRobotLength / 2) - 0.02);
@@ -42,20 +39,20 @@ public class OnePiece extends SequentialCommandGroup {
 
         //Choose level command
         switch (reefGoal.getLevel()){
-            case L1 -> levelCommand = new L1CommandGroup(e, c);
-            case L2 -> levelCommand = new L2CommandGroup(e, c);
-            case L3 -> levelCommand = new L3CommandGroup(e, c);
-            case L4 -> levelCommand = new L4NoSwerveCommandGroup(e, c);
+            case L1 -> levelCommand = () -> new L1CommandGroup(e, c);
+            case L2 -> levelCommand = () -> new L2CommandGroup(e, c);
+            case L3 -> levelCommand = () -> new L3CommandGroup(e, c);
+            case L4 -> levelCommand = () -> new L4CommandGroup(e, c);
         }
 
         addCommands( //Align while raising elevator
                 Commands.deadline(
                         new PathToTwoPosesCommand(offsetReefPose, goalReefPose, 0, slowConstraints, s),
-                        levelCommand
+                        levelCommand.get()
                 ),
                 Commands.parallel(
                         new AccuratePathCommand(goalReefPose, 2, true, s),
-                        levelCommand
+                        levelCommand.get()
                 )
         );
 

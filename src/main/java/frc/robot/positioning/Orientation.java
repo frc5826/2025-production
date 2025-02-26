@@ -28,6 +28,18 @@ public interface Orientation {
 
     Pose2d getReefL();
 
+    Pose2d getReefSideAB();
+
+    Pose2d getReefSideCD();
+
+    Pose2d getReefSideEF();
+
+    Pose2d getReefSideGH();
+
+    Pose2d getReefSideIJ();
+
+    Pose2d getReefSideKL();
+
     Pose2d getProcessor();
 
     Pose2d getCoralStationLA();

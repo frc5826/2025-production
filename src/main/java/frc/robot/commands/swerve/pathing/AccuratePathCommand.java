@@ -75,9 +75,6 @@ public class AccuratePathCommand extends LoggedCommand {
         pidY.calculate();
         pidR.calculate();
 
-        System.out.println("goal: " + goalSupplier.get());
-        System.out.println("current pose: " + getPose());
-
         ChassisSpeeds speeds;
 
         if (turn) {

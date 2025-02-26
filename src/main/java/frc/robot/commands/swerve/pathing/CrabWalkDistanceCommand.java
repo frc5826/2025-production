@@ -66,8 +66,6 @@ public class CrabWalkDistanceCommand extends LoggedCommand {
         ChassisSpeeds speeds = new ChassisSpeeds(0, crabWalkPID.calculate(), pidR.calculate());
         swerveSubsystem.driveRobotOriented(speeds);
 
-        System.out.println("distance left: " + distanceLeft);
-
         if (timer.get() >= timeOut || crabWalkPID.getDeadband() >= Math.abs(getDifference())) {
             finished = true;
         }
