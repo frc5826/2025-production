@@ -15,11 +15,11 @@ import static frc.robot.Constants.BluePositions.cRobotLength;
 
 public class AlignReefCommand extends SequentialCommandGroup {
 
-    public AlignReefCommand(Pose2d reefSidePose, Pose2d reefPose, PathConstraints fastConstraints, SwerveSubsystem s) {
+    public AlignReefCommand(Pose2d reefPose, PathConstraints fastConstraints, SwerveSubsystem s) {
 
         PathConstraints slowConstraints = new PathConstraints(0.5, 1, Math.PI, Math.PI * 2);
 
-        Pose2d offsetReefPose = MathHelper.offsetPoseReverse(reefSidePose, 0.6 + (cRobotLength / 2));
+        Pose2d offsetReefPose = MathHelper.offsetPoseReverse(reefPose, 0.6 + (cRobotLength / 2));
 
         addCommands(
                 new PathFindCommand(offsetReefPose, fastConstraints, s),

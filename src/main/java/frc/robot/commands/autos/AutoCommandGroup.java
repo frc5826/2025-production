@@ -21,7 +21,7 @@ public class AutoCommandGroup extends SequentialCommandGroup {
     PathConstraints fastConstraints = new PathConstraints(2, 3, Math.PI * 3, Math.PI * 4);
 
 
-    public AutoCommandGroup(ElevatorSubsystem e, CoralizerSubsystem c, SwerveSubsystem s, Supplier<Pose2d> station, List<ReefPosition> reefPositions){
+    public AutoCommandGroup(ElevatorSubsystem e, CoralizerSubsystem c, SwerveSubsystem s, Supplier<Pose2d> station, List<ReefPosition> reefPositions, boolean finishCoral){
         if (getOrientation().isValid() && !reefPositions.isEmpty()){
             addCommands(new OnePiece(reefPositions.get(0), s, e, c));
             reefPositions.remove(0);
@@ -31,7 +31,9 @@ public class AutoCommandGroup extends SequentialCommandGroup {
                         new OnePiece(reefPosition, s, e, c) //TODO add reef side pose
                 );
             }
-            addCommands(new AlignSourceCommandGroup(station, fastConstraints, s, e, c));
+            if(finishCoral) {
+                addCommands(new AlignSourceCommandGroup(station, fastConstraints, s, e, c));
+            }
         }
     }
 
