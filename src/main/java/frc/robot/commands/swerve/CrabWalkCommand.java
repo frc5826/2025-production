@@ -15,6 +15,8 @@ public class CrabWalkCommand extends LoggedCommand {
     public CrabWalkCommand(Direction direction, SwerveSubsystem swerveSubsystem) {
         this.swerveSubsystem = swerveSubsystem;
         this.direction = direction;
+
+        addRequirements(swerveSubsystem);
     }
 
     @Override

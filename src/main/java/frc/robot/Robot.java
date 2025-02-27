@@ -5,7 +5,9 @@
 
 package frc.robot;
 
+import com.studica.frc.AHRS;
 import edu.wpi.first.wpilibj.TimedRobot;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 
@@ -18,83 +20,13 @@ import edu.wpi.first.wpilibj2.command.CommandScheduler;
  */
 public class Robot extends TimedRobot
 {
-    private Command autonomousCommand;
-
-    private final RobotContainer robotContainer;
-
-    private boolean teleop;
-
-    public Robot()
-    {
-        robotContainer = new RobotContainer();
-    }
-
-    @Override
-    public void robotPeriodic()
-    {
-        robotContainer.prePeriodic(teleop);
-
-        CommandScheduler.getInstance().run();
-
-        robotContainer.postPeriodic();
+    AHRS navx;
+    public Robot() {
+        navx = new AHRS(AHRS.NavXComType.kMXP_SPI);
     }
 
     @Override
     public void robotInit() {
-        autonomousCommand = robotContainer.getAutoCommand();
-        teleop = false;
+        SmartDashboard.putData(navx);
     }
-
-    @Override
-    public void disabledInit() {
-        teleop = false;
-    }
-
-    @Override
-    public void disabledPeriodic() {}
-    
-    @Override
-    public void autonomousInit()
-    {
-        robotContainer.initZeroGyro();
-
-        autonomousCommand = robotContainer.getAutoCommand();
-
-        if (autonomousCommand != null)
-        {
-            autonomousCommand.schedule();
-        }
-    }
-    
-    @Override
-    public void autonomousPeriodic() {}
-    
-    @Override
-    public void teleopInit()
-    {
-        teleop = true;
-
-        if (autonomousCommand != null)
-        {
-            autonomousCommand.cancel();
-        }
-    }
-    
-    @Override
-    public void teleopPeriodic() {}
-
-    @Override
-    public void testInit()
-    {
-        CommandScheduler.getInstance().cancelAll();
-    }
-    
-    @Override
-    public void testPeriodic() {}
-    
-    @Override
-    public void simulationInit() {}
-    
-    @Override
-    public void simulationPeriodic() {}
 }

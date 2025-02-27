@@ -120,7 +120,7 @@ public class RobotContainer {
 
     //TODO set real constraints and different constraints variable for Source Pickup :)
     private void bindBoard() {
-        PathConstraints constraints = new PathConstraints(1.5, 2.5, Math.PI * 2,  Math.PI * 2);
+        PathConstraints constraints = new PathConstraints(1.75, 2, Math.PI * 2,  Math.PI * 2);
         //For Buttons 0-11, Starts at top left white button and goes clockwise around
         double offset = 0.5;
 //        new Trigger(() -> cButtonBoard.getButton(0)).whileTrue(new PathOffsetWrapper(FieldOrientation.getOrientation()::getReefH, constraints, offset, true, swerveSubsystem));

@@ -26,8 +26,8 @@ public class AccuratePathCommand extends LoggedCommand {
     private boolean turn;
 
     private final PIDConstants drivePID = new PIDConstants(2.5, 0.1, 0.1);
-    private final PID pidX = new PID(drivePID, 1, 0.4, 0.01, () -> getPose().getX());
-    private final PID pidY = new PID(drivePID, 1, 0.4, 0.01, () -> getPose().getY());
+    private final PID pidX = new PID(drivePID, 0.8, 0.4, 0.01, () -> getPose().getX());
+    private final PID pidY = new PID(drivePID, 0.8, 0.4, 0.01, () -> getPose().getY());
     private final PID pidR = new PID(Constants.Swerve.cTurnPID, Math.PI, 0.01, 0.05, () -> goalSupplier.get().getRotation().minus(swerveSubsystem.getLocalizationPose().getRotation()).getRadians());
 
     public AccuratePathCommand(Pose2d goal, double timeOut, boolean turn, SwerveSubsystem swerveSubsystem) {
