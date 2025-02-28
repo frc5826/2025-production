@@ -145,7 +145,7 @@ public final class Constants
         public static final double cCoralizerG = 0.04;
         public static final double cCoralizerMin = -0.75;
         public static final double cCoralizerMax = 0.75;
-        public static final double cCoralizerDeadband = 1.25;
+        public static final double cCoralizerDeadband = 5;
 
         public static final double cCoralizerMinRotation = -90;
         public static final double cCoralizerMaxRotation = 90;

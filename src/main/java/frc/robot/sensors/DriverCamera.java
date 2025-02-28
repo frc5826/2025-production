@@ -27,14 +27,16 @@ public class DriverCamera {
             CvSource source = CameraServer.putVideo("Driver", WIDTH, HEIGHT);
 
             Mat mat = new Mat();
-            Point p = new Point(WIDTH/2.0,HEIGHT/2.0);
+            Point p1 = new Point(HEIGHT-4,0);
+            Point p2 = new Point(HEIGHT-4, 400);
 
             while(!thread.isInterrupted()) {
                 if(sink.grabFrame(mat) == 0){
                     source.notifyError("error");
                     continue;
                 }
-                Imgproc.drawMarker(mat, p, Scalar.all(255), Imgproc.MARKER_CROSS,50);
+                Imgproc.line(mat, p1, p2, new Scalar(0, 255, 0, 255),2, Imgproc.LINE_8);
+                source.putFrame(mat);
             }
         });
         thread.setDaemon(true);

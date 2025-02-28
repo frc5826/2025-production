@@ -3,10 +3,11 @@ package frc.robot.commands.swerve;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj2.command.Command;
+import frc.robot.commands.LoggedCommand;
 import frc.robot.localization.Localization;
 import frc.robot.subsystems.SwerveSubsystem;
 
-public class MoveTimeCommand extends Command {
+public class MoveTimeCommand extends LoggedCommand {
 
     private double moveSec;
 
@@ -54,6 +55,7 @@ public class MoveTimeCommand extends Command {
 
     @Override
     public void end(boolean interrupted) {
+        super.end(interrupted);
         swerveSubsystem.driveFieldOriented(new ChassisSpeeds(0, 0, 0));
         timer.reset();
     }

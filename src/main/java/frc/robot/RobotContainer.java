@@ -128,9 +128,8 @@ public class RobotContainer {
     }
 
     private void bindBoard() {
-        PathConstraints constraints = new PathConstraints(3, 2, Math.PI * 2,  Math.PI * 2);
+        PathConstraints constraints = new PathConstraints(3.5, 2, Math.PI * 2,  Math.PI * 2);
         //For Buttons 0-11, Starts at top left white button and goes clockwise around
-        double offset = 0.5;
 //        new Trigger(() -> cButtonBoard.getButton(0)).whileTrue(new PathOffsetWrapper(FieldOrientation.getOrientation()::getReefH, constraints, offset, true, swerveSubsystem));
 //        new Trigger(() -> cButtonBoard.getButton(1)).whileTrue(new PathOffsetWrapper(FieldOrientation.getOrientation()::getReefG, constraints, offset, true, swerveSubsystem));
 //        new Trigger(() -> cButtonBoard.getButton(2)).whileTrue(new PathOffsetWrapper(FieldOrientation.getOrientation()::getReefF, constraints, offset, true, swerveSubsystem));

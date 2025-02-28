@@ -17,7 +17,7 @@ public class AlignReefCommand extends SequentialCommandGroup {
 
     public AlignReefCommand(Pose2d reefPose, PathConstraints fastConstraints, SwerveSubsystem s) {
 
-        PathConstraints slowConstraints = new PathConstraints(1, 0.75, Math.PI, Math.PI * 2);
+        PathConstraints slowConstraints = new PathConstraints(1.25, 1, Math.PI, Math.PI * 2);
 
         Pose2d offsetReefPose = MathHelper.offsetPoseReverse(reefPose, 0.6 + (cRobotLength / 2));
 
