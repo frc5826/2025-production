@@ -9,7 +9,7 @@ public class Dumb extends SequentialCommandGroup {
     public Dumb(SwerveSubsystem s) {
 
         addCommands(
-                new MoveTimeCommand(2.5,
+                new MoveTimeCommand(1.5,
                         new ChassisSpeeds(0.75, 0, 0),
                         true, s)
         );

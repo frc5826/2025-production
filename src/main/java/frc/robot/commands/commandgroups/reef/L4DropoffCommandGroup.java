@@ -18,11 +18,11 @@ public class L4DropoffCommandGroup extends SequentialCommandGroup {
 
     public L4DropoffCommandGroup(ElevatorSubsystem elevatorSubsystem, CoralizerSubsystem coralizerSubsystem, SwerveSubsystem swerveSubsystem){
         addCommands(
-                new CoralizerWristCommand(coralizerSubsystem, -25),
+                new CoralizerWristCommand(coralizerSubsystem, -20).withTimeout(1),
                 new ElevatorRepositionCommand(elevatorSubsystem, -0.3, ElevatorSubsystem.LevelTarget.NONE),
                 Commands.parallel(
                         new CoralizerIntakeCommand(coralizerSubsystem, OUT),
-                        new MoveTimeCommand(0.75, new ChassisSpeeds(-0.5, 0, 0), true, swerveSubsystem)
+                        new MoveTimeCommand(0.75, new ChassisSpeeds(-0.75, 0, 0), true, swerveSubsystem).asProxy()
                 ),
                 new HomeCommandGroup(elevatorSubsystem, coralizerSubsystem)
         );

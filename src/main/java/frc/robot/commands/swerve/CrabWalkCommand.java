@@ -26,16 +26,13 @@ public class CrabWalkCommand extends LoggedCommand {
         double rightleft = 0;
         double frontback = 0;
 
-        double team = DriverStation.getAlliance().equals(DriverStation.Alliance.Blue) ? 1 : -1;
-        double field = (Math.abs(swerveSubsystem.getLocalizationPose().getRotation().getDegrees()) > 90) ? 1 : -1;
-
         if (direction == Direction.RIGHT || direction == Direction.LEFT) {
             rightleft = (direction == Direction.RIGHT) ? -1 : 1;
         } else {
             frontback = (direction == Direction.FRONT) ? 1 : -1;
         }
 
-        speeds = new ChassisSpeeds(frontback, field * rightleft * team, 0);
+        speeds = new ChassisSpeeds(frontback, rightleft, 0);
     }
 
     @Override

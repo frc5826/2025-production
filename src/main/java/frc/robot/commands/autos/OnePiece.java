@@ -24,7 +24,7 @@ import static frc.robot.Constants.BluePositions.cRobotLength;
 public class OnePiece extends SequentialCommandGroup {
     public OnePiece(ReefPosition reefGoal, SwerveSubsystem s, ElevatorSubsystem e, CoralizerSubsystem c) {
 
-        PathConstraints slowConstraints = new PathConstraints(1, 2, Math.PI * 1.5, Math.PI * 2);
+        PathConstraints slowConstraints = new PathConstraints(1, 1, Math.PI * 1.5, Math.PI * 2);
         PathConstraints fastConstraints = new PathConstraints(2, 3, Math.PI * 3, Math.PI * 4);
 
         Supplier<Command> levelCommand = () -> new L4CommandGroup(e, c);

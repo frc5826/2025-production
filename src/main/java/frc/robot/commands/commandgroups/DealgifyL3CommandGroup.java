@@ -20,7 +20,7 @@ public class DealgifyL3CommandGroup extends SequentialCommandGroup {
                 new ElevatorPositionCommand(elevatorSubsystem, 1.01, ElevatorSubsystem.LevelTarget.NONE),
                 new CoralizerWristCommand(coralizerSubsystem, -10),
                 new AlgaeIntakeCommand(coralizerSubsystem),
-                new MoveTimeCommand(1, new ChassisSpeeds(-0.5, 0, 0), true, swerveSubsystem).asProxy(),
+                new MoveTimeCommand(1, new ChassisSpeeds(-0.75, 0, 0), true, swerveSubsystem).asProxy(),
                 new ElevatorPositionCommand(elevatorSubsystem, 0.1, ElevatorSubsystem.LevelTarget.NONE)
 
         );

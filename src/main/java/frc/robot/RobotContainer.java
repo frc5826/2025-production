@@ -6,6 +6,9 @@
 package frc.robot;
 
 import com.pathplanner.lib.path.PathConstraints;
+import edu.wpi.first.cameraserver.CameraServer;
+import edu.wpi.first.cscore.CvSink;
+import edu.wpi.first.cscore.UsbCamera;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.wpilibj.PowerDistribution;
@@ -28,6 +31,7 @@ import frc.robot.commands.swerve.pathing.*;
 import frc.robot.math.MathHelper;
 import frc.robot.positioning.Orientation;
 import frc.robot.positioning.ReefPosition;
+import frc.robot.sensors.DriverCamera;
 import frc.robot.subsystems.CameraSubsystem;
 import frc.robot.positioning.FieldOrientation;
 import frc.robot.subsystems.CoralizerSubsystem;
@@ -71,6 +75,8 @@ public class RobotContainer {
     public RobotContainer() {
         DataLogManager.start("/U/logs");
         CommandScheduler.getInstance().setDefaultCommand(swerveSubsystem, new TeleopDriveCommand(swerveSubsystem));
+
+        new DriverCamera();
 
         // Setup button bindings
         bindXbox();
@@ -116,11 +122,12 @@ public class RobotContainer {
 
         new Trigger(cXbox::getRightBumperButton).whileTrue(new DriveButtonCommand(new ChassisSpeeds(0, 0, -0.7), swerveSubsystem));
         new Trigger(cXbox::getLeftBumperButton).whileTrue(new DriveButtonCommand(new ChassisSpeeds(0, 0, 0.7), swerveSubsystem));
+
+        //new Trigger(cXbox::getAButton).whileTrue(new AccuratePathCommand(() -> MathHelper.offsetPoseReverse(swerveSubsystem.getLocalizationPose(), -0.75), 5, true, swerveSubsystem));
     }
 
-    //TODO set real constraints and different constraints variable for Source Pickup :)
     private void bindBoard() {
-        PathConstraints constraints = new PathConstraints(1.75, 2, Math.PI * 2,  Math.PI * 2);
+        PathConstraints constraints = new PathConstraints(2, 2, Math.PI * 2,  Math.PI * 2);
         //For Buttons 0-11, Starts at top left white button and goes clockwise around
         double offset = 0.5;
 //        new Trigger(() -> cButtonBoard.getButton(0)).whileTrue(new PathOffsetWrapper(FieldOrientation.getOrientation()::getReefH, constraints, offset, true, swerveSubsystem));
@@ -178,6 +185,7 @@ public class RobotContainer {
 
     public void initZeroGyro() {
         swerveSubsystem.zeroOdoGyro(Math.toRadians(FieldOrientation.getOrientation().getStartOrientation()));
+        swerveSubsystem.setOrientation(FieldOrientation.getOrientation());
     }
 
 //    private void setupAutoTab() {

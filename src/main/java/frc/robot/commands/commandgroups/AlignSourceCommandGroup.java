@@ -19,7 +19,7 @@ public class AlignSourceCommandGroup extends SequentialCommandGroup {
                                    SwerveSubsystem s, ElevatorSubsystem e, CoralizerSubsystem c) {
 
         Pose2d offsetPose = MathHelper.offsetPose(sourcePos.get(), 0.6 + (cRobotLength / 2), new Rotation2d(-Math.PI / 2));
-        Pose2d goalPose = MathHelper.offsetPose(sourcePos.get(), (cRobotLength / 2) - 0.02, new Rotation2d(-Math.PI / 2));
+        Pose2d goalPose = MathHelper.offsetPose(sourcePos.get(), (cRobotLength / 2) - 0.1, new Rotation2d(-Math.PI / 2));
 
         PathConstraints slowConstraints = new PathConstraints(1, 2, Math.PI, Math.PI * 2);
 

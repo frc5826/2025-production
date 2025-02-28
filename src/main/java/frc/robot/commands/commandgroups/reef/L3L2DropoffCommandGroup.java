@@ -23,7 +23,7 @@ public class L3L2DropoffCommandGroup extends SequentialCommandGroup {
                         ),
                 Commands.parallel(
                     new CoralizerIntakeCommand(coralizerSubsystem, CoralizerIntakeCommand.IntakeDirection.OUT),
-                    new MoveTimeCommand(0.75, new ChassisSpeeds(-0.5, 0, 0), true, swerveSubsystem)
+                    new MoveTimeCommand(0.75, new ChassisSpeeds(-0.75, 0, 0), true, swerveSubsystem).asProxy()
                 ),
                 new HomeCommandGroup(elevatorSubsystem, coralizerSubsystem)
         );
