@@ -123,11 +123,12 @@ public class RobotContainer {
         new Trigger(cXbox::getRightBumperButton).whileTrue(new DriveButtonCommand(new ChassisSpeeds(0, 0, -0.7), swerveSubsystem));
         new Trigger(cXbox::getLeftBumperButton).whileTrue(new DriveButtonCommand(new ChassisSpeeds(0, 0, 0.7), swerveSubsystem));
 
+        //new Trigger(cXbox::getBButtonPressed).onTrue(new GroundIntakeAlgaeCommand(coralizerSubsystem, elevatorSubsystem));
         //new Trigger(cXbox::getAButton).whileTrue(new AccuratePathCommand(() -> MathHelper.offsetPoseReverse(swerveSubsystem.getLocalizationPose(), -0.75), 5, true, swerveSubsystem));
     }
 
     private void bindBoard() {
-        PathConstraints constraints = new PathConstraints(2, 2, Math.PI * 2,  Math.PI * 2);
+        PathConstraints constraints = new PathConstraints(3, 2, Math.PI * 2,  Math.PI * 2);
         //For Buttons 0-11, Starts at top left white button and goes clockwise around
         double offset = 0.5;
 //        new Trigger(() -> cButtonBoard.getButton(0)).whileTrue(new PathOffsetWrapper(FieldOrientation.getOrientation()::getReefH, constraints, offset, true, swerveSubsystem));

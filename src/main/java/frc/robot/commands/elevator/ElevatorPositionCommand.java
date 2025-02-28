@@ -43,6 +43,7 @@ public class ElevatorPositionCommand extends LoggedCommand {
 
     @Override
     public void end(boolean interrupted) {
+        super.end(interrupted);
         timeoutTimer.reset();
     }
 }

@@ -17,4 +17,8 @@ public class ElevatorRepositionCommand extends ElevatorPositionCommand {
         super.initialize();
         elevatorSubsystem.setDesiredPosition(targetPosition, levelTarget);
     }
+
+    @Override
+    public boolean isFinished() {
+        return super.isFinished();    }
 }

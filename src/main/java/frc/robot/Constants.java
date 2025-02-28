@@ -89,7 +89,8 @@ public final class Constants
     public static final int cLOFTagLimit = 20;
 
     public static class BluePositions {
-        public static final double cRobotLength = Units.inchesToMeters(30 + 7);
+        public static final double cRobotLength = Units.inchesToMeters(30 + 6);
+        public static final double cRobotWidth = Units.inchesToMeters(27 + 6);
         public static final double cPipeApart = Units.inchesToMeters(13);
 
 //        public static Pose2d reefA = new Pose2d(3.16, 4.19, Rotation2d.fromDegrees(0));
