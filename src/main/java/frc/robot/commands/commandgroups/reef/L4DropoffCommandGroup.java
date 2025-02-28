@@ -8,6 +8,7 @@ import frc.robot.commands.coralizer.CoralizerIntakeCommand;
 import frc.robot.commands.coralizer.CoralizerWristCommand;
 import frc.robot.commands.elevator.ElevatorRepositionCommand;
 import frc.robot.commands.swerve.MoveTimeCommand;
+import frc.robot.commands.swerve.TeleopDriveCommand;
 import frc.robot.commands.swerve.pathing.AccuratePathCommand;
 import frc.robot.commands.swerve.pathing.PathFindCommand;
 import frc.robot.math.MathHelper;
@@ -21,14 +22,24 @@ public class L4DropoffCommandGroup extends SequentialCommandGroup {
 
     public L4DropoffCommandGroup(ElevatorSubsystem elevatorSubsystem, CoralizerSubsystem coralizerSubsystem, SwerveSubsystem swerveSubsystem){
         addCommands(
-                new CoralizerWristCommand(coralizerSubsystem, -20).withTimeout(0.75),
-                new ElevatorRepositionCommand(elevatorSubsystem, -0.3, ElevatorSubsystem.LevelTarget.NONE),
+                Commands.deadline(
+                        new CoralizerWristCommand(coralizerSubsystem, -20).withTimeout(0.75),
+                        new TeleopDriveCommand(swerveSubsystem)
+                ),
+                Commands.deadline(
+                        new ElevatorRepositionCommand(elevatorSubsystem, -0.3, ElevatorSubsystem.LevelTarget.NONE),
+                        new TeleopDriveCommand(swerveSubsystem)
+                ),
                 Commands.parallel(
                         new CoralizerIntakeCommand(coralizerSubsystem, OUT),
-                        new MoveTimeCommand(0.75, new ChassisSpeeds(-0.75, 0, 0), true, swerveSubsystem).asProxy()
+                        new MoveTimeCommand(0.75, new ChassisSpeeds(-0.75, 0, 0), true, swerveSubsystem)
                         //new AccuratePathCommand(() -> MathHelper.offsetPoseReverse(swerveSubsystem.getLocalizationPose(), 0.3), 1, false, swerveSubsystem)
                 ),
-                new HomeCommandGroup(elevatorSubsystem, coralizerSubsystem)
+                Commands.deadline(
+                        new HomeCommandGroup(elevatorSubsystem, coralizerSubsystem),
+                        new TeleopDriveCommand(swerveSubsystem)
+                )
+
         );
     }
 
