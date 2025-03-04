@@ -6,6 +6,7 @@ import com.revrobotics.spark.SparkMax;
 import com.revrobotics.spark.config.SparkBaseConfig;
 import com.revrobotics.spark.config.SparkMaxConfig;
 import edu.wpi.first.wpilibj.PowerDistribution;
+import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.math.MathHelper;
 import frc.robot.math.PID;
@@ -22,6 +23,8 @@ public class CoralizerSubsystem extends LoggedSubsystem{
     private PID pid;
 
     private double wristTarget;
+
+    private Timer wristEnableTimer;
 
     public CoralizerSubsystem() {
 
@@ -41,6 +44,10 @@ public class CoralizerSubsystem extends LoggedSubsystem{
         SmartDashboard.putNumber("coralizer/Encoder", 0.0);
         SmartDashboard.putNumber("coralizer/Output", 0.0);
         //SmartDashboard.putNumber("coralizer/Current", 0.0);
+
+        wristEnableTimer = new Timer();
+        wristEnableTimer.reset();
+        wristEnableTimer.stop();
     }
 
     @Override
@@ -53,10 +60,12 @@ public class CoralizerSubsystem extends LoggedSubsystem{
                 setIntakeSpeed(1);
             }
         }
-        double speed = pid.calculate() + cCoralizerG * Math.cos(getRotation() * (Math.PI/180));
-        wristMotor.set(speed);
+        if(wristEnableTimer.hasElapsed(1)) {
+            double speed = pid.calculate() + cCoralizerG * Math.cos(getRotation() * (Math.PI / 180));
+            wristMotor.set(speed);
+            SmartDashboard.putNumber("coralizer/Output", speed);
+        }
         SmartDashboard.putNumber("coralizer/Encoder", getRotation());
-        SmartDashboard.putNumber("coralizer/Output", speed);
         SmartDashboard.putBoolean("coralizer/HasCoral", hasCoral());
         //SmartDashboard.putNumber("coralizer/Current", cPowerDistribution.getCurrent(2));
     }
@@ -80,6 +89,10 @@ public class CoralizerSubsystem extends LoggedSubsystem{
             position -= 360;
         }
         return position;
+    }
+
+    public void startWristTimer(){
+        wristEnableTimer.restart();
     }
 
     public boolean hasCoral(){

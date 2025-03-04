@@ -64,6 +64,7 @@ public final class Constants
 
     public static final ButtonBoard cButtonBoard = new ButtonBoard(25);
     public static final XboxController cXbox = new XboxController(1);
+    public static final double rumbleHigh = 0.5;
 
     public static final double cTeleDriveDeadband = 0.25;
     public static final double cTeleTurnDeadband = 0.25;

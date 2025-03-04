@@ -123,7 +123,7 @@ public class RobotContainer {
         new Trigger(cXbox::getRightBumperButton).whileTrue(new DriveButtonCommand(new ChassisSpeeds(0, 0, -0.7), swerveSubsystem));
         new Trigger(cXbox::getLeftBumperButton).whileTrue(new DriveButtonCommand(new ChassisSpeeds(0, 0, 0.7), swerveSubsystem));
 
-        //new Trigger(cXbox::getBButtonPressed).onTrue(new GroundIntakeAlgaeCommand(coralizerSubsystem, elevatorSubsystem));
+        new Trigger(cXbox::getBButtonPressed).onTrue(new GroundIntakeAlgaeCommand(coralizerSubsystem, elevatorSubsystem));
         //new Trigger(cXbox::getAButton).whileTrue(new AccuratePathCommand(() -> MathHelper.offsetPoseReverse(swerveSubsystem.getLocalizationPose(), -0.75), 5, true, swerveSubsystem));
     }
 
@@ -183,9 +183,10 @@ public class RobotContainer {
         //new Trigger(() -> cButtonBoard.getButtonPressed(25)).onTrue(new AutoGroundPickupCommand(elevatorSubsystem, coralizerSubsystem));
     }
 
-    public void initZeroGyro() {
+    public void autoInit() {
         swerveSubsystem.zeroOdoGyro(Math.toRadians(FieldOrientation.getOrientation().getStartOrientation()));
         swerveSubsystem.setOrientation(FieldOrientation.getOrientation());
+        coralizerSubsystem.startWristTimer();
     }
 
 //    private void setupAutoTab() {

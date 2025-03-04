@@ -3,7 +3,9 @@ package frc.robot.commands.swerve.pathing;
 import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.path.PathConstraints;
 import edu.wpi.first.math.geometry.Pose2d;
+import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj2.command.Command;
+import frc.robot.Constants;
 import frc.robot.commands.LoggedCommand;
 import frc.robot.subsystems.SwerveSubsystem;
 
@@ -28,6 +30,8 @@ public class PathFindCommand extends LoggedCommand {
 
         command = AutoBuilder.pathfindToPose(goal, constraints);
         command.initialize();
+
+        Constants.cXbox.setRumble(GenericHID.RumbleType.kBothRumble, Constants.rumbleHigh);
     }
 
     @Override
@@ -45,5 +49,7 @@ public class PathFindCommand extends LoggedCommand {
     public void end(boolean interrupted) {
         super.end(interrupted);
         command.end(interrupted);
+
+        Constants.cXbox.setRumble(GenericHID.RumbleType.kBothRumble, 0);
     }
 }

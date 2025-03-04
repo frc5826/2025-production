@@ -3,6 +3,7 @@ package frc.robot.commands.swerve.pathing;
 import com.pathplanner.lib.config.PIDConstants;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
+import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.Constants;
@@ -72,6 +73,8 @@ public class AccuratePathCommand extends LoggedCommand {
         SmartDashboard.putData("Auto/AccuratePIDx", pidX);
         SmartDashboard.putData("Auto/AccuratePIDy", pidY);
         SmartDashboard.putData("Auto/AccuratePIDturn", pidR);
+
+        Constants.cXbox.setRumble(GenericHID.RumbleType.kBothRumble, Constants.rumbleHigh);
     }
 
     @Override
@@ -111,5 +114,7 @@ public class AccuratePathCommand extends LoggedCommand {
 
         timer.reset();
         finished = false;
+
+        Constants.cXbox.setRumble(GenericHID.RumbleType.kBothRumble, 0);
     }
 }
