@@ -22,8 +22,6 @@ public class Robot extends TimedRobot
 
     private final RobotContainer robotContainer;
 
-    private boolean teleop;
-
     public Robot()
     {
         robotContainer = new RobotContainer();
@@ -32,7 +30,7 @@ public class Robot extends TimedRobot
     @Override
     public void robotPeriodic()
     {
-        robotContainer.prePeriodic(teleop);
+        robotContainer.prePeriodic();
 
         CommandScheduler.getInstance().run();
 
@@ -42,12 +40,10 @@ public class Robot extends TimedRobot
     @Override
     public void robotInit() {
         autonomousCommand = robotContainer.getAutoCommand();
-        teleop = false;
     }
 
     @Override
     public void disabledInit() {
-        teleop = false;
     }
 
     @Override
@@ -72,8 +68,6 @@ public class Robot extends TimedRobot
     @Override
     public void teleopInit()
     {
-        teleop = true;
-
         if (autonomousCommand != null)
         {
             autonomousCommand.cancel();

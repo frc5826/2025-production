@@ -6,9 +6,6 @@
 package frc.robot;
 
 import com.pathplanner.lib.path.PathConstraints;
-import edu.wpi.first.cameraserver.CameraServer;
-import edu.wpi.first.cscore.CvSink;
-import edu.wpi.first.cscore.UsbCamera;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.wpilibj.PowerDistribution;
@@ -20,15 +17,15 @@ import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.commands.autos.AutoCommandGroup;
 import frc.robot.commands.autos.Dumb;
 import frc.robot.commands.commandgroups.*;
-import frc.robot.commands.commandgroups.reef.L1CommandGroup;
-import frc.robot.commands.commandgroups.reef.L2CommandGroup;
-import frc.robot.commands.commandgroups.reef.L3CommandGroup;
-import frc.robot.commands.commandgroups.reef.L4CommandGroup;
+import frc.robot.commands.commandgroups.algae.DealgifyL2CommandGroup;
+import frc.robot.commands.commandgroups.algae.DealgifyL3CommandGroup;
+import frc.robot.commands.commandgroups.algae.SourceCommandGroup;
+import frc.robot.commands.commandgroups.dropoff.DropoffCommandGroup;
+import frc.robot.commands.commandgroups.reef.*;
 import frc.robot.commands.coralizer.CoralizerIntakeCommand;
-import frc.robot.commands.swerve.CrabWalkCommand;
-import frc.robot.commands.swerve.DriveButtonCommand;
+import frc.robot.commands.swerve.drivercontrol.CrabWalkCommand;
+import frc.robot.commands.swerve.drivercontrol.DriveButtonCommand;
 import frc.robot.commands.swerve.pathing.*;
-import frc.robot.math.MathHelper;
 import frc.robot.positioning.Orientation;
 import frc.robot.positioning.ReefPosition;
 import frc.robot.sensors.DriverCamera;
@@ -40,7 +37,7 @@ import edu.wpi.first.wpilibj.DataLogManager;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
-import frc.robot.commands.swerve.TeleopDriveCommand;
+import frc.robot.commands.swerve.drivercontrol.TeleopDriveCommand;
 import frc.robot.subsystems.SwerveSubsystem;
 import frc.robot.localization.Localization;
 
@@ -49,7 +46,6 @@ import java.util.List;
 import java.util.function.Supplier;
 
 import static frc.robot.Constants.*;
-import static frc.robot.Constants.BluePositions.*;
 
 public class RobotContainer {
 
@@ -61,8 +57,6 @@ public class RobotContainer {
     public final ElevatorSubsystem elevatorSubsystem = new ElevatorSubsystem();
 
     public final CoralizerSubsystem coralizerSubsystem = new CoralizerSubsystem();
-
-    DeferredLevelCommand deferredLevelCommand = new DeferredLevelCommand(elevatorSubsystem, coralizerSubsystem, swerveSubsystem);
 
     private Field2d field;
 
@@ -89,20 +83,17 @@ public class RobotContainer {
         setupAutoTab();
     }
 
-    public void prePeriodic(boolean teleop) {
+    public void prePeriodic() {
         SmartDashboard.putNumber("Adjusted angle", swerveSubsystem.getAdjustedIMUContinuousAngle().getDegrees());
         SmartDashboard.putNumber("Not adjusted angle", swerveSubsystem.getIMUContinuousAngle().getDegrees());
 
         if (!swerveSubsystem.getOrientation().equals(FieldOrientation.getOrientation())) {
             swerveSubsystem.setOrientation(FieldOrientation.getOrientation());
         }
-
-        //if (teleop) {
-            localization.move();
-            localization.measure(swerveSubsystem);
-            updateField();
-        //}
-
+        
+        localization.move();
+        localization.measure(swerveSubsystem);
+        updateField();
     }
 
     public void postPeriodic() {
@@ -122,29 +113,11 @@ public class RobotContainer {
 
         new Trigger(cXbox::getRightBumperButton).whileTrue(new DriveButtonCommand(new ChassisSpeeds(0, 0, -0.7), swerveSubsystem));
         new Trigger(cXbox::getLeftBumperButton).whileTrue(new DriveButtonCommand(new ChassisSpeeds(0, 0, 0.7), swerveSubsystem));
-
-        new Trigger(cXbox::getBButtonPressed).onTrue(new GroundIntakeAlgaeCommand(coralizerSubsystem, elevatorSubsystem));
-        //new Trigger(cXbox::getAButton).whileTrue(new AccuratePathCommand(() -> MathHelper.offsetPoseReverse(swerveSubsystem.getLocalizationPose(), -0.75), 5, true, swerveSubsystem));
     }
 
     private void bindBoard() {
         PathConstraints constraints = new PathConstraints(3.5, 2, Math.PI * 2,  Math.PI * 2);
-        //For Buttons 0-11, Starts at top left white button and goes clockwise around
-//        new Trigger(() -> cButtonBoard.getButton(0)).whileTrue(new PathOffsetWrapper(FieldOrientation.getOrientation()::getReefH, constraints, offset, true, swerveSubsystem));
-//        new Trigger(() -> cButtonBoard.getButton(1)).whileTrue(new PathOffsetWrapper(FieldOrientation.getOrientation()::getReefG, constraints, offset, true, swerveSubsystem));
-//        new Trigger(() -> cButtonBoard.getButton(2)).whileTrue(new PathOffsetWrapper(FieldOrientation.getOrientation()::getReefF, constraints, offset, true, swerveSubsystem));
-//        new Trigger(() -> cButtonBoard.getButton(3)).whileTrue(new PathOffsetWrapper(FieldOrientation.getOrientation()::getReefE, constraints, offset, true, swerveSubsystem));
-//        //new Trigger(() -> cButtonBoard.getButton(4)).whileTrue(new PathOffsetWrapper(FieldOrientation.getOrientation()::getReefD, constraints, offset, true, swerveSubsystem));
-//        //new Trigger(() -> cButtonBoard.getButton(5)).whileTrue(new PathOffsetWrapper(FieldOrientation.getOrientation()::getReefC, constraints, offset, true, swerveSubsystem));
-//        new Trigger(() -> cButtonBoard.getButton(6)).whileTrue(new PathOffsetWrapper(FieldOrientation.getOrientation()::getReefB, constraints, offset, true, swerveSubsystem));
-//        new Trigger(() -> cButtonBoard.getButton(7)).whileTrue(new PathOffsetWrapper(FieldOrientation.getOrientation()::getReefA, constraints, offset, true, swerveSubsystem));
-//        new Trigger(() -> cButtonBoard.getButton(8)).whileTrue(new PathOffsetWrapper(FieldOrientation.getOrientation()::getReefL, constraints, offset, true, swerveSubsystem));
-//        new Trigger(() -> cButtonBoard.getButton(9)).whileTrue(new PathOffsetWrapper(FieldOrientation.getOrientation()::getReefK, constraints, offset, true, swerveSubsystem));
-//        new Trigger(() -> cButtonBoard.getButton(10)).whileTrue(new PathOffsetWrapper(FieldOrientation.getOrientation()::getReefJ, constraints, offset, true, swerveSubsystem));
-//        new Trigger(() -> cButtonBoard.getButton(11)).whileTrue(new PathOffsetWrapper(FieldOrientation.getOrientation()::getReefI, constraints, offset, true, swerveSubsystem));
-        //new Trigger(() -> cButtonBoard.getButtonPressed(11)).onTrue(new AutoGroundPickupCommand(elevatorSubsystem, coralizerSubsystem)); //TODO add a button for this
 
-        //TODO new align stuff test :D
         new Trigger(() -> cButtonBoard.getButton(0)).whileTrue(new AlignReefCommand(FieldOrientation.getOrientation().getReefH(), constraints, swerveSubsystem));
         new Trigger(() -> cButtonBoard.getButton(1)).whileTrue(new AlignReefCommand(FieldOrientation.getOrientation().getReefG(), constraints, swerveSubsystem));
         new Trigger(() -> cButtonBoard.getButton(2)).whileTrue(new AlignReefCommand(FieldOrientation.getOrientation().getReefF(), constraints, swerveSubsystem));
@@ -160,13 +133,9 @@ public class RobotContainer {
 
         //For Buttons 12-15, Starts at top white button and goes straight down
         new Trigger(() -> cButtonBoard.getButtonPressed(12)).onTrue(new L4CommandGroup(elevatorSubsystem, coralizerSubsystem));
-//        new Trigger(() -> cButtonBoard.getButtonPressed(12)).onTrue(new InstantCommand(() -> {deferredLevelCommand.setTarget(DeferredLevelCommand.DeferredLevel.L4);}));
         new Trigger(() -> cButtonBoard.getButtonPressed(13)).onTrue(new L3CommandGroup(elevatorSubsystem, coralizerSubsystem));
-//        new Trigger(() -> cButtonBoard.getButtonPressed(13)).onTrue(new InstantCommand(() -> {deferredLevelCommand.setTarget(DeferredLevelCommand.DeferredLevel.L3);}));
         new Trigger(() -> cButtonBoard.getButtonPressed(14)).onTrue(new L2CommandGroup(elevatorSubsystem, coralizerSubsystem));
-//        new Trigger(() -> cButtonBoard.getButtonPressed(14)).onTrue(new InstantCommand(() -> {deferredLevelCommand.setTarget(DeferredLevelCommand.DeferredLevel.L2);}));
         new Trigger(() -> cButtonBoard.getButtonPressed(15)).onTrue(new L1CommandGroup(elevatorSubsystem, coralizerSubsystem));
-//        new Trigger(() -> cButtonBoard.getButtonPressed(15)).onTrue(new InstantCommand(() -> {deferredLevelCommand.setTarget(DeferredLevelCommand.DeferredLevel.L1);}));
         //For Buttons 16-18, Starts at top right black button and goes left
         new Trigger(() -> cButtonBoard.getButtonPressed(16)).onTrue(new DropoffCommandGroup(elevatorSubsystem, coralizerSubsystem, swerveSubsystem));
         new Trigger(() -> cButtonBoard.getButtonPressed(17)).onTrue(new HomeCommandGroup(elevatorSubsystem, coralizerSubsystem));
@@ -179,8 +148,6 @@ public class RobotContainer {
         new Trigger(() -> cButtonBoard.getButtonPressed(22)).onTrue(new DealgifyL2CommandGroup(elevatorSubsystem, coralizerSubsystem, swerveSubsystem));
         new Trigger(() -> cButtonBoard.getButtonPressed(23)).onTrue(new DealgifyL3CommandGroup(elevatorSubsystem, coralizerSubsystem, swerveSubsystem));
         new Trigger(() -> cButtonBoard.getButton(24)).whileTrue(new CoralizerIntakeCommand(coralizerSubsystem, CoralizerIntakeCommand.IntakeDirection.IN));
-        //Ground pickup
-        //new Trigger(() -> cButtonBoard.getButtonPressed(25)).onTrue(new AutoGroundPickupCommand(elevatorSubsystem, coralizerSubsystem));
     }
 
     public void autoInit() {
@@ -188,62 +155,6 @@ public class RobotContainer {
         swerveSubsystem.setOrientation(FieldOrientation.getOrientation());
         coralizerSubsystem.startWristTimer();
     }
-
-//    private void setupAutoTab() {
-//        ShuffleboardTab autoTab = Shuffleboard.getTab("Auto");
-//
-//        SendableChooser<Pose2d> firstReef = new SendableChooser<Pose2d>();
-//        SendableChooser<Pose2d> secondReef = new SendableChooser<Pose2d>();
-//        SendableChooser<Boolean> dumb = new SendableChooser<Boolean>();
-//
-//        Orientation orientation = FieldOrientation.getOrientation();
-//
-//        dumb.addOption("Yes dumb", true);
-//        dumb.addOption("No dumb", false);
-//
-//        autoTab.add("Dumb?", firstReef)
-//                .withWidget(BuiltInWidgets.kComboBoxChooser)
-//                .withSize(2, 2)
-//                .withPosition(0, 0);
-//
-//        //TODO these are not initialized yet. Maybe use orientation::getReefA
-//        firstReef.addOption("A", orientation.getReefA());
-//        firstReef.addOption("B", orientation.getReefB());
-//        firstReef.addOption("C", orientation.getReefC());
-//        firstReef.addOption("D", orientation.getReefD());
-//        firstReef.addOption("E", orientation.getReefE());
-//        firstReef.addOption("F", orientation.getReefF());
-//        firstReef.addOption("G", orientation.getReefG());
-//        firstReef.addOption("H", orientation.getReefH());
-//        firstReef.addOption("I", orientation.getReefI());
-//        firstReef.addOption("J", orientation.getReefJ());
-//        firstReef.addOption("K", orientation.getReefK());
-//        firstReef.addOption("L", orientation.getReefL());
-//
-//        autoTab.add("First reef target", firstReef)
-//                .withWidget(BuiltInWidgets.kComboBoxChooser)
-//                .withSize(2, 2)
-//                .withPosition(2, 0);
-//
-//        secondReef.addOption("Nothing", new Pose2d());
-//        secondReef.addOption("A", orientation.getReefA());
-//        secondReef.addOption("B", orientation.getReefB());
-//        secondReef.addOption("C", orientation.getReefC());
-//        secondReef.addOption("D", orientation.getReefD());
-//        secondReef.addOption("E", orientation.getReefE());
-//        secondReef.addOption("F", orientation.getReefF());
-//        secondReef.addOption("G", orientation.getReefG());
-//        secondReef.addOption("H", orientation.getReefH());
-//        secondReef.addOption("I", orientation.getReefI());
-//        secondReef.addOption("J", orientation.getReefJ());
-//        secondReef.addOption("K", orientation.getReefK());
-//        secondReef.addOption("L", orientation.getReefL());
-//
-//        autoTab.add("Second reef target", secondReef)
-//                .withWidget(BuiltInWidgets.kComboBoxChooser)
-//                .withSize(2, 2)
-//                .withPosition(4, 0);
-//    }
 
     private void setupAutoTab(){
         Orientation orientation = FieldOrientation.getOrientation();
@@ -340,18 +251,6 @@ public class RobotContainer {
         position.addDouble("Robot X", ()-> localization.getPose().getX());
         position.addDouble("Robot Y", ()-> localization.getPose().getY());
         position.addDouble("Robot rotation", ()-> localization.getPose().getRotation().getDegrees());
-
-
-//        //Filter inputs
-//        ShuffleboardLayout inputs = tab.getLayout("Filter inputs", BuiltInLayouts.kList)
-//                .withPosition(0, 0).withSize(2, 4);
-//
-////        if (swerveSubsystem.getFieldAcc().isPresent()) {
-////            inputs.add("Acceleration", swerveSubsystem.getFieldAcc().get());
-////        }
-//        inputs.add("Velocity", swerveSubsystem.getOdoFieldVel());
-//        inputs.add("Adjusted gyro angle", swerveSubsystem.getAdjustedIMUContinuousAngle());
-//        inputs.add("Cam pose", cameraSubsystem.getCameraMeasurements());
     }
 
     public Command getAutoCommand(){

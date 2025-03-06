@@ -1,9 +1,6 @@
-package frc.robot.commands.commandgroups;
+package frc.robot.commands.commandgroups.dropoff;
 
 import edu.wpi.first.wpilibj2.command.Command;
-import frc.robot.commands.commandgroups.reef.L1DropoffCommandGroup;
-import frc.robot.commands.commandgroups.reef.L3L2DropoffCommandGroup;
-import frc.robot.commands.commandgroups.reef.L4DropoffCommandGroup;
 import frc.robot.commands.coralizer.CoralizerIntakeCommand;
 import frc.robot.subsystems.CoralizerSubsystem;
 import frc.robot.subsystems.ElevatorSubsystem;

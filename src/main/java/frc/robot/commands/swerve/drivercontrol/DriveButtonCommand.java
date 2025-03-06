@@ -1,4 +1,4 @@
-package frc.robot.commands.swerve;
+package frc.robot.commands.swerve.drivercontrol;
 
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import frc.robot.commands.LoggedCommand;

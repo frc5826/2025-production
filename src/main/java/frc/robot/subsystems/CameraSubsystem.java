@@ -29,8 +29,4 @@ public class CameraSubsystem extends LoggedSubsystem {
     public List<Pose3d> getCameraMeasurements() {
         return measurements;
     }
-
-    public Pose3d getAligningPose() {
-        return measurements.get(0);
-    }
 }

@@ -2,17 +2,13 @@ package frc.robot.commands.autos;
 
 import com.pathplanner.lib.path.PathConstraints;
 import edu.wpi.first.math.geometry.Pose2d;
-import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
-import frc.robot.commands.commandgroups.*;
+import frc.robot.commands.commandgroups.dropoff.DropoffCommandGroup;
 import frc.robot.commands.commandgroups.reef.*;
-import frc.robot.commands.coralizer.CoralizerIntakeCommand;
-import frc.robot.commands.coralizer.CoralizerWristCommand;
-import frc.robot.commands.elevator.ElevatorRepositionCommand;
-import frc.robot.commands.swerve.MoveTimeCommand;
+import frc.robot.commands.swerve.pathing.MoveTimeCommand;
 import frc.robot.commands.swerve.pathing.*;
 import frc.robot.math.MathHelper;
 import frc.robot.positioning.ReefPosition;
@@ -20,11 +16,9 @@ import frc.robot.subsystems.CoralizerSubsystem;
 import frc.robot.subsystems.ElevatorSubsystem;
 import frc.robot.subsystems.SwerveSubsystem;
 
-import java.nio.file.Path;
 import java.util.function.Supplier;
 
 import static frc.robot.Constants.BluePositions.cRobotLength;
-import static frc.robot.commands.coralizer.CoralizerIntakeCommand.IntakeDirection.OUT;
 
 public class OnePiece extends SequentialCommandGroup {
     public OnePiece(ReefPosition reefGoal, Pose2d sourceGoal, SwerveSubsystem s, ElevatorSubsystem e, CoralizerSubsystem c) {

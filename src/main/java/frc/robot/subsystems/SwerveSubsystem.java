@@ -82,6 +82,18 @@ public class SwerveSubsystem extends LoggedSubsystem {
         }
     }
 
+    public ChassisSpeeds getOdoFieldVel() {
+        ChassisSpeeds vel = swerveDrive.getRobotVelocity();
+        Translation2d velTranslation = new Translation2d(vel.vxMetersPerSecond, vel.vyMetersPerSecond);
+        velTranslation = velTranslation.rotateBy(getAdjustedIMUContinuousAngle());
+        vel = new ChassisSpeeds(velTranslation.getX(), velTranslation.getY(), vel.omegaRadiansPerSecond);
+        return vel;
+    }
+
+    public ChassisSpeeds getOdoRobotVel() {
+        return swerveDrive.getRobotVelocity();
+    }
+
     public Orientation getOrientation() {
         return orientation;
     }
@@ -100,20 +112,13 @@ public class SwerveSubsystem extends LoggedSubsystem {
 
     public double getCrabSpeedMult() { return crabSpeedMult; }
 
-    public ChassisSpeeds getOdoFieldVel() {
-        ChassisSpeeds vel = swerveDrive.getRobotVelocity();
-        Translation2d velTranslation = new Translation2d(vel.vxMetersPerSecond, vel.vyMetersPerSecond);
-        velTranslation = velTranslation.rotateBy(getAdjustedIMUContinuousAngle());
-        vel = new ChassisSpeeds(velTranslation.getX(), velTranslation.getY(), vel.omegaRadiansPerSecond);
-        return vel;
-    }
-
-    public ChassisSpeeds getOdoRobotVel() {
-        return swerveDrive.getRobotVelocity();
-    }
-
     public void driveFieldOriented(ChassisSpeeds velocity) {
         swerveDrive.drive(ChassisSpeeds.fromFieldRelativeSpeeds(velocity, getAdjustedIMUContinuousAngle()));
+    }
+
+    public void driveRobotOriented(ChassisSpeeds velocity)
+    {
+        swerveDrive.drive(velocity);
     }
 
     public void teleDriveFieldOriented(ChassisSpeeds vel) {
@@ -134,14 +139,8 @@ public class SwerveSubsystem extends LoggedSubsystem {
         swerveDrive.setGyro(new Rotation3d(0, 0, offset));
     }
 
-    public void driveRobotOriented(ChassisSpeeds velocity)
-    {
-        swerveDrive.drive(velocity);
-    }
-
     public void setupPathPlanner()
-    {
-
+    { // Comments from yagsl docs
         // Load the RobotConfig from the GUI settings. You should probably
         // store this in your Constants file
         RobotConfig config;

@@ -25,8 +25,6 @@ import frc.robot.subsystems.ButtonBoard;
 public final class Constants
 {
 
-    //public static final PowerDistribution cPowerDistribution = new PowerDistribution();
-
     public static class Elevator {
         public static final int cElevatorMotor1ID = 1;
         public static final int cElevatorMotor2ID = 2;
@@ -40,16 +38,13 @@ public final class Constants
         public static final double cElevatorMinOutput = -1;
         public static final double cElevatorMaxOutput = 1;
         public static final double cElevatorVUp = 0.8;
-        public static final double cElevatorVDown = 0.8; //TODO THESE ARE NAMED INCORRECTLY WYATT!!!!!!!!!!!!!!!!!!
+        public static final double cElevatorVDown = 0.8;
         public static final double cElevatorG = 0.07;
         public static final double cElevatorMaxAcceleration = 1;
         public static final double cElevatorMaxVelocity = 1.67;
         public static final double cElevatorHeightMin = 0;
         public static final double cElevatorHeightMax = 1.71;
         public static final double cElevatorDeadband = 0.06;
-        //TODO get limit switch IDs
-        public static final int cElevatorLimitSwitch1ID = 0;
-        public static final int cElevatorLimitSwitch2ID = 0;
 
         public static class ConversionFactor {
             public static final double cElevatorClicksPerMeter = 17777;
@@ -68,7 +63,6 @@ public final class Constants
 
     public static final double cTeleDriveDeadband = 0.25;
     public static final double cTeleTurnDeadband = 0.25;
-    public static final double cTurnDeadband = 0.8;
 
     public static final double cL4offset = 0.03;
 
@@ -94,18 +88,6 @@ public final class Constants
         public static final double cRobotWidth = Units.inchesToMeters(27 + 6);
         public static final double cPipeApart = Units.inchesToMeters(13);
 
-//        public static Pose2d reefA = new Pose2d(3.16, 4.19, Rotation2d.fromDegrees(0));
-//        public static Pose2d reefB = new Pose2d(3.16, 3.86, Rotation2d.fromDegrees(0));
-//        public static Pose2d reefC = new Pose2d(3.69, 2.97, Rotation2d.fromDegrees(60));
-//        public static Pose2d reefD = new Pose2d(3.97, 2.80, Rotation2d.fromDegrees(60));
-//        public static Pose2d reefE = new Pose2d(5.00, 2.80, Rotation2d.fromDegrees(120));
-//        public static Pose2d reefF = new Pose2d(5.30, 2.96, Rotation2d.fromDegrees(120));
-//        public static Pose2d reefG = new Pose2d(5.82, 3.86, Rotation2d.fromDegrees(180));
-//        public static Pose2d reefH = new Pose2d(5.82, 4.19, Rotation2d.fromDegrees(180));
-//        public static Pose2d reefI = new Pose2d(5.30, 5.09, Rotation2d.fromDegrees(-120));
-//        public static Pose2d reefJ = new Pose2d(5.00, 5.25, Rotation2d.fromDegrees(-120));
-//        public static Pose2d reefK = new Pose2d(3.97, 5.25, Rotation2d.fromDegrees(-60));
-//        public static Pose2d reefL = new Pose2d(3.68, 5.09, Rotation2d.fromDegrees(-60));
         public static Pose2d reefSideAB = new Pose2d(Units.inchesToMeters(144), Units.inchesToMeters(158.5), Rotation2d.fromDegrees(180 - 180));
         public static Pose2d reefSideCD = new Pose2d(Units.inchesToMeters(160.39), Units.inchesToMeters(130.17), Rotation2d.fromDegrees(240 - 180));
         public static Pose2d reefSideEF = new Pose2d(Units.inchesToMeters(193.1), Units.inchesToMeters(130.17), Rotation2d.fromDegrees(300 - 180));
@@ -125,13 +107,7 @@ public final class Constants
         public static Pose2d reefK = MathHelper.offsetPose(reefSideKL, cPipeApart / 2, new Rotation2d(-Math.PI / 2));
         public static Pose2d reefL = MathHelper.offsetPose(reefSideKL, cPipeApart / 2, new Rotation2d(Math.PI / 2));
         public static Pose2d processor = new Pose2d(11.51, 7.47, Rotation2d.fromDegrees(90));
-//        public static Pose2d coralStationLA = new Pose2d(0.76, 6.69, Rotation2d.fromDegrees(-144));
-//        public static Pose2d coralStationLB = new Pose2d(1.19, 7, Rotation2d.fromDegrees(-144));
-//        public static Pose2d coralStationLC = new Pose2d(1.63, 7.32, Rotation2d.fromDegrees(-144));
-//        public static Pose2d coralStationRA = new Pose2d(0.76, 1.34, Rotation2d.fromDegrees(-36));
-//        public static Pose2d coralStationRB = new Pose2d(1.19, 1.02, Rotation2d.fromDegrees(-36));
-//        public static Pose2d coralStationRC = new Pose2d(1.63, 0.71, Rotation2d.fromDegrees(-36));
-        public static Pose2d coralStationLA = new Pose2d(0.76, 6.69, Rotation2d.fromDegrees(-144));
+        public static Pose2d coralStationLA = new Pose2d(0.76, 6.69, Rotation2d.fromDegrees(-144)); //TODO maybe switch these to use april tag poses idk maybe if you want
         public static Pose2d coralStationLB = new Pose2d(Units.inchesToMeters(33.51), Units.inchesToMeters(291.2), Rotation2d.fromDegrees(-144));
         public static Pose2d coralStationLC = new Pose2d(1.63, 7.32, Rotation2d.fromDegrees(-144));
         public static Pose2d coralStationRA = new Pose2d(0.76, 1.34, Rotation2d.fromDegrees(-36));

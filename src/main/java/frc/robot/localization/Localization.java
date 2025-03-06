@@ -25,6 +25,7 @@ public class Localization {
 
     public Localization(CameraSubsystem cameraSubsystem) {
         kalmanFilter = new KalmanFilter(new MultivariateNormalDistribution(new double[]{0, 0, 0, 0, 0, 0, 0, 0, 0}, initCovar()));
+        //TODO adjust variances
         this.measVar = new Variances(30, 2, 10, 4, 2, 10);
         this.cameraSubsystem = cameraSubsystem;
         timer = new Timer();
@@ -73,7 +74,7 @@ public class Localization {
 
         //Velocity from wheel encoders
         ChassisSpeeds velocity = s.getOdoFieldVel();
-        zOdo.setEntry(3, velocity.vxMetersPerSecond); //TODO test this and acc
+        zOdo.setEntry(3, velocity.vxMetersPerSecond);
         zOdo.setEntry(4, velocity.vyMetersPerSecond);
         zOdo.setEntry(5, velocity.omegaRadiansPerSecond);
 
@@ -107,10 +108,6 @@ public class Localization {
                 new Rotation2d(MathUtil.angleModulus(m.getEntry(2))));
 
         return pose;
-    }
-
-    public Pose2d getCameraPose() {
-        return cameraPose;
     }
 
     private static double[][] initCovar() {

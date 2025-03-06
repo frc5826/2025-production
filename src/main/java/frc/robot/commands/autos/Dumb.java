@@ -2,7 +2,7 @@ package frc.robot.commands.autos;
 
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
-import frc.robot.commands.swerve.MoveTimeCommand;
+import frc.robot.commands.swerve.pathing.MoveTimeCommand;
 import frc.robot.subsystems.SwerveSubsystem;
 
 public class Dumb extends SequentialCommandGroup {

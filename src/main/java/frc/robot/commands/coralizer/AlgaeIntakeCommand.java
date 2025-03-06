@@ -1,7 +1,6 @@
-package frc.robot.commands;
+package frc.robot.commands.coralizer;
 
-import edu.wpi.first.wpilibj.Timer;
-import frc.robot.commands.coralizer.CoralizerIntakeCommand;
+import frc.robot.commands.LoggedCommand;
 import frc.robot.subsystems.CoralizerSubsystem;
 
 public class AlgaeIntakeCommand extends LoggedCommand {

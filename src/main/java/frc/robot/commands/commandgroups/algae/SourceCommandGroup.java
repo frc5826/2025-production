@@ -1,6 +1,5 @@
-package frc.robot.commands.commandgroups;
+package frc.robot.commands.commandgroups.algae;
 
-import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import frc.robot.commands.coralizer.CoralizerIntakeCommand;
 import frc.robot.commands.coralizer.CoralizerWristCommand;

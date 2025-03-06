@@ -117,7 +117,6 @@ public class CameraSystem {
 
         for (Pose3d possible : results) {
             double factor = filter.LOF(possible, tagLog);
-            //System.out.println(factor); //TODO test
             if (factor <= cLOFRejectionValue) {
                 filteredResults.add(possible);
             }

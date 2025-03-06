@@ -17,7 +17,7 @@ public class MathHelper {
     }
 
     public static Pose2d offsetPose(Pose2d pose, double offset, Rotation2d dir) {
-        Translation2d translation = new Translation2d(offset, pose.getRotation().minus(dir)); //TODO TEST
+        Translation2d translation = new Translation2d(offset, pose.getRotation().minus(dir));
 
         return new Pose2d(pose.getX() + translation.getX(),
                 pose.getY() + translation.getY(),
