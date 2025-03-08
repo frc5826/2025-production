@@ -70,7 +70,7 @@ public class RobotContainer {
         DataLogManager.start("/U/logs");
         CommandScheduler.getInstance().setDefaultCommand(swerveSubsystem, new TeleopDriveCommand(swerveSubsystem));
 
-        new DriverCamera();
+//        new DriverCamera(); Removed usb camera
 
         // Setup button bindings
         bindXbox();
@@ -115,6 +115,7 @@ public class RobotContainer {
         new Trigger(cXbox::getLeftBumperButton).whileTrue(new DriveButtonCommand(new ChassisSpeeds(0, 0, 0.7), swerveSubsystem));
 
         new Trigger(cXbox::getAButton).whileTrue(new AlignReefCameraCommand(cameraSubsystem, swerveSubsystem));
+        new Trigger(cXbox::getBButtonPressed).onTrue(new InstantCommand(() -> coralizerSubsystem.setWristTarget(10)));
     }
 
     private void bindBoard() {

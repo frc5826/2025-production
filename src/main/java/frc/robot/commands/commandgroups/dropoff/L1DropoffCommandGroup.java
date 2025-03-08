@@ -1,6 +1,7 @@
 package frc.robot.commands.commandgroups.dropoff;
 
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
+import frc.robot.commands.commandgroups.HomeCommandGroup;
 import frc.robot.commands.coralizer.CoralizerIntakeCommand;
 import frc.robot.commands.coralizer.CoralizerWristCommand;
 import frc.robot.commands.elevator.ElevatorPositionCommand;
@@ -14,9 +15,10 @@ public class L1DropoffCommandGroup extends SequentialCommandGroup {
 
     public L1DropoffCommandGroup(ElevatorSubsystem elevatorSubsystem, CoralizerSubsystem coralizerSubsystem, SwerveSubsystem swerveSubsystem){
         addCommands(
-                new ElevatorPositionCommand(elevatorSubsystem, 0.5, ElevatorSubsystem.LevelTarget.NONE),
-                new CoralizerWristCommand(coralizerSubsystem, -20),
-                new CoralizerIntakeCommand(coralizerSubsystem, OUT)
+//                new ElevatorPositionCommand(elevatorSubsystem, 0.5, ElevatorSubsystem.LevelTarget.NONE),
+//                new CoralizerWristCommand(coralizerSubsystem, -20),
+                new CoralizerIntakeCommand(coralizerSubsystem, OUT),
+                new HomeCommandGroup(elevatorSubsystem, coralizerSubsystem)
         );
     }
 

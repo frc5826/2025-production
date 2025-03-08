@@ -31,14 +31,16 @@ public class CoralizerSubsystem extends LoggedSubsystem{
         shouldHold = false;
         intakeMotor = new SparkMax(4, SparkLowLevel.MotorType.kBrushless);
         wristMotor = new SparkMax(3, SparkLowLevel.MotorType.kBrushless);
-        pid = new PID(cCoralizerP, cCoralizerI, cCoralizerD, cCoralizerMax, cCoralizerMin, cCoralizerDeadband, this::getRotation);
-        wristTarget = 60;
+        pid = new PID(cCoralizerP, cCoralizerI, cCoralizerD, cCoralizerMax, cCoralizerMin, 0, this::getRotation);
+        wristTarget = 50;
         pid.setGoal(wristTarget);
         SparkMaxConfig config = new SparkMaxConfig();
         config.idleMode(SparkBaseConfig.IdleMode.kBrake);
         config.inverted(false);
         config.smartCurrentLimit(40);
         config.signals.absoluteEncoderPositionPeriodMs(20);
+//        config.absoluteEncoder.inverted(true);
+//        config.absoluteEncoder.zeroCentered(true);
         wristMotor.configure(config, SparkBase.ResetMode.kResetSafeParameters, SparkBase.PersistMode.kPersistParameters);
 
         SmartDashboard.putData("coralizer/PID", pid);

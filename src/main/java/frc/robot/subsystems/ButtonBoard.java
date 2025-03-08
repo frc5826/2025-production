@@ -20,18 +20,6 @@ public class ButtonBoard extends SubsystemBase {
         }
     }
 
-    @Override
-    public void periodic() {
-        boolean isConnected = false;
-        for (ConnectionInfo c:NetworkTableInstance.getDefault().getConnections()){
-            if (c.remote_id.equals("button-client")) {
-                isConnected = true;
-                break;
-            }
-        }
-        connectionPublisher.set(isConnected);
-    }
-
     public boolean getButton(int button) {
         if (button < buttons.length && button >= 0) {
             return buttons[button].get();

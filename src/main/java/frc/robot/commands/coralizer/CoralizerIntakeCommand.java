@@ -25,7 +25,7 @@ public class CoralizerIntakeCommand extends LoggedCommand {
         super.initialize();
         coralizerSubsystem.setShouldHold(false);
         switch (direction){
-            case IN -> coralizerSubsystem.setIntakeSpeed(1);
+            case IN -> coralizerSubsystem.setIntakeSpeed(0.4);
             case OUT -> coralizerSubsystem.setIntakeSpeed(-0.4);
             case SHOOT -> coralizerSubsystem.setIntakeSpeed(-1);
         }

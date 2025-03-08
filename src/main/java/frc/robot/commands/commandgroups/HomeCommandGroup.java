@@ -11,7 +11,7 @@ public class HomeCommandGroup extends SequentialCommandGroup {
 
     public HomeCommandGroup(ElevatorSubsystem e, CoralizerSubsystem c){
         addCommands(
-                new CoralizerWristCommand(c, 60),
+                new CoralizerWristCommand(c, 50),
                 new ElevatorPositionCommand(e, 0, ElevatorSubsystem.LevelTarget.NONE)
         );
     }

@@ -119,7 +119,7 @@ public final class Constants
         public static final double cCoralizerP = 0.025;
         public static final double cCoralizerI = 0;
         public static final double cCoralizerD = 0;
-        public static final double cCoralizerG = 0.04;
+        public static final double cCoralizerG = 0.01;
         public static final double cCoralizerMin = -0.75;
         public static final double cCoralizerMax = 0.75;
         public static final double cCoralizerDeadband = 5;

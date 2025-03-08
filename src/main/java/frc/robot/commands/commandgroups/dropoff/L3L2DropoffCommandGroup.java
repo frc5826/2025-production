@@ -16,15 +16,15 @@ public class L3L2DropoffCommandGroup extends SequentialCommandGroup {
 
     public L3L2DropoffCommandGroup(ElevatorSubsystem elevatorSubsystem, CoralizerSubsystem coralizerSubsystem, SwerveSubsystem swerveSubsystem){
         addCommands(
-
-                Commands.parallel(
-                new ElevatorRepositionCommand(elevatorSubsystem, -0.3, ElevatorSubsystem.LevelTarget.NONE),
-                new CoralizerWristCommand(coralizerSubsystem, 20)
-                        ),
-                Commands.parallel(
-                    new CoralizerIntakeCommand(coralizerSubsystem, CoralizerIntakeCommand.IntakeDirection.OUT),
-                    new MoveTimeCommand(0.75, new ChassisSpeeds(-0.75, 0, 0), true, swerveSubsystem).asProxy()
-                ),
+//                Commands.parallel(
+//                        new ElevatorRepositionCommand(elevatorSubsystem, -0.3, ElevatorSubsystem.LevelTarget.NONE),
+//                        new CoralizerWristCommand(coralizerSubsystem, 20)
+//                ),
+//                Commands.parallel(
+//                    new CoralizerIntakeCommand(coralizerSubsystem, CoralizerIntakeCommand.IntakeDirection.OUT),
+//                    new MoveTimeCommand(0.75, new ChassisSpeeds(-0.75, 0, 0), true, swerveSubsystem).asProxy()
+//                ),
+                new CoralizerIntakeCommand(coralizerSubsystem, CoralizerIntakeCommand.IntakeDirection.OUT),
                 new HomeCommandGroup(elevatorSubsystem, coralizerSubsystem)
         );
     }
