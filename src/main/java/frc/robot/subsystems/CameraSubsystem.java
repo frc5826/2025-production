@@ -6,6 +6,7 @@ import frc.robot.sensors.CameraSystem;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 public class CameraSubsystem extends LoggedSubsystem {
 
@@ -28,5 +29,13 @@ public class CameraSubsystem extends LoggedSubsystem {
 
     public List<Pose3d> getCameraMeasurements() {
         return measurements;
+    }
+
+    public Optional<Double> getReefYaw() {
+        return cameraSystem.getReefTargetYaw();
+    }
+
+    public boolean hasReefTarget() {
+        return cameraSystem.getReefTargetYaw().isPresent();
     }
 }

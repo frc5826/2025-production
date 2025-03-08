@@ -28,7 +28,8 @@ public class CameraSystem {
     private static final double POSE_CUTOFF = 0.2;
     private static final double distanceCutoff = 4;
     private AprilTagFieldLayout fieldLayout;
-    private final List<Camera> cameras;
+    private final List<Camera> aprilTagCameras;
+    private Camera reefCamera;
     private DoubleLogEntry xLog, yLog, rotationLog, ambiguityLog;
 
     private FilterLOF2D filter;
@@ -45,7 +46,7 @@ public class CameraSystem {
             e.printStackTrace();
         }
 
-        cameras = List.of(
+        aprilTagCameras = List.of(
                 new Camera(new Translation3d(inToM(-3), inToM(8.5), inToM(12.125)),
                         new Rotation3d(0, -Math.PI / 4, 0),
                         "L45"),
@@ -60,6 +61,10 @@ public class CameraSystem {
                         "R0")
         );
 
+        reefCamera = new Camera(new Translation3d(inToM(14), 0, inToM(4)),
+                new Rotation3d(0, Math.toRadians(80), 0),
+                "Center");
+
         DataLog log = DataLogManager.getLog();
         xLog = new DoubleLogEntry(log, "/robot/vision/position/x");
         yLog = new DoubleLogEntry(log, "/robot/vision/position/y");
@@ -72,12 +77,21 @@ public class CameraSystem {
 
     }
 
+    public Optional<Double> getReefTargetYaw() {
+        for (var result : reefCamera.getCamera().getAllUnreadResults()) {
+            if (result.hasTargets()) {
+                return Optional.of(result.getBestTarget().getYaw());
+            }
+        }
+        return Optional.empty();
+    }
+
     public List<Pose3d> getCameraMeasurements() {
 
         LinkedList<Pose3d> results = new LinkedList<>();
         LinkedList<Pose3d> filteredResults = new LinkedList<>();
 
-        for (Camera camera : cameras) {
+        for (Camera camera : aprilTagCameras) {
 
             for (PhotonPipelineResult result : camera.getCamera().getAllUnreadResults()) {
 

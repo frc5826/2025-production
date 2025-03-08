@@ -113,6 +113,8 @@ public class RobotContainer {
 
         new Trigger(cXbox::getRightBumperButton).whileTrue(new DriveButtonCommand(new ChassisSpeeds(0, 0, -0.7), swerveSubsystem));
         new Trigger(cXbox::getLeftBumperButton).whileTrue(new DriveButtonCommand(new ChassisSpeeds(0, 0, 0.7), swerveSubsystem));
+
+        new Trigger(cXbox::getAButton).whileTrue(new AlignReefCameraCommand(cameraSubsystem, swerveSubsystem));
     }
 
     private void bindBoard() {
