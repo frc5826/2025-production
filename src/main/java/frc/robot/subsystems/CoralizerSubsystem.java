@@ -38,12 +38,12 @@ public class CoralizerSubsystem extends LoggedSubsystem{
         config.idleMode(SparkBaseConfig.IdleMode.kBrake);
         config.inverted(false);
         config.smartCurrentLimit(40);
+        config.signals.absoluteEncoderPositionPeriodMs(20);
         wristMotor.configure(config, SparkBase.ResetMode.kResetSafeParameters, SparkBase.PersistMode.kPersistParameters);
 
         SmartDashboard.putData("coralizer/PID", pid);
         SmartDashboard.putNumber("coralizer/Encoder", 0.0);
         SmartDashboard.putNumber("coralizer/Output", 0.0);
-        //SmartDashboard.putNumber("coralizer/Current", 0.0);
 
         wristEnableTimer = new Timer();
         wristEnableTimer.reset();
@@ -60,14 +60,13 @@ public class CoralizerSubsystem extends LoggedSubsystem{
                 setIntakeSpeed(1);
             }
         }
-        if(wristEnableTimer.hasElapsed(1)) {
-            double speed = pid.calculate() + cCoralizerG * Math.cos(getRotation() * (Math.PI / 180));
-            wristMotor.set(speed);
-            SmartDashboard.putNumber("coralizer/Output", speed);
-        }
+
+        double speed = pid.calculate() + cCoralizerG * Math.cos(getRotation() * (Math.PI / 180));
+        wristMotor.set(speed);
+        SmartDashboard.putNumber("coralizer/Output", speed);
+
         SmartDashboard.putNumber("coralizer/Encoder", getRotation());
         SmartDashboard.putBoolean("coralizer/HasCoral", hasCoral());
-        //SmartDashboard.putNumber("coralizer/Current", cPowerDistribution.getCurrent(2));
     }
 
     public void setIntakeSpeed(double speed) {
