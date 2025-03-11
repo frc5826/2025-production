@@ -5,6 +5,8 @@ import edu.wpi.first.networktables.NTSendableBuilder;
 import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.DutyCycle;
 
+import java.util.concurrent.TimeUnit;
+
 public class UltrasonicPWM implements NTSendable {
 
 
@@ -19,15 +21,16 @@ public class UltrasonicPWM implements NTSendable {
      * @return Reading in Meters
      */
     public double getUltrasonic(){
-        return ultrasonicReading.getHighTimeNanoseconds()/100000.0;
+        return TimeUnit.NANOSECONDS.toSeconds(ultrasonicReading.getHighTimeNanoseconds());
     }
 
-    public double getOffsetUltrasonic(){
+    public double getUltrasonicFromBumper(){
         if (getUltrasonic() <= 0.30){
             return 0.00;
         }
         else {
-            return getUltrasonic() - 0.30;
+            //This should be the distance (In meters) that the ultrasonic is from the edge of the front bumper
+            return getUltrasonic() - 0.50;
         }
     }
 
@@ -37,6 +40,6 @@ public class UltrasonicPWM implements NTSendable {
 
         builder.setSmartDashboardType("5826-Ultrasonic");
         builder.addDoubleProperty("FromSensorMeters", this::getUltrasonic, null);
-        builder.addDoubleProperty("FromBumperMeters", this::getOffsetUltrasonic, null);
+        builder.addDoubleProperty("FromBumperMeters", this::getUltrasonicFromBumper, null);
     }
 }
