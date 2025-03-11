@@ -8,6 +8,8 @@ package frc.robot;
 import com.pathplanner.lib.path.PathConstraints;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
+import edu.wpi.first.networktables.NetworkTableInstance;
+import edu.wpi.first.util.datalog.StringLogEntry;
 import edu.wpi.first.wpilibj.PowerDistribution;
 import edu.wpi.first.wpilibj.shuffleboard.*;
 import edu.wpi.first.wpilibj.smartdashboard.Field2d;
@@ -68,6 +70,9 @@ public class RobotContainer {
 
     public RobotContainer() {
         DataLogManager.start("/U/logs");
+//        StringLogEntry entry = new StringLogEntry(DataLogManager.getLog(), "/ntlog");
+//        NetworkTableInstance.getDefault().addLogger(0, 100,
+//                event -> entry.append(event.logMessage.filename + ":" + event.logMessage.line + ":" + event.logMessage.message));
         CommandScheduler.getInstance().setDefaultCommand(swerveSubsystem, new TeleopDriveCommand(swerveSubsystem));
 
 //        new DriverCamera(); Removed usb camera
@@ -114,8 +119,15 @@ public class RobotContainer {
         new Trigger(cXbox::getRightBumperButton).whileTrue(new DriveButtonCommand(new ChassisSpeeds(0, 0, -0.7), swerveSubsystem));
         new Trigger(cXbox::getLeftBumperButton).whileTrue(new DriveButtonCommand(new ChassisSpeeds(0, 0, 0.7), swerveSubsystem));
 
-        new Trigger(cXbox::getAButton).whileTrue(new AlignReefCameraCommand(cameraSubsystem, swerveSubsystem));
-        new Trigger(cXbox::getBButtonPressed).onTrue(new InstantCommand(() -> coralizerSubsystem.setWristTarget(10)));
+        //new Trigger(cXbox::getAButton).whileTrue(new AlignReefCameraCommand(cameraSubsystem, swerveSubsystem));
+        new Trigger(() -> cJoystick.getRawButtonPressed(12)).onTrue(new L4CommandGroup(elevatorSubsystem, coralizerSubsystem));
+        new Trigger(() -> cJoystick.getRawButtonPressed(11)).onTrue(new L3CommandGroup(elevatorSubsystem, coralizerSubsystem));
+        new Trigger(() -> cJoystick.getRawButtonPressed(10)).onTrue(new L2CommandGroup(elevatorSubsystem, coralizerSubsystem));
+        new Trigger(() -> cJoystick.getRawButtonPressed(9)).onTrue(new L1CommandGroup(elevatorSubsystem, coralizerSubsystem));
+        new Trigger(() -> cJoystick.getRawButtonPressed(8)).onTrue(new SourceCommandGroup(elevatorSubsystem, coralizerSubsystem));
+        new Trigger(() -> cJoystick.getRawButtonPressed(7)).onTrue(new HomeCommandGroup(elevatorSubsystem, coralizerSubsystem));
+        new Trigger(() -> cJoystick.getRawButton(3)).whileTrue(new CoralizerIntakeCommand(coralizerSubsystem, CoralizerIntakeCommand.IntakeDirection.OUT));
+        new Trigger(() -> cJoystick.getRawButton(4)).whileTrue(new CoralizerIntakeCommand(coralizerSubsystem, CoralizerIntakeCommand.IntakeDirection.IN));
     }
 
     private void bindBoard() {

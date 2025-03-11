@@ -11,8 +11,8 @@ public class L1CommandGroup extends SequentialCommandGroup {
     public L1CommandGroup(ElevatorSubsystem elevatorSubsystem, CoralizerSubsystem coralizerSubsystem) {
 
          addCommands(
-                 new ElevatorPositionCommand(elevatorSubsystem, 0.5, ElevatorSubsystem.LevelTarget.L1),
-                 new CoralizerWristCommand(coralizerSubsystem, -25)
+                 new ElevatorPositionCommand(elevatorSubsystem, 0.1, ElevatorSubsystem.LevelTarget.L1),
+                 new CoralizerWristCommand(coralizerSubsystem, -10)
         );
 
     }

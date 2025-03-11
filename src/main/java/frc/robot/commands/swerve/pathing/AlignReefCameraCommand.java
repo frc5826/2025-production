@@ -30,10 +30,6 @@ public class AlignReefCameraCommand extends LoggedCommand {
         this.s = swerveSubsystem;
         this.ca = cameraSubsystem;
 
-        yaw = 0;
-        finished = false;
-        averageYaw = 0;
-
         pastYaws = new ArrayDeque<Double>(averagePastCount);
 
         SmartDashboard.putData("align camera pid", crabwalkPID);
@@ -46,7 +42,9 @@ public class AlignReefCameraCommand extends LoggedCommand {
         super.initialize();
 
         pastYaws.clear();
+        yaw = 0;
         finished = false;
+        averageYaw = 0;
 
         crabwalkPID.setGoal(0);
     }
@@ -71,14 +69,13 @@ public class AlignReefCameraCommand extends LoggedCommand {
             }
             averageYaw /= averagePastCount;
 
-            System.out.println("average yaw: " + averageYaw);
-
             if (Math.abs(averageYaw) > farYawThreshold) {
                 finished = true;
             }
 
         }
 
+        System.out.println("pid output: " + crabwalkPID.getOutput());
         crabwalkPID.calculate();
         s.driveRobotOriented(new ChassisSpeeds(0, crabwalkPID.getOutput(), 0));
     }

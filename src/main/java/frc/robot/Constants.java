@@ -6,6 +6,7 @@
 package frc.robot;
 
 import edu.wpi.first.math.util.Units;
+import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.PowerDistribution;
 import com.pathplanner.lib.config.PIDConstants;
 import edu.wpi.first.math.geometry.Pose2d;
@@ -44,7 +45,7 @@ public final class Constants
         public static final double cElevatorMaxVelocity = 1.67;
         public static final double cElevatorHeightMin = 0;
         public static final double cElevatorHeightMax = 1.71;
-        public static final double cElevatorDeadband = 0.06;
+        public static final double cElevatorDeadband = 0.04;
 
         public static class ConversionFactor {
             public static final double cElevatorClicksPerMeter = 17777;
@@ -59,6 +60,7 @@ public final class Constants
 
     public static final ButtonBoard cButtonBoard = new ButtonBoard(25);
     public static final XboxController cXbox = new XboxController(1);
+    public static final Joystick cJoystick = new Joystick(2);
     public static final double rumbleHigh = 0.5;
 
     public static final double cTeleDriveDeadband = 0.25;
