@@ -9,7 +9,6 @@ import frc.robot.subsystems.ReefTargeting;
 import frc.robot.subsystems.SwerveSubsystem;
 
 import static frc.robot.commands.coralizer.CoralizerIntakeCommand.IntakeDirection.OUT;
-import static frc.robot.subsystems.ElevatorSubsystem.LevelTarget.*;
 
 public class DropoffCommandGroup extends Command {
 
