@@ -19,6 +19,8 @@ public class LidarPWM implements NTSendable {
 
     }
 
+
+
     public void turnOn(){
         lidarTrigger.set(false);
     }
