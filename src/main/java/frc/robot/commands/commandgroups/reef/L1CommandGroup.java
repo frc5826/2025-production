@@ -1,6 +1,7 @@
 package frc.robot.commands.commandgroups.reef;
 
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
+import frc.robot.Constants;
 import frc.robot.commands.coralizer.CoralizerWristCommand;
 import frc.robot.commands.elevator.ElevatorPositionCommand;
 import frc.robot.subsystems.CoralizerSubsystem;
@@ -11,7 +12,7 @@ public class L1CommandGroup extends SequentialCommandGroup {
     public L1CommandGroup(ElevatorSubsystem elevatorSubsystem, CoralizerSubsystem coralizerSubsystem) {
 
          addCommands(
-                 new ElevatorPositionCommand(elevatorSubsystem, 0.1, ElevatorSubsystem.LevelTarget.L1),
+                 new ElevatorPositionCommand(elevatorSubsystem, Constants.Elevator.L1Height, ElevatorSubsystem.LevelTarget.L1),
                  new CoralizerWristCommand(coralizerSubsystem, -10)
         );
 

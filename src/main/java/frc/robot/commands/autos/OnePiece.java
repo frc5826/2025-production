@@ -57,7 +57,7 @@ public class OnePiece extends SequentialCommandGroup {
         );
 
         addCommands( //Drop off and backup
-                new DropoffCommandGroup(e, c, s),
+                //new DropoffCommandGroup(e, c, s), //TODO make autos work like tele cycles
                 new MoveTimeCommand(0.75, new ChassisSpeeds(-1.5, 0, 0), true, s)
         );
 

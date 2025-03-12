@@ -9,6 +9,7 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.math.ElevatorController;
 import frc.robot.math.MathHelper;
 import frc.robot.math.PID;
+import frc.robot.positioning.ReefPosition;
 
 import static frc.robot.Constants.Elevator.*;
 import static frc.robot.Constants.Elevator.ConversionFactor.*;
@@ -22,7 +23,6 @@ public class ElevatorSubsystem extends LoggedSubsystem {
     private SparkMax motor, motorFollower;
     private Encoder encoder;
     private double desiredPos;
-    private LevelTarget levelTarget;
 
     public ElevatorSubsystem(){
 
@@ -44,9 +44,6 @@ public class ElevatorSubsystem extends LoggedSubsystem {
         motorFollower.configure(configFollower, SparkBase.ResetMode.kResetSafeParameters, SparkBase.PersistMode.kPersistParameters);
 
         currentController = upController;
-
-        levelTarget = LevelTarget.NONE;
-
     }
 
     @Override
@@ -61,10 +58,9 @@ public class ElevatorSubsystem extends LoggedSubsystem {
 
     }
 
-    public void setDesiredPosition(double position, LevelTarget levelTarget) {
+    public void setDesiredPosition(double position) {
 
         desiredPos = MathHelper.clamp(position, cElevatorHeightMin, cElevatorHeightMax);
-        this.levelTarget = levelTarget;
 
         if(getPos() < desiredPos){
             currentController = upController;
@@ -97,18 +93,6 @@ public class ElevatorSubsystem extends LoggedSubsystem {
 
         return pos;
 
-    }
-
-    public LevelTarget getLevelTarget() {
-        return levelTarget;
-    }
-
-    public static enum LevelTarget {
-        L1,
-        L2,
-        L3,
-        L4,
-        NONE
     }
 
 }

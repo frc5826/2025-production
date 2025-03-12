@@ -54,6 +54,8 @@ public class PathToCommand extends LoggedCommand {
         pathCommand.initialize();
 
         Constants.cXbox.setRumble(GenericHID.RumbleType.kBothRumble, Constants.rumbleHigh);
+
+        System.out.println("goal target: " + goal);
     }
 
     @Override

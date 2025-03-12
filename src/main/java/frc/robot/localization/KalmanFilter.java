@@ -25,7 +25,7 @@ class KalmanFilter {
         this.x = MatrixUtils.createRealVector(initial.getMeans());
         this.P = initial.getCovariances();
 
-        this.moveVar = new Variances(3, 3, 3, 3, 3, 3);
+        this.moveVar = new Variances(5, 5, 5, 5, 5, 5);
 
         this.Q = MatrixUtils.createRealMatrix(new double[][]{
                 //X pos variance
@@ -47,7 +47,6 @@ class KalmanFilter {
     }
 
     private void move(double deltaTime, RealMatrix B, RealVector u, RealMatrix Q) {
-        SmartDashboard.putNumber("Kalman filter deltatime", deltaTime);
         RealMatrix F = getF(deltaTime);
         x = F.operate(x).add(B.operate(u));
         P = F.multiply(P).multiply(F.transpose()).add(Q);

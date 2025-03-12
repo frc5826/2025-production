@@ -32,8 +32,6 @@ public class AlignReefCameraCommand extends LoggedCommand {
 
         pastYaws = new ArrayDeque<Double>(averagePastCount);
 
-        SmartDashboard.putData("align camera pid", crabwalkPID);
-
         addRequirements(s);
     }
 

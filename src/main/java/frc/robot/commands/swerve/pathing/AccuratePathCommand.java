@@ -70,10 +70,6 @@ public class AccuratePathCommand extends LoggedCommand {
 
         timer.restart();
 
-        SmartDashboard.putData("Auto/AccuratePIDx", pidX);
-        SmartDashboard.putData("Auto/AccuratePIDy", pidY);
-        SmartDashboard.putData("Auto/AccuratePIDturn", pidR);
-
         Constants.cXbox.setRumble(GenericHID.RumbleType.kBothRumble, Constants.rumbleHigh);
     }
 

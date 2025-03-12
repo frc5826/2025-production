@@ -6,6 +6,7 @@ import edu.wpi.first.math.geometry.Pose3d;
 import edu.wpi.first.math.geometry.Rotation3d;
 import edu.wpi.first.math.geometry.Transform3d;
 import edu.wpi.first.math.geometry.Translation3d;
+import edu.wpi.first.networktables.NetworkTable;
 import edu.wpi.first.util.datalog.DataLog;
 import edu.wpi.first.util.datalog.DoubleLogEntry;
 import edu.wpi.first.wpilibj.DataLogManager;
@@ -50,14 +51,14 @@ public class CameraSystem {
                 new Camera(new Translation3d(inToM(-3), inToM(8.5), inToM(12.125)),
                         new Rotation3d(0, -Math.PI / 4, 0),
                         "L45"),
-                new Camera(new Translation3d(inToM(-3), inToM(8.5), inToM(16.125)),
-                        new Rotation3d(0, 0, 0),
+                new Camera(new Translation3d(inToM(-3), inToM(8.5), 0.7),
+                        new Rotation3d(0, Math.toRadians(25), 0),
                         "L0"),
                 new Camera(new Translation3d(inToM(-3), inToM(-8.5), inToM(12.125)),
-                        new Rotation3d(0, -Math.PI / 4, -Math.PI / 2),
+                        new Rotation3d(Math.PI, -Math.PI / 4, 0),
                         "R45"),
-                new Camera(new Translation3d(inToM(-3), inToM(-8.5), inToM(16.125)),
-                        new Rotation3d(Math.PI, 0,0),
+                new Camera(new Translation3d(inToM(-3), inToM(-8.5), 0.7),
+                        new Rotation3d(0, Math.toRadians(25),0),
                         "R0")
         );
 
@@ -110,11 +111,11 @@ public class CameraSystem {
                             rotationLog.append(robotPose.getRotation().getZ());
                             ambiguityLog.append(target.getPoseAmbiguity());
 
-                            SmartDashboard.putNumber("Cameras/" + camera.getName() + "/x", robotPose.getX());
-                            SmartDashboard.putNumber("Cameras/" + camera.getName() + "/y", robotPose.getY());
-                            SmartDashboard.putNumber("Cameras/" + camera.getName() + "/yaw", robotPose.getRotation().getZ());
-                            SmartDashboard.putNumber("Cameras/" + camera.getName() + "/time_stamp", result.getTimestampSeconds());
-                            SmartDashboard.putNumber("Ambiguity", target.getPoseAmbiguity());
+//                            SmartDashboard.putNumber("Cameras/" + camera.getName() + "/x", robotPose.getX());
+//                            SmartDashboard.putNumber("Cameras/" + camera.getName() + "/y", robotPose.getY());
+//                            SmartDashboard.putNumber("Cameras/" + camera.getName() + "/yaw", robotPose.getRotation().getZ());
+//                            SmartDashboard.putNumber("Cameras/" + camera.getName() + "/time_stamp", result.getTimestampSeconds());
+//                            SmartDashboard.putNumber("Ambiguity", target.getPoseAmbiguity());
 
                             results.add(robotPose);
                             tagLog.add(robotPose);

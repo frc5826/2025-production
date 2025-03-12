@@ -1,6 +1,7 @@
 package frc.robot.positioning;
 
 import edu.wpi.first.math.geometry.Pose2d;
+import static frc.robot.Constants.Elevator.*;
 
 public class ReefPosition {
 
@@ -21,11 +22,19 @@ public class ReefPosition {
     }
 
     public enum ReefLevel {
-        NONE,
-        L1,
-        L2,
-        L3,
-        L4
+        NONE(0, 30),
+        L1(L1Height, L1Angle),
+        L2(L2Height, L2Angle),
+        L3(L3Height, L3Angle),
+        L4(L4Height, L4Angle);
+
+        public final double height;
+        public final double angle;
+
+        private ReefLevel(double height, double angle) {
+            this.height = height;
+            this.angle = angle;
+        }
     }
 
 }

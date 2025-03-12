@@ -6,7 +6,6 @@ import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import frc.robot.commands.commandgroups.HomeCommandGroup;
 import frc.robot.commands.coralizer.CoralizerIntakeCommand;
 import frc.robot.commands.coralizer.CoralizerWristCommand;
-import frc.robot.commands.elevator.ElevatorRepositionCommand;
 import frc.robot.commands.swerve.pathing.MoveTimeCommand;
 import frc.robot.commands.swerve.drivercontrol.TeleopDriveCommand;
 import frc.robot.subsystems.CoralizerSubsystem;

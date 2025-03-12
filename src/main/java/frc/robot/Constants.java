@@ -47,6 +47,16 @@ public final class Constants
         public static final double cElevatorHeightMax = 1.71;
         public static final double cElevatorDeadband = 0.04;
 
+        public static final double L4Height = 1.71;
+        public static final double L3Height = 1.07;
+        public static final double L2Height = 0.67;
+        public static final double L1Height = 0.1;
+
+        public static final double L4Angle = -70;
+        public static final double L3Angle = -66;
+        public static final double L2Angle = -66;
+        public static final double L1Angle = -10;
+
         public static class ConversionFactor {
             public static final double cElevatorClicksPerMeter = 17777;
             public static final double cElevatorOverlapPosition = 0.877;
@@ -61,12 +71,10 @@ public final class Constants
     public static final ButtonBoard cButtonBoard = new ButtonBoard(25);
     public static final XboxController cXbox = new XboxController(1);
     public static final Joystick cJoystick = new Joystick(2);
-    public static final double rumbleHigh = 0.5;
+    public static final double rumbleHigh = 0.75;
 
     public static final double cTeleDriveDeadband = 0.25;
     public static final double cTeleTurnDeadband = 0.25;
-
-    public static final double cL4offset = 0.03;
 
     public static class  Swerve {
         public static final double cMaxVelocity = 5.05968; //DON'T CHANGE!!!!!!!!!!!!!!!!!!!!!!!
@@ -76,7 +84,7 @@ public final class Constants
         public static final PIDConstants cTurnPID = new PIDConstants(4, 0, 0);
 
         public static final double cHighSpeedMultiplier = 1;
-        public static final double cLowSpeedMultiplier = 0.5;
+        public static final double cLowSpeedMultiplier = 0.6;
         public static final double cHighCrabSpeedMult = 1;
         public static final double cLowCrabSpeedMult = 0.5;
     }
