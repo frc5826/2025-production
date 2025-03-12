@@ -19,8 +19,8 @@ public class DistanceSubsystem extends LoggedSubsystem {
 //        this.ultrasonic1 = new UltrasonicAN(2, 3);
 //        this.ultrasonicAllowedVariability = 0.0;
 
-        this.lidarPWMRight = new LidarPWM(4,5);
-        this.lidarPWMLeft = new LidarPWM(6,7);
+        this.lidarPWMRight = new LidarPWM(3,2);
+        this.lidarPWMLeft = new LidarPWM(5,4);
 
     }
 
@@ -30,6 +30,27 @@ public class DistanceSubsystem extends LoggedSubsystem {
 
     public boolean lidarHitRight(){
         return lidarPWMRight.getMeasurement() < 0.1;
+    }
+
+    public double lidarLeftDistance(){
+        return lidarPWMLeft.getMeasurement();
+    }
+
+    public double lidarRightDistance(){
+        return lidarPWMRight.getMeasurement();
+    }
+    //TODO this is a placeholder value
+    public boolean shouldMoveLeft(){
+        return lidarPWMLeft.getMeasurement() < 0.4;
+    }
+    //TODO this is a placeholder value
+    public boolean shouldMoveRight(){
+        return lidarPWMRight.getMeasurement() < 0.4;
+    }
+
+    public void lidarTrigger(){
+        lidarPWMLeft.turnOn();
+        lidarPWMRight.turnOn();
     }
 //
 //    @Override

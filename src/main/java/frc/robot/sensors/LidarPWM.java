@@ -34,7 +34,7 @@ public class LidarPWM implements NTSendable {
      */
     public double getMeasurement() {
 
-        return lidarReading.getHighTimeNanoseconds()/100000.0;
+        return lidarReading.getHighTimeNanoseconds()/1000000.0;
 
     }
 
