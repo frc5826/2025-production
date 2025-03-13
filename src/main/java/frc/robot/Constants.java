@@ -26,6 +26,13 @@ import frc.robot.subsystems.ButtonBoard;
 public final class Constants
 {
 
+    public static class Nuzzle {
+        public static final double cXVelo = 0.1;
+        public static final double cYVelo = 0.1;
+        public static final double cZVelo = 0.1;
+
+    }
+
     public static class Elevator {
         public static final int cElevatorMotor1ID = 1;
         public static final int cElevatorMotor2ID = 2;
