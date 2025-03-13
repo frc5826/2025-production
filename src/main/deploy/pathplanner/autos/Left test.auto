@@ -1,0 +1,43 @@
+{
+  "version": "2025.0",
+  "command": {
+    "type": "sequential",
+    "data": {
+      "commands": [
+        {
+          "type": "path",
+          "data": {
+            "pathName": "Left start"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "Left J to source "
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "Left source to KL"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "Left KL to source"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "Left source to KL"
+          }
+        }
+      ]
+    }
+  },
+  "resetOdom": true,
+  "folder": null,
+  "choreoAuto": false
+}

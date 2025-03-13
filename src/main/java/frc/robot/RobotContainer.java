@@ -136,8 +136,6 @@ public class RobotContainer {
     }
 
     private void bindBoard() {
-        PathConstraints constraints = new PathConstraints(3.5, 2, Math.PI * 2,  Math.PI * 2);
-
 //        new Trigger(() -> cButtonBoard.getButton(0)).whileTrue(new AlignReefCommand(FieldOrientation.getOrientation().getReefH(), constraints, swerveSubsystem));
 //        new Trigger(() -> cButtonBoard.getButton(1)).whileTrue(new AlignReefCommand(FieldOrientation.getOrientation().getReefG(), constraints, swerveSubsystem));
 //        new Trigger(() -> cButtonBoard.getButton(2)).whileTrue(new AlignReefCommand(FieldOrientation.getOrientation().getReefF(), constraints, swerveSubsystem));
@@ -154,6 +152,16 @@ public class RobotContainer {
         //Set pose goals
         new Trigger(() -> cButtonBoard.getButtonPressed(0)).onTrue(new InstantCommand(() -> reefTargeting.updatePose(FieldOrientation.getOrientation().getReefH())));
         new Trigger(() -> cButtonBoard.getButtonPressed(1)).onTrue(new InstantCommand(() -> reefTargeting.updatePose(FieldOrientation.getOrientation().getReefG())));
+        new Trigger(() -> cButtonBoard.getButtonPressed(2)).onTrue(new InstantCommand(() -> reefTargeting.updatePose(FieldOrientation.getOrientation().getReefF())));
+        new Trigger(() -> cButtonBoard.getButtonPressed(3)).onTrue(new InstantCommand(() -> reefTargeting.updatePose(FieldOrientation.getOrientation().getReefE())));
+        new Trigger(() -> cButtonBoard.getButtonPressed(4)).onTrue(new InstantCommand(() -> reefTargeting.updatePose(FieldOrientation.getOrientation().getReefD())));
+        new Trigger(() -> cButtonBoard.getButtonPressed(5)).onTrue(new InstantCommand(() -> reefTargeting.updatePose(FieldOrientation.getOrientation().getReefC())));
+        new Trigger(() -> cButtonBoard.getButtonPressed(6)).onTrue(new InstantCommand(() -> reefTargeting.updatePose(FieldOrientation.getOrientation().getReefB())));
+        new Trigger(() -> cButtonBoard.getButtonPressed(7)).onTrue(new InstantCommand(() -> reefTargeting.updatePose(FieldOrientation.getOrientation().getReefA())));
+        new Trigger(() -> cButtonBoard.getButtonPressed(8)).onTrue(new InstantCommand(() -> reefTargeting.updatePose(FieldOrientation.getOrientation().getReefL())));
+        new Trigger(() -> cButtonBoard.getButtonPressed(9)).onTrue(new InstantCommand(() -> reefTargeting.updatePose(FieldOrientation.getOrientation().getReefK())));
+        new Trigger(() -> cButtonBoard.getButtonPressed(10)).onTrue(new InstantCommand(() -> reefTargeting.updatePose(FieldOrientation.getOrientation().getReefJ())));
+        new Trigger(() -> cButtonBoard.getButtonPressed(11)).onTrue(new InstantCommand(() -> reefTargeting.updatePose(FieldOrientation.getOrientation().getReefI())));
 
         //testing new align
         //new Trigger(() -> cButtonBoard.getButton(0)).whileTrue(new AlignReefCommand(FieldOrientation.getOrientation().getReefH(), FieldOrientation.getOrientation().getReefSideGH(), swerveSubsystem, elevatorSubsystem, coralizerSubsystem));

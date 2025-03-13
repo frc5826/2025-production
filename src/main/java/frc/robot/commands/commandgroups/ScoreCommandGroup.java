@@ -23,8 +23,8 @@ public class ScoreCommandGroup extends SequentialCommandGroup {
 
     public ScoreCommandGroup(ReefTargeting target, SwerveSubsystem s, ElevatorSubsystem e, CoralizerSubsystem c) {
 
-        PathConstraints alignConstraints = new PathConstraints(1.5, 1.5, Math.PI * 2, Math.PI * 2);
-        PathConstraints fastConstraints = new PathConstraints(3, 4, Math.PI * 3, Math.PI * 4);
+        PathConstraints alignConstraints = new PathConstraints(1.5, 1.5, Math.PI * 1.5, Math.PI * 2);
+        PathConstraints fastConstraints = new PathConstraints(3, 4, Math.PI * 2, Math.PI * 3);
 
         addCommands(
 

@@ -31,7 +31,7 @@ public class AlignSourceCommandGroup extends SequentialCommandGroup {
 
     public AlignSourceCommandGroup(Pose2d goal, SwerveSubsystem s, ElevatorSubsystem e, CoralizerSubsystem c) {
 
-        PathConstraints constraints = new PathConstraints(4, 4, Math.PI * 3, Math.PI * 3);
+        PathConstraints constraints = new PathConstraints(4, 4, Math.PI * 2, Math.PI * 3);
 
         addCommands(
 
