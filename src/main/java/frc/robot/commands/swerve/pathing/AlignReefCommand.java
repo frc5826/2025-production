@@ -77,14 +77,11 @@ public class AlignReefCommand extends SequentialCommandGroup {
     //TODO add pathfinding
     public AlignReefCommand(ReefTargeting reefTargeting, SwerveSubsystem swerveSubsystem) {
 
-        Pose2d endPose = MathHelper.offsetPoseReverse(reefTargeting.getPose(), cRobotLength / 2);
-        Pose2d offsetPose = MathHelper.offsetPoseReverse(reefTargeting.getPose(), 0.35 + (cRobotLength / 2));
-
         PathConstraints alignConstraints = new PathConstraints(1.5, 1.5, Math.PI * 2, Math.PI * 2);
 
         addCommands(
-                new PathToCommand(offsetPose, 0, alignConstraints, swerveSubsystem),
-                new PathToCommand(endPose, 0, alignConstraints, swerveSubsystem)
+                new PathToCommand(reefTargeting.getAlignmentOffsetPose(), 0, alignConstraints, swerveSubsystem),
+                new PathToCommand(reefTargeting.getAlignmentPose(), 0, alignConstraints, swerveSubsystem)
         );
 
     }

@@ -30,7 +30,7 @@ public class DropoffCommandGroup extends Command {
     @Override
     public void initialize() {
         super.initialize();
-    ReefPosition.ReefLevel levelTarget = reefTargeting.getLevel();
+    ReefPosition.ReefLevel levelTarget = reefTargeting.getLevel().get();
         if (levelTarget.equals(ReefPosition.ReefLevel.L1)){
             command = new L1DropoffCommandGroup(elevatorSubsystem, coralizerSubsystem, swerveSubsystem);
         }

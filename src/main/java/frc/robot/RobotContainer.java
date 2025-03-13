@@ -8,8 +8,6 @@ package frc.robot;
 import com.pathplanner.lib.path.PathConstraints;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
-import edu.wpi.first.networktables.NetworkTableInstance;
-import edu.wpi.first.util.datalog.StringLogEntry;
 import edu.wpi.first.wpilibj.PowerDistribution;
 import edu.wpi.first.wpilibj.shuffleboard.*;
 import edu.wpi.first.wpilibj.smartdashboard.Field2d;
@@ -21,17 +19,14 @@ import frc.robot.commands.autos.Dumb;
 import frc.robot.commands.commandgroups.*;
 import frc.robot.commands.commandgroups.algae.DealgifyL2CommandGroup;
 import frc.robot.commands.commandgroups.algae.DealgifyL3CommandGroup;
-import frc.robot.commands.commandgroups.algae.SourceCommandGroup;
+import frc.robot.commands.commandgroups.SourceCommandGroup;
 import frc.robot.commands.commandgroups.dropoff.DropoffCommandGroup;
 import frc.robot.commands.commandgroups.reef.*;
 import frc.robot.commands.coralizer.CoralizerIntakeCommand;
-import frc.robot.commands.elevator.ElevatorPositionCommand;
 import frc.robot.commands.swerve.drivercontrol.CrabWalkCommand;
 import frc.robot.commands.swerve.drivercontrol.DriveButtonCommand;
 import frc.robot.commands.swerve.pathing.*;
-import frc.robot.positioning.Orientation;
 import frc.robot.positioning.ReefPosition;
-import frc.robot.sensors.DriverCamera;
 import frc.robot.subsystems.*;
 import frc.robot.positioning.FieldOrientation;
 import edu.wpi.first.wpilibj.DataLogManager;
@@ -58,7 +53,7 @@ public class RobotContainer {
 
     public final CoralizerSubsystem coralizerSubsystem = new CoralizerSubsystem();
 
-    public final ReefTargeting reefTargeting = new ReefTargeting();
+    public final ReefTargeting reefTargeting = new ReefTargeting(swerveSubsystem);
 
     private Field2d field;
 
@@ -178,8 +173,8 @@ public class RobotContainer {
         new Trigger(() -> cButtonBoard.getButtonPressed(17)).onTrue(new HomeCommandGroup(elevatorSubsystem, coralizerSubsystem));
         new Trigger(() -> cButtonBoard.getButtonPressed(18)).onTrue(new SourceCommandGroup(elevatorSubsystem, coralizerSubsystem));
         //For Buttons 19-21, Starts at middle right red button and goes left
-        new Trigger(() -> cButtonBoard.getButton(19)).whileTrue(new AlignSourceCommandGroup(FieldOrientation.getOrientation()::getCoralStationLB, constraints, swerveSubsystem, elevatorSubsystem, coralizerSubsystem));
-        new Trigger(() -> cButtonBoard.getButton(20)).whileTrue(new AlignSourceCommandGroup(FieldOrientation.getOrientation()::getCoralStationRB, constraints, swerveSubsystem, elevatorSubsystem, coralizerSubsystem));
+        new Trigger(() -> cButtonBoard.getButton(19)).whileTrue(new AlignSourceCommandGroup(FieldOrientation.getOrientation().getCoralStationLB(), swerveSubsystem, elevatorSubsystem, coralizerSubsystem));
+        new Trigger(() -> cButtonBoard.getButton(20)).whileTrue(new AlignSourceCommandGroup(FieldOrientation.getOrientation().getCoralStationRB(), swerveSubsystem, elevatorSubsystem, coralizerSubsystem));
         new Trigger(() -> cButtonBoard.getButton(21)).whileTrue(new CoralizerIntakeCommand(coralizerSubsystem, CoralizerIntakeCommand.IntakeDirection.OUT));
         //For Buttons 22-24, Starts at bottom right white button and goes left
         new Trigger(() -> cButtonBoard.getButtonPressed(22)).onTrue(new DealgifyL2CommandGroup(elevatorSubsystem, coralizerSubsystem, swerveSubsystem));
@@ -290,20 +285,20 @@ public class RobotContainer {
         position.addDouble("Robot rotation", ()-> localization.getPose().getRotation().getDegrees());
     }
 
-    public Command getAutoCommand(){
-        if (dumb.getSelected()){
-            return new Dumb(swerveSubsystem);
-        }
-        List<ReefPosition> reefPositions = new ArrayList<>();
-        for (int i = 0; i < 4; i++) {
-            Pose2d reefLocation = reefLocations.get(i).getSelected();
-            ReefPosition.ReefLevel reefLevel = reefLevels.get(i).getSelected();
-            if (!reefLocation.equals(new Pose2d()) && !reefLevel.equals(ReefPosition.ReefLevel.NONE)){
-                reefPositions.add(new ReefPosition(reefLocation, reefLevel));
-            }
-        }
-
-        return new AutoCommandGroup(elevatorSubsystem, coralizerSubsystem, swerveSubsystem, autoStationPosition.getSelected(), reefPositions, pathCoral.getSelected());
-    }
+//    public Command getAutoCommand(){
+//        if (dumb.getSelected()){
+//            return new Dumb(swerveSubsystem);
+//        }
+//        List<ReefPosition> reefPositions = new ArrayList<>();
+//        for (int i = 0; i < 4; i++) {
+//            Pose2d reefLocation = reefLocations.get(i).getSelected();
+//            ReefPosition.ReefLevel reefLevel = reefLevels.get(i).getSelected();
+//            if (!reefLocation.equals(new Pose2d()) && !reefLevel.equals(ReefPosition.ReefLevel.NONE)){
+//                reefPositions.add(new ReefPosition(reefLocation, reefLevel));
+//            }
+//        }
+//
+//        return new AutoCommandGroup(elevatorSubsystem, coralizerSubsystem, swerveSubsystem, autoStationPosition.getSelected(), reefPositions, pathCoral.getSelected());
+//    }
 
 }

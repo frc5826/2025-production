@@ -9,14 +9,16 @@ import frc.robot.Constants;
 import frc.robot.commands.LoggedCommand;
 import frc.robot.subsystems.SwerveSubsystem;
 
+import java.util.function.Supplier;
+
 public class PathFindCommand extends LoggedCommand {
 
     private SwerveSubsystem s;
-    private Pose2d goal;
+    private Supplier<Pose2d> goal;
     private PathConstraints constraints;
     private Command command;
 
-    public PathFindCommand(Pose2d goal, PathConstraints constraints, SwerveSubsystem swerveSubsystem) {
+    public PathFindCommand(Supplier<Pose2d> goal, PathConstraints constraints, SwerveSubsystem swerveSubsystem) {
         this.s = swerveSubsystem;
         this.goal = goal;
         this.constraints = constraints;
@@ -24,11 +26,15 @@ public class PathFindCommand extends LoggedCommand {
         addRequirements(s);
     }
 
+    public PathFindCommand(Pose2d goal, PathConstraints constraints, SwerveSubsystem swerveSubsystem) {
+        this(() -> goal, constraints, swerveSubsystem);
+    }
+
     @Override
     public void initialize() {
         super.initialize();
 
-        command = AutoBuilder.pathfindToPose(goal, constraints);
+        command = AutoBuilder.pathfindToPose(goal.get(), constraints);
         command.initialize();
 
         Constants.cXbox.setRumble(GenericHID.RumbleType.kBothRumble, Constants.rumbleHigh);

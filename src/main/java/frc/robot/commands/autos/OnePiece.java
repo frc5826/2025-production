@@ -34,7 +34,7 @@ public class OnePiece extends SequentialCommandGroup {
 
         //Path find
         addCommands(
-                new PathFindCommand(offsetReefPose, fastConstraints, s)
+                //new PathFindCommand(offsetReefPose, fastConstraints, s)
         );
 
         //Choose level command

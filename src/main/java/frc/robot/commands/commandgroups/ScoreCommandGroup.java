@@ -23,26 +23,23 @@ public class ScoreCommandGroup extends SequentialCommandGroup {
 
     public ScoreCommandGroup(ReefTargeting target, SwerveSubsystem s, ElevatorSubsystem e, CoralizerSubsystem c) {
 
-        Pose2d endPose = MathHelper.offsetPoseReverse(target.getPose(), cRobotLength / 2);
-        Pose2d offsetPose = MathHelper.offsetPoseReverse(target.getPose(), 0.35 + (cRobotLength / 2));
-
         PathConstraints alignConstraints = new PathConstraints(1.5, 1.5, Math.PI * 2, Math.PI * 2);
         PathConstraints fastConstraints = new PathConstraints(3, 4, Math.PI * 3, Math.PI * 4);
 
         addCommands(
 
-                new PathFindCommand(offsetPose, fastConstraints, s)
-                        .onlyWhile(() -> s.getLocalizationPose().getTranslation().getDistance(offsetPose.getTranslation()) > 1.5),
+                new PathFindCommand(target.getFindOffsetPose(), fastConstraints, s)
+                        .onlyWhile(target.isFarEnoughToPath()),
                 Commands.deadline(
                         Commands.parallel(
-                                new PathFindCommand(offsetPose, fastConstraints, s),
-                                new ElevatorPositionCommand(e, 1.07, target.getLevel())
+                                new PathFindCommand(target.getAlignmentOffsetPose(), fastConstraints, s),
+                                new ElevatorPositionCommand(e, () -> target.getLevel().get().height, target.getLevel().get())
                         ),
-                        new CoralizerWristCommand(c, target.getLevel().angle).onlyWhile(() -> e.getPos() > 0.5)
+                        new CoralizerWristCommand(c, () -> target.getLevel().get().angle).onlyWhile(() -> e.getPos() > 0.5)
                 ),
                 Commands.parallel(
-                        new PathToCommand(endPose, 0, alignConstraints, s),
-                        new CoralizerWristCommand(c, target.getLevel().angle)
+                        new PathToCommand(target.getAlignmentPose(), 0, alignConstraints, s),
+                        new CoralizerWristCommand(c, () -> target.getLevel().get().angle)
                 ),
                 new CoralizerIntakeCommand(c, CoralizerIntakeCommand.IntakeDirection.OUT),
                 Commands.parallel(

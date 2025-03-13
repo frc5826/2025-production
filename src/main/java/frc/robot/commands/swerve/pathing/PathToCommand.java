@@ -12,18 +12,19 @@ import frc.robot.subsystems.SwerveSubsystem;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.function.Supplier;
 
 public class PathToCommand extends LoggedCommand {
 
     private SwerveSubsystem swerveSubsystem;
 
-    private Pose2d goal;
+    private Supplier<Pose2d> goal;
     private PathConstraints constraints;
     private double endVel;
 
     private Command pathCommand;
 
-    public PathToCommand(Pose2d pose, double endVel, PathConstraints constraints, SwerveSubsystem swerveSubsystem) {
+    public PathToCommand(Supplier<Pose2d> pose, double endVel, PathConstraints constraints, SwerveSubsystem swerveSubsystem) {
         this.swerveSubsystem = swerveSubsystem;
 
         goal = pose;
@@ -33,13 +34,17 @@ public class PathToCommand extends LoggedCommand {
         addRequirements(swerveSubsystem);
     }
 
-    @Override
+    public PathToCommand(Pose2d pose, double endVel, PathConstraints constraints, SwerveSubsystem swerveSubsystem) {
+        this(() -> pose, endVel, constraints, swerveSubsystem);
+    }
+
+        @Override
     public void initialize() {
         super.initialize();
 
         Pose2d start = swerveSubsystem.getLocalizationPose();
-        start = new Pose2d(start.getTranslation(), MathHelper.getAngleAtoB(start, goal));
-        Pose2d end = new Pose2d(goal.getTranslation(), MathHelper.getAngleAtoB(start, goal));
+        start = new Pose2d(start.getTranslation(), MathHelper.getAngleAtoB(start, goal.get()));
+        Pose2d end = new Pose2d(goal.get().getTranslation(), MathHelper.getAngleAtoB(start, goal.get()));
 
         List<Waypoint> points = PathPlannerPath.waypointsFromPoses(start, end);
 
@@ -47,7 +52,7 @@ public class PathToCommand extends LoggedCommand {
                 points,
                 constraints,
                 null,
-                new GoalEndState(endVel, goal.getRotation()));
+                new GoalEndState(endVel, goal.get().getRotation()));
 
         pathCommand = AutoBuilder.followPath(path);
 

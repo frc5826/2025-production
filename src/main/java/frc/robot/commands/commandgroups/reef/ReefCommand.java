@@ -27,8 +27,8 @@ public class ReefCommand extends Command {
         super.initialize();
 
         command = Commands.sequence(
-                new ElevatorPositionCommand(e, reefTargeting.getLevel().height, reefTargeting.getLevel()),
-                new CoralizerWristCommand(c, reefTargeting.getLevel().angle)
+                new ElevatorPositionCommand(e, reefTargeting.getLevel().get().height, reefTargeting.getLevel().get()),
+                new CoralizerWristCommand(c, reefTargeting.getLevel().get().angle)
         );
 
         command.initialize();

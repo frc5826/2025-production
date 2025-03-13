@@ -25,8 +25,8 @@ public class CoralizerIntakeCommand extends LoggedCommand {
         super.initialize();
         coralizerSubsystem.setShouldHold(false);
         switch (direction){
-            case IN -> coralizerSubsystem.setIntakeSpeed(-0.4);
-            case OUT -> coralizerSubsystem.setIntakeSpeed(0.4);
+            case IN -> coralizerSubsystem.setIntakeSpeed(-0.6);
+            case OUT -> coralizerSubsystem.setIntakeSpeed(0.5);
             case SHOOT -> coralizerSubsystem.setIntakeSpeed(1);
         }
         releaseTimer.reset();
@@ -41,14 +41,17 @@ public class CoralizerIntakeCommand extends LoggedCommand {
 
     @Override
     public boolean isFinished() {
-        if(releaseTimer.get() >= 0.25){
+        if(releaseTimer.get() >= 0.5){
             if (direction == IntakeDirection.IN) {
                 return coralizerSubsystem.hasCoral();
             }
             return !coralizerSubsystem.hasCoral();
         }
-        if (expirationTimer.get() >= 7) {return true;}
+
         return false;
+
+//        if (expirationTimer.get() >= 7) {return true;}
+//        return false;
     }
 
     @Override
