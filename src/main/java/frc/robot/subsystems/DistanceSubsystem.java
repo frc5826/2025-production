@@ -1,87 +1,103 @@
 package frc.robot.subsystems;
 
-import frc.robot.Constants;
 import frc.robot.sensors.LidarPWM;
-//import frc.robot.sensors.UltrasonicAN;
+import frc.robot.Constants.*;
 
 
 public class DistanceSubsystem extends LoggedSubsystem {
 
-//    private UltrasonicAN ultrasonic1, ultrasonic2;
-    private double ultrasonicAllowedVariability;
-    private boolean ultrasonic1EqualTo2;
-    private boolean ultrasonic2EqualTo1;
-    private LidarPWM lidarPWMRight, lidarPWMLeft;
+    private double lidar0AllowedVariability;
+    private boolean lidarRight0EqualToLeft0;
+    //Yes, these are crappy names
+    private LidarPWM lidarPWMRight60, lidarPWMLeft60, lidarPWMRight0, lidarPWMLeft0;
 
     public DistanceSubsystem(){
         //TODO Get correct channels
-//        this.ultrasonic2 = new UltrasonicAN(1, 0);
-//        this.ultrasonic1 = new UltrasonicAN(2, 3);
-//        this.ultrasonicAllowedVariability = 0.0;
 
-        this.lidarPWMRight = new LidarPWM(3,2);
-        this.lidarPWMLeft = new LidarPWM(5,4);
+        this.lidar0AllowedVariability = 0.0;
+        this.lidarPWMRight60 = new LidarPWM(3,2);
+        this.lidarPWMLeft60 = new LidarPWM(5,4);
+        this.lidarPWMRight0 = new LidarPWM(6, 7);
+        this.lidarPWMLeft0 = new LidarPWM(8, 9);
 
     }
 
-    public boolean lidarHitLeft(){
-        return lidarPWMLeft.getMeasurement() < 0.1;
+
+    @Override
+    public void periodic() {
+        super.periodic();
+
+        this.lidarRight0EqualToLeft0 = lidarPWMRight0.getFromBumperMeasurement() == Math.clamp(lidarPWMLeft0.getFromBumperMeasurement(), lidarPWMRight0.getFromBumperMeasurement() - lidar0AllowedVariability, lidarPWMRight0.getFromBumperMeasurement() + lidar0AllowedVariability);
     }
 
-    public boolean lidarHitRight(){
-        return lidarPWMRight.getMeasurement() < 0.1;
+    public boolean angledLidarHitLeft(){
+        return lidarPWMLeft60.getFromBumperMeasurement() < 0.01;
     }
 
-    public double lidarLeftDistance(){
-        return lidarPWMLeft.getMeasurement();
+    public boolean angledLidarHitRight(){
+        return lidarPWMRight60.getFromBumperMeasurement() < 0.01;
     }
 
-    public double lidarRightDistance(){
-        return lidarPWMRight.getMeasurement();
-    }
-    //TODO this is a placeholder value
-    public boolean shouldMoveLeft(){
-        return lidarPWMLeft.getMeasurement() < 0.4;
-    }
-    //TODO this is a placeholder value
-    public boolean shouldMoveRight(){
-        return lidarPWMRight.getMeasurement() < 0.4;
+    public double angledLidarLeftDistance(){
+        return lidarPWMLeft60.getFromBumperMeasurement();
     }
 
-    public void lidarTrigger(){
-        lidarPWMLeft.turnOn();
-        lidarPWMRight.turnOn();
+    public double angledLidarRightDistance(){
+        return lidarPWMRight60.getFromBumperMeasurement();
     }
-//
-//    @Override
-//    public void periodic() {
-//        super.periodic();
 
-//        this.ultrasonic2EqualTo1 = ultrasonic2.getUltrasonicFromBumper() == Math.clamp(ultrasonic1.getUltrasonicFromBumper(), ultrasonic2.getUltrasonicFromBumper() - ultrasonicAllowedVariability, ultrasonic2.getUltrasonicFromBumper() + ultrasonicAllowedVariability);
-//        this.ultrasonic1EqualTo2 = ultrasonic1.getUltrasonicFromBumper() == Math.clamp(ultrasonic2.getUltrasonicFromBumper(), ultrasonic1.getUltrasonicFromBumper() - ultrasonicAllowedVariability, ultrasonic1.getUltrasonicFromBumper() + ultrasonicAllowedVariability);
-    //}
+    public void enableLidar(){
+        lidarPWMLeft60.turnOn();
+        lidarPWMRight60.turnOn();
+        lidarPWMRight0.turnOn();
+        lidarPWMLeft0.turnOn();
+    }
 
+    public void disableLidar(){
+        lidarPWMLeft60.turnOff();
+        lidarPWMRight60.turnOff();
+        lidarPWMLeft0.turnOff();
+        lidarPWMRight0.turnOff();
+    }
 
-//    public double getUltrasonicDifference(){
-////        return Math.abs(ultrasonic1.getUltrasonicFromBumper() - ultrasonic2.getUltrasonicFromBumper());
-//    }
-//
-//    public boolean ultrasonicsDontEqual(){
-////        return !ultrasonic1EqualTo2 || !ultrasonic2EqualTo1;
-//    }
-//
-//    public double getDistanceFromReef(){
-////        double ultrasonicDifference = getUltrasonicDifference();
-////        if (ultrasonic1.getUltrasonicFromBumper() > ultrasonic2.getUltrasonicFromBumper()){
-////            return ultrasonic1.getUltrasonicFromBumper() - ultrasonicDifference/2;
-////        } else if (ultrasonic1.getUltrasonicFromBumper() < ultrasonic2.getUltrasonicFromBumper()) {
-////            return ultrasonic2.getUltrasonicFromBumper() - ultrasonicDifference/2;
-////        }
-////        return 0.0;
+    public boolean lidarLeft0IsCloser() {
+        return lidarPWMLeft0.getFromBumperMeasurement() < lidarPWMRight0.getFromBumperMeasurement();
+    }
+
+//    public boolean lidarRight0IsCloser(){
+//        return lidarPWMLeft0.getFromBumperMeasurement() > lidarPWMRight0.getFromBumperMeasurement();
 //    }
 
-//    public double getTurnAngle(){
-//        double ultrasonicDifference = getUltrasonicDifference();
-//        return Math.toDegrees(Math.atan2(ultrasonicDifference, Constants.BluePositions.cRobotWidth));
-//    }
+    public double getDistanceFromReef(){
+        double lidarDifference = getLidarDifference();
+        if (lidarLeft0IsCloser()){
+            return lidarPWMLeft0.getFromBumperMeasurement() - lidarDifference/2;
+        }
+        else  {
+            return lidarPWMRight0.getFromBumperMeasurement() - lidarDifference/2;
+        }
+    }
+
+    public double getLidarDifference(){
+        return Math.abs(lidarPWMLeft0.getFromBumperMeasurement() - lidarPWMRight0.getFromBumperMeasurement());
+    }
+
+    public boolean lidars0DontEqual(){
+        return !lidarRight0EqualToLeft0;
+    }
+
+    public boolean isTouching() {
+        return !lidars0DontEqual() && getDistanceFromReef() < 0.1;
+    }
+
+    public double getSkew() {
+        //assume 90 degrees is left and -90 is right
+        return lidarLeft0IsCloser() ? getTurnAngle() * -1 : getTurnAngle();
+    }
+
+    public double getTurnAngle(){
+        double lidarDifference = getLidarDifference();
+        return Math.toDegrees(Math.atan2(lidarDifference, BluePositions.cRobotWidth));
+    }
+
 }

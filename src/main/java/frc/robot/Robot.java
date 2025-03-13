@@ -39,8 +39,8 @@ public class Robot extends TimedRobot
 
         robotContainer.postPeriodic();
 
-        System.out.println("Left Lidar " + distanceSubsystem.lidarLeftDistance());
-        System.out.println("Right Lidar " + distanceSubsystem.lidarRightDistance());
+        System.out.println("Left Lidar " + distanceSubsystem.angledLidarLeftDistance());
+        System.out.println("Right Lidar " + distanceSubsystem.angledLidarRightDistance());
     }
 
     @Override
@@ -79,7 +79,7 @@ public class Robot extends TimedRobot
             autonomousCommand.cancel();
         }
 
-        distanceSubsystem.lidarTrigger();
+        distanceSubsystem.enableLidar();
 
     }
 
