@@ -14,8 +14,7 @@ import edu.wpi.first.wpilibj.smartdashboard.Field2d;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
-import frc.robot.commands.autos.AutoCommandGroup;
-import frc.robot.commands.autos.Dumb;
+import frc.robot.commands.autos.*;
 import frc.robot.commands.commandgroups.*;
 import frc.robot.commands.commandgroups.algae.DealgifyL2CommandGroup;
 import frc.robot.commands.commandgroups.algae.DealgifyL3CommandGroup;
@@ -26,6 +25,7 @@ import frc.robot.commands.coralizer.CoralizerIntakeCommand;
 import frc.robot.commands.swerve.drivercontrol.CrabWalkCommand;
 import frc.robot.commands.swerve.drivercontrol.DriveButtonCommand;
 import frc.robot.commands.swerve.pathing.*;
+import frc.robot.positioning.Orientation;
 import frc.robot.positioning.ReefPosition;
 import frc.robot.subsystems.*;
 import frc.robot.positioning.FieldOrientation;
@@ -62,6 +62,7 @@ public class RobotContainer {
     SendableChooser<Boolean> dumb = new SendableChooser<>();
     SendableChooser<Supplier<Pose2d>> autoStationPosition = new SendableChooser<>();
     SendableChooser<Boolean> pathCoral = new SendableChooser<>();
+    SendableChooser<Command> autoCommandPicker = new SendableChooser<>();
 
     public RobotContainer() {
         DataLogManager.start("/U/logs");
@@ -185,8 +186,8 @@ public class RobotContainer {
         new Trigger(() -> cButtonBoard.getButton(20)).whileTrue(new AlignSourceCommandGroup(FieldOrientation.getOrientation().getCoralStationRB(), swerveSubsystem, elevatorSubsystem, coralizerSubsystem));
         new Trigger(() -> cButtonBoard.getButton(21)).whileTrue(new CoralizerIntakeCommand(coralizerSubsystem, CoralizerIntakeCommand.IntakeDirection.OUT));
         //For Buttons 22-24, Starts at bottom right white button and goes left
-        new Trigger(() -> cButtonBoard.getButtonPressed(22)).onTrue(new DealgifyL2CommandGroup(elevatorSubsystem, coralizerSubsystem, swerveSubsystem));
-        new Trigger(() -> cButtonBoard.getButtonPressed(23)).onTrue(new DealgifyL3CommandGroup(elevatorSubsystem, coralizerSubsystem, swerveSubsystem));
+        new Trigger(() -> cButtonBoard.getButtonPressed(22)).onTrue(new DealgifyL2CommandGroup(elevatorSubsystem, coralizerSubsystem));
+        new Trigger(() -> cButtonBoard.getButtonPressed(23)).onTrue(new DealgifyL3CommandGroup(elevatorSubsystem, coralizerSubsystem));
         new Trigger(() -> cButtonBoard.getButton(24)).whileTrue(new CoralizerIntakeCommand(coralizerSubsystem, CoralizerIntakeCommand.IntakeDirection.IN));
     }
 
@@ -197,18 +198,19 @@ public class RobotContainer {
     }
 
     private void setupAutoTab(){
-//        Orientation orientation = FieldOrientation.getOrientation();
-//        ShuffleboardTab autoTab = Shuffleboard.getTab("Auto");
-//
-//        dumb.addOption("Yes dumb", true);
-//        dumb.addOption("No dumb", false);
-//        dumb.setDefaultOption("No dumb", false);
-//
-//        autoTab.add("Dumb?", dumb)
-//                .withWidget(BuiltInWidgets.kComboBoxChooser)
-//                .withSize(2, 2)
-//                .withPosition(0, 3);
-//
+        //Orientation orientation = FieldOrientation.getOrientation();
+        ShuffleboardTab autoTab = Shuffleboard.getTab("Auto");
+
+        autoCommandPicker.addOption("Right", new Right(swerveSubsystem, elevatorSubsystem, coralizerSubsystem));
+        autoCommandPicker.addOption("Left", new Left(swerveSubsystem, elevatorSubsystem, coralizerSubsystem));
+        autoCommandPicker.addOption("Mid", new Mid(swerveSubsystem, elevatorSubsystem, coralizerSubsystem));
+        autoCommandPicker.setDefaultOption("Dumb", new Dumb(swerveSubsystem));
+
+        autoTab.add("Auto", autoCommandPicker)
+                .withWidget(BuiltInWidgets.kComboBoxChooser)
+                .withSize(2, 3)
+                .withPosition(0, 0);
+
 //        autoStationPosition.addOption("LA", orientation::getCoralStationLA);
 //        autoStationPosition.addOption("LB", orientation::getCoralStationLB);
 //        autoStationPosition.addOption("LC", orientation::getCoralStationLC);
@@ -267,6 +269,10 @@ public class RobotContainer {
 //            reefLocations.add(reefLocation);
 //            reefLevels.add(reefLevel);
 //        }
+    }
+
+    public Command getAutoCommand() {
+        return autoCommandPicker.getSelected();
     }
 
     public void updateField() {

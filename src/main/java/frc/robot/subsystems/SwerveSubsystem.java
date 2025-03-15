@@ -54,7 +54,7 @@ public class SwerveSubsystem extends LoggedSubsystem {
         }
         swerveDrive.setHeadingCorrection(false);
 
-        SwerveDriveTelemetry.verbosity = SwerveDriveTelemetry.TelemetryVerbosity.HIGH;
+        SwerveDriveTelemetry.verbosity = SwerveDriveTelemetry.TelemetryVerbosity.NONE;
         SmartDashboard.putData("/drive/ahrs",(AHRS)swerveDrive.getGyro().getIMU());
 
         resetOdometry(new Pose2d(0, 0, new Rotation2d()));
@@ -170,11 +170,12 @@ public class SwerveSubsystem extends LoggedSubsystem {
                     // This will flip the path being followed to the red side of the field.
                     // THE ORIGIN WILL REMAIN ON THE BLUE SIDE
 
-//                    var alliance = DriverStation.getAlliance();
-//                    if (alliance.isPresent()) {
-//                        return alliance.get() == DriverStation.Alliance.Red;
-//                    }
-                    return false;
+                    var alliance = DriverStation.getAlliance();
+                    if (alliance.isPresent()) {
+                        return alliance.get() == DriverStation.Alliance.Red; //TODO test inverting
+                    } else {
+                        return false;
+                    }
                 },
                 this // Reference to this subsystem to set requirements
         );

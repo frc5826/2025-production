@@ -2,6 +2,7 @@ package frc.robot.commands.commandgroups;
 
 import com.pathplanner.lib.path.PathConstraints;
 import edu.wpi.first.math.geometry.Pose2d;
+import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import frc.robot.commands.commandgroups.reef.ReefCommand;
@@ -9,6 +10,7 @@ import frc.robot.commands.coralizer.CoralizerIntakeCommand;
 import frc.robot.commands.coralizer.CoralizerWristCommand;
 import frc.robot.commands.elevator.ElevatorPositionCommand;
 import frc.robot.commands.swerve.drivercontrol.TeleopDriveCommand;
+import frc.robot.commands.swerve.pathing.MoveTimeCommand;
 import frc.robot.commands.swerve.pathing.PathFindCommand;
 import frc.robot.commands.swerve.pathing.PathToCommand;
 import frc.robot.math.MathHelper;
@@ -42,9 +44,13 @@ public class ScoreCommandGroup extends SequentialCommandGroup {
                         new CoralizerWristCommand(c, () -> target.getLevel().get().angle)
                 ),
                 new CoralizerIntakeCommand(c, CoralizerIntakeCommand.IntakeDirection.OUT),
+                Commands.deadline(
+                        new MoveTimeCommand(0.25, new ChassisSpeeds(-1, 0, 0), true, s),
+                        new HomeCommandGroup(e, c)
+                ),
                 Commands.parallel(
-                        new HomeCommandGroup(e, c),
-                        new TeleopDriveCommand(s)
+                        new TeleopDriveCommand(s),
+                        new HomeCommandGroup(e, c)
                 )
 
         );
