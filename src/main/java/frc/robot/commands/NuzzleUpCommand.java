@@ -27,7 +27,6 @@ public class NuzzleUpCommand extends LoggedCommand{
         addRequirements(distanceSubsystem, swerveSubsystem, cameraSubsystem);
     }
 
-    //TODO this is a placeholder value
     private boolean shouldMoveLatterly(){
         return lidarLatterly();
     }
@@ -37,7 +36,7 @@ public class NuzzleUpCommand extends LoggedCommand{
     }
 
     private boolean shouldMoveForward(){
-        return false;
+        return lidarForward();
     }
 
     private boolean lidarForward(){
@@ -54,9 +53,6 @@ public class NuzzleUpCommand extends LoggedCommand{
         double normalized = MathHelper.clamp(skew/90, -1, 1);
         return normalized * -1;
     }
-
-
-
 
     @Override
     public void initialize() {

@@ -29,7 +29,27 @@ public final class Constants
     public static class Nuzzle {
         public static final double cXVelo = 0.25;
         public static final double cYVelo = 0.25;
-        public static final double cZVelo = 0.0;
+        public static final double cZVelo = 0.1;
+
+    }
+
+    public static class Distance {
+        public static final int lidarBufferSize = 9;
+
+        public static final int lidarPWMRight60ReadingPort = 2;
+        public static final int lidarPWMRight60TriggerPort = 3;
+        public static final int lidarPWMRight0ReadingPort = 4;
+        public static final int lidarPWMRight0TriggerPort = 5;
+
+        public static final int lidarPWMLeft0ReadingPort = 6;
+        public static final int lidarPWMLeft0TriggerPort = 7;
+        public static final int lidarPWMLeft60ReadingPort = 8;
+        public static final int lidarPWMLeft60TriggerPort = 9;
+
+        public static final double bumperDistance = 0.58;
+
+        public static final double hitDistance = 0.23;
+        public static final double touchingDistance = 0.1;
 
     }
 
