@@ -1,6 +1,5 @@
 package frc.robot.commands;
 
-import edu.wpi.first.apriltag.AprilTagFieldLayout;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import frc.robot.math.MathHelper;
 import frc.robot.math.PID;
@@ -31,12 +30,17 @@ public class NuzzleUpCommand extends LoggedCommand{
         addRequirements(distanceSubsystem, swerveSubsystem, cameraSubsystem);
     }
 
-    private boolean shouldMoveLatterly(){
-        return lidarLatterly();
+
+    private boolean robotTooFar(){
+        return left.getAsBoolean() ? distanceSubsystem.angledLidarHitLeftFar() : distanceSubsystem.angledLidarHitRightFar();
     }
 
-    private boolean lidarLatterly(){
-        return left.getAsBoolean() ? distanceSubsystem.angledLidarHitLeft() : distanceSubsystem.angledLidarHitRight();
+    private boolean robotTooClose(){
+        return left.getAsBoolean() ? distanceSubsystem.angledLidarHitLeftClose() : distanceSubsystem.angledLidarHitRightClose();
+    }
+
+    private boolean robotShouldMoveLatterly(){
+        return robotTooFar() || robotTooClose();
     }
 
     private boolean shouldMoveForward(){
@@ -78,12 +82,16 @@ public class NuzzleUpCommand extends LoggedCommand{
 
         double xVelo = 0.0;
         double yVelo = 0.0;
-        double zVelo = -nuzzlePID.calculate();
+        double zVelo = 0.0; //-nuzzlePID.calculate();
 
-        if (shouldMoveLatterly()){
-            xVelo += (Nuzzle.cXVelo * (left.getAsBoolean() ? 1 : -1));
+        if (robotShouldMoveLatterly() && distanceSubsystem.getDistanceFromReef() < 0.4){
+            if (robotTooClose()){
+                xVelo += (Nuzzle.cXVelo * (left.getAsBoolean() ? 1 : -1));
+            } else if (robotTooFar()) {
+                xVelo -= (Nuzzle.cXVelo * (left.getAsBoolean() ? 1 : -1));
+            }
         }
-        if (shouldMoveForward()){
+        if (shouldMoveForward() && !(distanceSubsystem.getDistanceFromReef() < 0.1 && robotShouldMoveLatterly())){
             yVelo += Nuzzle.cYVelo;
         }
 
@@ -92,7 +100,7 @@ public class NuzzleUpCommand extends LoggedCommand{
 
     @Override
     public boolean isFinished() {
-        return !shouldMoveForward() && !shouldMoveLatterly();
+        return !shouldMoveForward() && !robotShouldMoveLatterly();
     }
 
     @Override

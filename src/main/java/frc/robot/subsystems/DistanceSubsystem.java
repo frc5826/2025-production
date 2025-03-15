@@ -7,7 +7,6 @@ import frc.robot.sensors.LidarPWM;
 import static frc.robot.Constants.Distance.*;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 import java.util.function.Supplier;
 
@@ -47,7 +46,7 @@ public class DistanceSubsystem extends LoggedSubsystem {
     @Override
     public void periodic() {
         super.periodic();
-        SmartDashboard.putBoolean("lidars/AngledHitRight", angledLidarHitRight());
+        SmartDashboard.putBoolean("lidars/AngledHitRight", angledLidarHitRightClose());
         SmartDashboard.putBoolean("lidars/TouchingWall", isTouching());
         SmartDashboard.putNumber("lidars/AngledRightDistance", angledLidarRightDistance());
         SmartDashboard.putNumber("lidars/DistanceFromReef", getDistanceFromReef());
@@ -74,12 +73,20 @@ public class DistanceSubsystem extends LoggedSubsystem {
         return buffer.getMedian() - bumperDistance;
     }
 
-    public boolean angledLidarHitLeft(){
-        return getFromBumperMeasurement(lidarPWMLeft60Buffer) - getFromBumperMeasurement(lidarPWMLeft0Buffer) < hitDistance;
+    public boolean angledLidarHitLeftClose(){
+        return angledLidarLeftDistance() - getFromBumperMeasurement(lidarPWMLeft0Buffer) < hitDistance;
     }
 
-    public boolean angledLidarHitRight(){
-        return getFromBumperMeasurement(lidarPWMRight60Buffer) - getFromBumperMeasurement(lidarPWMRight0Buffer) < hitDistance;
+    public boolean angledLidarHitLeftFar(){
+        return angledLidarLeftDistance() - getFromBumperMeasurement(lidarPWMLeft0Buffer) > maxHitDistance;
+    }
+
+    public boolean angledLidarHitRightClose(){
+        return angledLidarRightDistance() - getFromBumperMeasurement(lidarPWMRight0Buffer) < hitDistance;
+    }
+
+    public boolean angledLidarHitRightFar(){
+        return angledLidarRightDistance() - getFromBumperMeasurement(lidarPWMRight0Buffer) > maxHitDistance;
     }
 
     public double angledLidarLeftDistance(){

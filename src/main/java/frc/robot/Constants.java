@@ -28,7 +28,7 @@ public final class Constants
 {
 
     public static class Nuzzle {
-        public static final double cXVelo = 0.4;
+        public static final double cXVelo = 0.25;
         public static final double cYVelo = 0.4;
         public static final double cZVelo = 0.5*Math.PI;
         public static final double cZVeloDeadband = 0;
@@ -54,7 +54,8 @@ public final class Constants
 
         public static final double bumperDistance = 0.55;
 
-        public static final double hitDistance = 0.05;
+        public static final double hitDistance = 0.09;
+        public static final double maxHitDistance = 0.15;
         public static final double touchingDistance = 0.0;
 
     }

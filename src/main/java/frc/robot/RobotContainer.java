@@ -16,6 +16,7 @@ import edu.wpi.first.wpilibj.smartdashboard.Field2d;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
+import frc.robot.commands.NuzzleUpCommand;
 import frc.robot.commands.autos.*;
 import frc.robot.commands.commandgroups.*;
 import frc.robot.commands.commandgroups.algae.DealgifyL2CommandGroup;
@@ -27,6 +28,7 @@ import frc.robot.commands.coralizer.CoralizerIntakeCommand;
 import frc.robot.commands.swerve.drivercontrol.CrabWalkCommand;
 import frc.robot.commands.swerve.drivercontrol.DriveButtonCommand;
 import frc.robot.commands.swerve.pathing.*;
+import frc.robot.positioning.AprilTag;
 import frc.robot.positioning.Orientation;
 import frc.robot.positioning.ReefPosition;
 import frc.robot.subsystems.*;
@@ -41,6 +43,7 @@ import frc.robot.localization.Localization;
 import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.function.BooleanSupplier;
 import java.util.function.Supplier;
 
 import static frc.robot.Constants.*;
@@ -125,6 +128,7 @@ public class RobotContainer {
         new Trigger(cXbox::getAButton).whileTrue(new ScoreCommandGroup(reefTargeting, swerveSubsystem, elevatorSubsystem, coralizerSubsystem, distanceSubsystem, cameraSubsystem));
         new Trigger(cXbox::getXButton).whileTrue(new AlignReefCommand(reefTargeting, swerveSubsystem));
         new Trigger(cXbox::getBButton).onTrue(new ReefCommand(reefTargeting, elevatorSubsystem, coralizerSubsystem));
+        new Trigger(cXbox::getYButton).whileTrue(new NuzzleUpCommand(distanceSubsystem, swerveSubsystem, cameraSubsystem, new AprilTag(1), () -> false));
 
         //new Trigger(cXbox::getBButtonPressed).onTrue(new MovingHeightCommandGroup(elevatorSubsystem, coralizerSubsystem));
 
