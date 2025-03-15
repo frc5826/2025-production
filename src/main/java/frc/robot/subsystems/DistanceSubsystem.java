@@ -1,34 +1,45 @@
 package frc.robot.subsystems;
 
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import frc.robot.Constants;
+import frc.robot.math.MathHelper;
 import frc.robot.sensors.LidarPWM;
-import frc.robot.Constants.*;
+import static frc.robot.Constants.Distance.*;
 
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.function.Supplier;
 
 
 public class DistanceSubsystem extends LoggedSubsystem {
 
-    private double lidar0AllowedVariability;
     private boolean lidarRight0EqualToLeft0;
-    //Yes, these are crappy names
-    private LidarPWM lidarPWMRight60, lidarPWMRight0;
-    private ReadingBuffer lidarPWMRight60Buffer, lidarPWMRight0Buffer;
-    //private LidarPWM lidarPWMLeft60, lidarPWMLeft0;
+    private double lidar0AllowedVariability;
 
+    //Yes, these are crappy names
+    private final LidarPWM lidarPWMRight60, lidarPWMRight0;
+    private final ReadingBuffer lidarPWMRight60Buffer, lidarPWMRight0Buffer;
+    private final LidarPWM lidarPWMLeft60, lidarPWMLeft0;
+    private final ReadingBuffer lidarPWMLeft60Buffer, lidarPWMLeft0Buffer;
+    private final List<LidarPWM> lidars;
+    private final List<ReadingBuffer> buffers;
 
     public DistanceSubsystem(){
-        //TODO Get correct channels
+        lidar0AllowedVariability = 0.0;
 
-        this.lidar0AllowedVariability = 0.0;
-        this.lidarPWMRight60 = new LidarPWM(7,6);
-        //this.lidarPWMLeft60 = new LidarPWM(5,4);
-        this.lidarPWMRight0 = new LidarPWM(3, 2);
-        //this.lidarPWMLeft0 = new LidarPWM(8, 9);
-        this.lidarPWMRight60Buffer = new ReadingBuffer(9);
-        this.lidarPWMRight0Buffer = new ReadingBuffer(9);
+        this.lidarPWMRight60 = new LidarPWM(lidarPWMRight60TriggerPort,lidarPWMRight60ReadingPort, "Right60", cR60Offset);
+        this.lidarPWMRight0 = new LidarPWM(lidarPWMRight0TriggerPort,lidarPWMRight0ReadingPort, "Right0", cR0Offset);
+        this.lidarPWMLeft0 = new LidarPWM(lidarPWMLeft0TriggerPort,lidarPWMLeft0ReadingPort, "Left0", cL0Offset);
+        this.lidarPWMLeft60 = new LidarPWM(lidarPWMLeft60TriggerPort,lidarPWMLeft60ReadingPort, "Left60", cL60Offset);
+        this.lidars = List.of(lidarPWMRight60, lidarPWMRight0, lidarPWMLeft0, lidarPWMLeft60);
+        this.lidars.forEach(LidarPWM::turnOff);
+
+        this.lidarPWMRight60Buffer = new ReadingBuffer(lidarBufferSize, this.lidarPWMRight60::getMeasurement, this.lidarPWMRight60::isOn);
+        this.lidarPWMRight0Buffer = new ReadingBuffer(lidarBufferSize, this.lidarPWMRight0::getMeasurement, this.lidarPWMRight0::isOn);
+        this.lidarPWMLeft0Buffer = new ReadingBuffer(lidarBufferSize, this.lidarPWMLeft0::getMeasurement, this.lidarPWMLeft0::isOn);
+        this.lidarPWMLeft60Buffer = new ReadingBuffer(lidarBufferSize, this.lidarPWMLeft60::getMeasurement, this.lidarPWMLeft60::isOn);
+        this.buffers = List.of(lidarPWMRight60Buffer, lidarPWMRight0Buffer, lidarPWMLeft0Buffer, lidarPWMLeft60Buffer);
 
     }
 
@@ -42,45 +53,37 @@ public class DistanceSubsystem extends LoggedSubsystem {
         SmartDashboard.putNumber("lidars/DistanceFromReef", getDistanceFromReef());
         SmartDashboard.putNumber("lidars/Skew", getSkew());
 
-        if(lidarPWMRight60.isOn()){
-            lidarPWMRight60Buffer.add(lidarPWMRight60.getMeasurement());
-        }
-        else {
-            lidarPWMRight60Buffer.clear();
-        }
-        if(lidarPWMRight0.isOn()){
-            lidarPWMRight0Buffer.add(lidarPWMRight0.getMeasurement());
-        }
-        else {
-            lidarPWMRight0Buffer.clear();
-        }
+        SmartDashboard.putNumber("lidars/" + lidarPWMRight60.getName() + "-median", lidarPWMRight60Buffer.getMedian());
+        SmartDashboard.putNumber("lidars/" + lidarPWMRight0.getName() + "-median", lidarPWMRight0Buffer.getMedian());
+        SmartDashboard.putNumber("lidars/" + lidarPWMLeft0.getName() + "-median", lidarPWMLeft0Buffer.getMedian());
+        SmartDashboard.putNumber("lidars/" + lidarPWMLeft60.getName() + "-median", lidarPWMLeft60Buffer.getMedian());
 
 
-        this.lidarRight0EqualToLeft0 = true;//lidarPWMRight0.getFromBumperMeasurement() == Math.clamp(lidarPWMLeft0.getFromBumperMeasurement(), lidarPWMRight0.getFromBumperMeasurement() - lidar0AllowedVariability, lidarPWMRight0.getFromBumperMeasurement() + lidar0AllowedVariability);
+        this.buffers.forEach(ReadingBuffer::add);
+        this.lidarRight0EqualToLeft0 = lidarPWMRight0Buffer.getMedian() == MathHelper.clamp(lidarPWMLeft0Buffer.getMedian(), lidarPWMRight0Buffer.getMedian() - lidar0AllowedVariability, lidarPWMRight0Buffer.getMedian() + lidar0AllowedVariability);
     }
 
     private double getFromBumperMeasurement(ReadingBuffer buffer){
-        if (buffer.getMedian() <= 0.58){
-            return 0.00;
-        }
-        else {
-            //TODO get real distance from bumper to Lidar
-            //This should be the distance (In meters) that the Lidar is from the edge of the front bumper
-            return buffer.getMedian() - 0.56;
-        }
-
+//        if (buffer.getMedian() <= bumperDistance){
+//            return 0.00;
+//        }
+//        else {
+//            //This should be the distance (In meters) that the Lidar is from the edge of the front bumper
+//            return buffer.getMedian() - bumperDistance;
+//        }
+        return buffer.getMedian() - bumperDistance;
     }
 
     public boolean angledLidarHitLeft(){
-        return false;//lidarPWMLeft60.getFromBumperMeasurement() < 0.01;
+        return getFromBumperMeasurement(lidarPWMLeft60Buffer) - getFromBumperMeasurement(lidarPWMLeft0Buffer) < hitDistance;
     }
 
     public boolean angledLidarHitRight(){
-        return getFromBumperMeasurement(lidarPWMRight60Buffer) < 0.23;
+        return getFromBumperMeasurement(lidarPWMRight60Buffer) - getFromBumperMeasurement(lidarPWMRight0Buffer) < hitDistance;
     }
 
     public double angledLidarLeftDistance(){
-        return 0.0; //lidarPWMLeft60.getFromBumperMeasurement();
+        return getFromBumperMeasurement(lidarPWMLeft60Buffer);
     }
 
     public double angledLidarRightDistance(){
@@ -88,39 +91,34 @@ public class DistanceSubsystem extends LoggedSubsystem {
     }
 
     public void enableLidar(){
-        //lidarPWMLeft60.turnOn();
-        lidarPWMRight60.turnOn();
-        lidarPWMRight0.turnOn();
-        //lidarPWMLeft0.turnOn();
+        lidars.forEach(LidarPWM::turnOn);
     }
 
     public void disableLidar(){
-        //lidarPWMLeft60.turnOff();
-        lidarPWMRight60.turnOff();
-        //lidarPWMLeft0.turnOff();
-        lidarPWMRight0.turnOff();
+        lidars.forEach(LidarPWM::turnOff);
+        buffers.forEach(ReadingBuffer::clear);
     }
 
     public boolean lidarLeft0IsCloser() {
-        return false; //lidarPWMLeft0.getFromBumperMeasurement() < lidarPWMRight0.getFromBumperMeasurement();
+        return getFromBumperMeasurement(lidarPWMLeft0Buffer) < getFromBumperMeasurement(lidarPWMRight0Buffer);
     }
 
-//    public boolean lidarRight0IsCloser(){
-//        return lidarPWMLeft0.getFromBumperMeasurement() > lidarPWMRight0.getFromBumperMeasurement();
-//    }
+    public boolean lidarRight0IsCloser(){
+        return getFromBumperMeasurement(lidarPWMLeft0Buffer) > getFromBumperMeasurement(lidarPWMRight0Buffer);
+    }
 
     public double getDistanceFromReef(){
         double lidarDifference = getLidarDifference();
         if (lidarLeft0IsCloser()){
-            return 0.0; //lidarPWMLeft0.getFromBumperMeasurement() - lidarDifference/2;
+            return getFromBumperMeasurement(lidarPWMLeft0Buffer);
         }
         else  {
-            return getFromBumperMeasurement(lidarPWMRight0Buffer)  - lidarDifference/2;
+            return getFromBumperMeasurement(lidarPWMRight0Buffer);
         }
     }
 
     public double getLidarDifference(){
-        return 0.0; //Math.abs(lidarPWMLeft0.getFromBumperMeasurement() - lidarPWMRight0.getFromBumperMeasurement());
+        return Math.abs(getFromBumperMeasurement(lidarPWMLeft0Buffer) - getFromBumperMeasurement(lidarPWMRight0Buffer));
     }
 
     public boolean lidars0DontEqual(){
@@ -128,7 +126,7 @@ public class DistanceSubsystem extends LoggedSubsystem {
     }
 
     public boolean isTouching() {
-        return !lidars0DontEqual() && getDistanceFromReef() < 0.1;
+        return !lidars0DontEqual() && getDistanceFromReef() < touchingDistance;
     }
 
     public double getSkew() {
@@ -138,37 +136,57 @@ public class DistanceSubsystem extends LoggedSubsystem {
 
     public double getTurnAngle(){
         double lidarDifference = getLidarDifference();
-        return Math.toDegrees(Math.atan2(lidarDifference, BluePositions.cRobotWidth));
+        return Math.toDegrees(Math.atan2(lidarDifference, Constants.BluePositions.cRobotWidth));
     }
 
     private static class ReadingBuffer{
         private final int bufferSize;
         private final List<Double> buffer;
         private int counter;
+        private final Supplier<Double> readings;
+        private final Supplier<Boolean> enabled;
 
-        public ReadingBuffer(int bufferSize){
-
+        public ReadingBuffer(int bufferSize, Supplier<Double> readings, Supplier<Boolean> enabled){
             counter = 0;
             this.bufferSize = bufferSize;
+            this.readings = readings;
+            this.enabled = enabled;
             this.buffer = new ArrayList<>(bufferSize);
             this.clear();
+        }
 
+        public ReadingBuffer(int bufferSize){
+            this(bufferSize, () -> 0.0, () -> true);
         }
 
         public void add(double reading){
-            buffer.set(counter, reading);
+            if(buffer.size() - 1 < counter){
+                buffer.add(reading);
+            }
+            else {
+                buffer.set(counter, reading);
+            }
             counter = (counter + 1) % bufferSize;
         }
 
+        public void add(){
+            if(enabled.get()){
+                add(readings.get());
+            }
+        }
+
         public double getMedian(){
-            return buffer.stream().sorted().toList().get((int) Math.ceil(bufferSize/2.0));
+            if(buffer.isEmpty()){
+                return 0.0;
+            }
+            else {
+                int index = (int)Math.min(buffer.size()/2.0, buffer.size() - 1);
+                return buffer.stream().sorted().toList().get(index);
+            }
         }
 
         public void clear(){
             this.buffer.clear();
-            for(int i = 0; i < bufferSize; i++){
-                this.buffer.add(0.);
-            }
         }
 
     }
