@@ -9,18 +9,24 @@ import edu.wpi.first.wpilibj.DutyCycle;
 
 public class LidarPWM implements NTSendable {
 
-    public DutyCycle lidarReading;
-    public DigitalOutput lidarTrigger;
-    public String name;
+    private DutyCycle lidarReading;
+    private DigitalOutput lidarTrigger;
+    private String name;
+    private double offset;
 
-    public LidarPWM(int triggerChannel, int readingChannel, String name){
+    public LidarPWM(int triggerChannel, int readingChannel, String name, double offset){
         lidarTrigger = new DigitalOutput(triggerChannel);
         lidarReading = new DutyCycle(new DigitalInput(readingChannel));
         this.name = name;
+        this.offset = offset;
+    }
+
+    public LidarPWM(int triggerChannel, int readingChannel, String name) {
+        this(triggerChannel,readingChannel,name,0);
     }
 
     public LidarPWM(int triggerChannel, int readingChannel){
-        this(triggerChannel, readingChannel, "");
+        this(triggerChannel, readingChannel, "", 0);
     }
 
     public void turnOn(){
@@ -35,7 +41,7 @@ public class LidarPWM implements NTSendable {
      * @return Measurement in meters
      */
     public double getMeasurement() {
-        return lidarReading.getHighTimeNanoseconds()/1000000.0;
+        return lidarReading.getHighTimeNanoseconds()/1000000.0 + offset;
     }
 
     //TODO - I'm not sure if this is how this works.

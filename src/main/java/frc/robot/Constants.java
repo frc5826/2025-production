@@ -14,6 +14,7 @@ import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj.XboxController;
 import frc.robot.math.MathHelper;
 import frc.robot.subsystems.ButtonBoard;
+import org.opencv.core.Mat;
 
 /**
  * The Constants class provides a convenient place for teams to hold robot-wide numerical or boolean
@@ -27,14 +28,14 @@ public final class Constants
 {
 
     public static class Nuzzle {
-        public static final double cXVelo = 0.25;
-        public static final double cYVelo = 0.25;
-        public static final double cZVelo = 0.1;
-
+        public static final double cXVelo = 0.5;
+        public static final double cYVelo = 0.5;
+        public static final double cZVelo = 0.5*Math.PI;
+        public static final double cZVeloDeadband = 0;
     }
 
     public static class Distance {
-        public static final int lidarBufferSize = 9;
+        public static final int lidarBufferSize = 3;
 
         public static final int lidarPWMRight60ReadingPort = 2;
         public static final int lidarPWMRight60TriggerPort = 3;
@@ -46,10 +47,15 @@ public final class Constants
         public static final int lidarPWMLeft60ReadingPort = 8;
         public static final int lidarPWMLeft60TriggerPort = 9;
 
-        public static final double bumperDistance = 0.58;
+        public static final double cR60Offset = 0.06;
+        public static final double cR0Offset = -0.06;
+        public static final double cL60Offset = -0.05;
+        public static final double cL0Offset = -0.01;
 
-        public static final double hitDistance = 0.23;
-        public static final double touchingDistance = 0.1;
+        public static final double bumperDistance = 0.55;
+
+        public static final double hitDistance = 0.05;
+        public static final double touchingDistance = 0.0;
 
     }
 

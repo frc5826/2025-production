@@ -28,7 +28,8 @@ public class CameraSystem {
 
     private static final double POSE_CUTOFF = 0.2;
     private static final double distanceCutoff = 4;
-    private AprilTagFieldLayout fieldLayout;
+
+    private static AprilTagFieldLayout fieldLayout;
     private final List<Camera> aprilTagCameras;
     private Camera reefCamera;
     private DoubleLogEntry xLog, yLog, rotationLog, ambiguityLog;
@@ -152,6 +153,10 @@ public class CameraSystem {
         }
 
         return robotPose;
+    }
+
+    public static AprilTagFieldLayout getFieldLayout() {
+        return fieldLayout;
     }
 
     private double inToM(double inch) {
