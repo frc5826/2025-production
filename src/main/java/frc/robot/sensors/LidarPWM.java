@@ -38,16 +38,16 @@ public class LidarPWM implements NTSendable {
 
     }
 
-    public double getFromBumperMeasurement(){
-        if (getMeasurement() <= 0.50){
-            return 0.00;
-        }
-        else {
-            //TODO get real distance from bumper to Lidar
-            //This should be the distance (In meters) that the Lidar is from the edge of the front bumper
-            return getMeasurement() - 0.50;
-        }
-    }
+//    public double getFromBumperMeasurement(){
+//        if (getMeasurement() <= 0.50){
+//            return 0.00;
+//        }
+//        else {
+//            //TODO get real distance from bumper to Lidar
+//            //This should be the distance (In meters) that the Lidar is from the edge of the front bumper
+//            return getMeasurement() - 0.50;
+//        }
+//    }
 
 
     public boolean isOn(){

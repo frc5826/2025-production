@@ -22,12 +22,9 @@ public class Robot extends TimedRobot
 
     private final RobotContainer robotContainer;
 
-    private DistanceSubsystem distanceSubsystem;
-
     public Robot()
     {
         robotContainer = new RobotContainer();
-        this.distanceSubsystem = new DistanceSubsystem();
     }
 
     @Override
@@ -38,9 +35,6 @@ public class Robot extends TimedRobot
         CommandScheduler.getInstance().run();
 
         robotContainer.postPeriodic();
-
-        System.out.println("Left Lidar " + distanceSubsystem.angledLidarLeftDistance());
-        System.out.println("Right Lidar " + distanceSubsystem.angledLidarRightDistance());
     }
 
     @Override
@@ -78,9 +72,6 @@ public class Robot extends TimedRobot
         {
             autonomousCommand.cancel();
         }
-
-        distanceSubsystem.enableLidar();
-
     }
 
     @Override

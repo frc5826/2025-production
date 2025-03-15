@@ -1,6 +1,7 @@
 package frc.robot.commands;
 
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
+import frc.robot.math.MathHelper;
 import frc.robot.positioning.AprilTag;
 import frc.robot.subsystems.CameraSubsystem;
 import frc.robot.subsystems.DistanceSubsystem;
@@ -23,6 +24,7 @@ public class NuzzleUpCommand extends LoggedCommand{
         this.cameraSubsystem = cameraSubsystem;
         this.target = target;
         this.left = left;
+        addRequirements(distanceSubsystem, swerveSubsystem, cameraSubsystem);
     }
 
     //TODO this is a placeholder value
@@ -49,7 +51,7 @@ public class NuzzleUpCommand extends LoggedCommand{
     private double lidarRotational(){
         //assume 90 degrees is left and -90 is right
         double skew = distanceSubsystem.getSkew();
-        double normalized = Math.clamp(skew/90, -1, 1);
+        double normalized = MathHelper.clamp(skew/90, -1, 1);
         return normalized * -1;
     }
 
