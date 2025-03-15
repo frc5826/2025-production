@@ -1,6 +1,7 @@
 package frc.robot.commands;
 
 import edu.wpi.first.apriltag.AprilTagFieldLayout;
+import edu.wpi.first.math.geometry.Pose3d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import frc.robot.math.MathHelper;
 import frc.robot.math.PID;
@@ -9,6 +10,8 @@ import frc.robot.subsystems.CameraSubsystem;
 import frc.robot.subsystems.DistanceSubsystem;
 import frc.robot.subsystems.SwerveSubsystem;
 import frc.robot.Constants.*;
+
+import java.util.Optional;
 
 public class NuzzleUpCommand extends LoggedCommand{
 
@@ -37,6 +40,10 @@ public class NuzzleUpCommand extends LoggedCommand{
         return left ? distanceSubsystem.angledLidarHitLeft() : distanceSubsystem.angledLidarHitRight();
     }
 
+    private boolean aprilTagLatterly(){
+        return false;
+    }
+
     private boolean shouldMoveForward(){
         return lidarForward();
     }
@@ -44,6 +51,14 @@ public class NuzzleUpCommand extends LoggedCommand{
     private boolean lidarForward(){
         return !distanceSubsystem.isTouching();
     }
+
+    private boolean aprilTagForward(){
+        Optional<Pose3d> leftRobotPose = cameraSubsystem.getRobotPose(target.id(), true);
+        Optional<Pose3d> rightRobotPose = cameraSubsystem.getRobotPose(target.id(), false);
+        return (leftRobotPose.isPresent() && leftRobotPose.get().getY() > 0) || (rightRobotPose.isPresent() && rightRobotPose.get().getY() > 0);
+    }
+
+
     //return between -1 to 1
     private double rotationalDirection(){
        if (Math.abs(lidarRotational()) > Nuzzle.cZVeloDeadband){

@@ -6,15 +6,14 @@ import edu.wpi.first.math.geometry.Pose3d;
 import edu.wpi.first.math.geometry.Rotation3d;
 import edu.wpi.first.math.geometry.Transform3d;
 import edu.wpi.first.math.geometry.Translation3d;
-import edu.wpi.first.networktables.NetworkTable;
 import edu.wpi.first.util.datalog.DataLog;
 import edu.wpi.first.util.datalog.DoubleLogEntry;
 import edu.wpi.first.wpilibj.DataLogManager;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.math.FilterLOF2D;
 import org.photonvision.PhotonCamera;
 import org.photonvision.targeting.PhotonPipelineResult;
 import org.photonvision.targeting.PhotonTrackedTarget;
+import org.photonvision.targeting.TargetCorner;
 
 import java.io.IOException;
 import java.util.LinkedList;
@@ -37,6 +36,9 @@ public class CameraSystem {
     private FilterLOF2D filter;
     private LinkedList<Pose3d> tagLog;
 
+    private final Camera leftForward;
+    private final Camera rightForward;
+
     public CameraSystem() {
 
         try {
@@ -48,19 +50,23 @@ public class CameraSystem {
             e.printStackTrace();
         }
 
+        leftForward = new Camera(new Translation3d(inToM(-3), inToM(8.5), 0.7),
+                new Rotation3d(0, Math.toRadians(25), 0),
+                "L0");
+
+        rightForward = new Camera(new Translation3d(inToM(-3), inToM(-8.5), 0.7),
+                new Rotation3d(0, Math.toRadians(25),0),
+                "R0");
+
         aprilTagCameras = List.of(
                 new Camera(new Translation3d(inToM(-3), inToM(8.5), inToM(12.125)),
                         new Rotation3d(0, -Math.PI / 4, 0),
                         "L45"),
-                new Camera(new Translation3d(inToM(-3), inToM(8.5), 0.7),
-                        new Rotation3d(0, Math.toRadians(25), 0),
-                        "L0"),
+                leftForward,
                 new Camera(new Translation3d(inToM(-3), inToM(-8.5), inToM(12.125)),
                         new Rotation3d(Math.PI, -Math.PI / 4, 0),
                         "R45"),
-                new Camera(new Translation3d(inToM(-3), inToM(-8.5), 0.7),
-                        new Rotation3d(0, Math.toRadians(25),0),
-                        "R0")
+                rightForward
         );
 
         reefCamera = new Camera(new Translation3d(inToM(14), 0, inToM(4)),
@@ -79,6 +85,14 @@ public class CameraSystem {
 
     }
 
+    public Camera getLeftForward() {
+        return leftForward;
+    }
+
+    public Camera getRightForward() {
+        return rightForward;
+    }
+
     public Optional<Double> getReefTargetYaw() {
         for (var result : reefCamera.getCamera().getAllUnreadResults()) {
             if (result.hasTargets()) {
@@ -88,10 +102,10 @@ public class CameraSystem {
         return Optional.empty();
     }
 
-    public List<Pose3d> getCameraMeasurements() {
+    public List<Result> getCameraMeasurements() {
 
-        LinkedList<Pose3d> results = new LinkedList<>();
-        LinkedList<Pose3d> filteredResults = new LinkedList<>();
+        LinkedList<Result> results = new LinkedList<>();
+        LinkedList<Result> filteredResults = new LinkedList<>();
 
         for (Camera camera : aprilTagCameras) {
 
@@ -107,6 +121,8 @@ public class CameraSystem {
 
                             Pose3d robotPose = getRobotLocation(camera.getCameraToRobot(), target.getBestCameraToTarget(), target.getFiducialId());
 
+                            Result tagResult = new Result(robotPose, target.getDetectedCorners(), target.getFiducialId(), camera);
+
                             xLog.append(robotPose.getX());
                             yLog.append(robotPose.getY());
                             rotationLog.append(robotPose.getRotation().getZ());
@@ -118,7 +134,7 @@ public class CameraSystem {
 //                            SmartDashboard.putNumber("Cameras/" + camera.getName() + "/time_stamp", result.getTimestampSeconds());
 //                            SmartDashboard.putNumber("Ambiguity", target.getPoseAmbiguity());
 
-                            results.add(robotPose);
+                            results.add(tagResult);
                             tagLog.add(robotPose);
                             if (tagLog.size() > cLOFTagLimit) {
                                 tagLog.removeFirst();
@@ -131,8 +147,8 @@ public class CameraSystem {
             }
         }
 
-        for (Pose3d possible : results) {
-            double factor = filter.LOF(possible, tagLog);
+        for (Result possible : results) {
+            double factor = filter.LOF(possible.robotPose(), tagLog);
             if (factor <= cLOFRejectionValue) {
                 filteredResults.add(possible);
             }
@@ -186,6 +202,9 @@ public class CameraSystem {
         public String getName() {
             return camera.getName();
         }
+    }
+
+    public record Result(Pose3d robotPose, List<TargetCorner> tagCorners, int id, Camera camera) {
     }
 
 }
