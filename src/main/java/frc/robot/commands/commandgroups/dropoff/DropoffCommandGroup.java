@@ -16,15 +16,13 @@ public class DropoffCommandGroup extends Command {
     private ElevatorSubsystem elevatorSubsystem;
     private ReefTargeting reefTargeting;
     private CoralizerSubsystem coralizerSubsystem;
-    private SwerveSubsystem swerveSubsystem;
 
-    public DropoffCommandGroup(ReefTargeting reefTargeting, ElevatorSubsystem elevatorSubsystem, CoralizerSubsystem coralizerSubsystem, SwerveSubsystem swerveSubsystem){
+    public DropoffCommandGroup(ReefTargeting reefTargeting, ElevatorSubsystem elevatorSubsystem, CoralizerSubsystem coralizerSubsystem){
 
          this.elevatorSubsystem = elevatorSubsystem;
          this.reefTargeting = reefTargeting;
          this.coralizerSubsystem = coralizerSubsystem;
-         this.swerveSubsystem = swerveSubsystem;
-         addRequirements(elevatorSubsystem, swerveSubsystem, coralizerSubsystem);
+         addRequirements(elevatorSubsystem, coralizerSubsystem);
     }
 
     @Override
@@ -32,13 +30,13 @@ public class DropoffCommandGroup extends Command {
         super.initialize();
     ReefPosition.ReefLevel levelTarget = reefTargeting.getLevel().get();
         if (levelTarget.equals(ReefPosition.ReefLevel.L1)){
-            command = new L1DropoffCommandGroup(elevatorSubsystem, coralizerSubsystem, swerveSubsystem);
+            command = new L1DropoffCommandGroup(elevatorSubsystem, coralizerSubsystem);
         }
         else if (levelTarget.equals(ReefPosition.ReefLevel.L2) || levelTarget.equals(ReefPosition.ReefLevel.L3)){
-            command = new L3L2DropoffCommandGroup(elevatorSubsystem, coralizerSubsystem, swerveSubsystem);
+            command = new L3L2DropoffCommandGroup(elevatorSubsystem, coralizerSubsystem);
         }
         else if (levelTarget.equals(ReefPosition.ReefLevel.L4)){
-            command = new L4DropoffCommandGroup(elevatorSubsystem, coralizerSubsystem, swerveSubsystem);
+            command = new L4DropoffCommandGroup(elevatorSubsystem, coralizerSubsystem);
         }
         else {
             command = new CoralizerIntakeCommand(coralizerSubsystem, OUT);

@@ -79,10 +79,10 @@ public final class Constants
         public static final double cElevatorMaxAcceleration = 1.5;
         public static final double cElevatorMaxVelocity = 1.2;
         public static final double cElevatorHeightMin = 0;
-        public static final double cElevatorHeightMax = 1.73;
+        public static final double cElevatorHeightMax = 1.75;
         public static final double cElevatorDeadband = 0.04;
 
-        public static final double L4Height = 1.73;
+        public static final double L4Height = 1.75;
         public static final double L3Height = 1.1;
         public static final double L2Height = 0.7;
         public static final double L1Height = 0;
