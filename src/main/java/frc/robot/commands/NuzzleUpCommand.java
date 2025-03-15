@@ -1,7 +1,9 @@
 package frc.robot.commands;
 
+import edu.wpi.first.apriltag.AprilTagFieldLayout;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import frc.robot.math.MathHelper;
+import frc.robot.math.PID;
 import frc.robot.positioning.AprilTag;
 import frc.robot.subsystems.CameraSubsystem;
 import frc.robot.subsystems.DistanceSubsystem;
@@ -16,7 +18,7 @@ public class NuzzleUpCommand extends LoggedCommand{
     private boolean left;
     private final CameraSubsystem cameraSubsystem;
     private final SwerveSubsystem swerveSubsystem;
-    //private final PID nuzzlePID = new PID(0.1, 0.0, 0, 0.8, -0.8, 0.3, null);
+    private final PID nuzzlePID = new PID(10, 0, 0, Nuzzle.cZVelo, 0, Nuzzle.cZVeloDeadband, this::lidarRotational);
 
     public NuzzleUpCommand(DistanceSubsystem distanceSubsystem, SwerveSubsystem swerveSubsystem, CameraSubsystem cameraSubsystem, AprilTag target, boolean left){
         this.swerveSubsystem = swerveSubsystem;
@@ -27,7 +29,6 @@ public class NuzzleUpCommand extends LoggedCommand{
         addRequirements(distanceSubsystem, swerveSubsystem, cameraSubsystem);
     }
 
-    //TODO this is a placeholder value
     private boolean shouldMoveLatterly(){
         return lidarLatterly();
     }
@@ -37,15 +38,20 @@ public class NuzzleUpCommand extends LoggedCommand{
     }
 
     private boolean shouldMoveForward(){
-        return false;
+        return lidarForward();
     }
 
     private boolean lidarForward(){
-        return distanceSubsystem.isTouching();
+        return !distanceSubsystem.isTouching();
     }
     //return between -1 to 1
-    private double rotationalSpeed(){
-        return lidarRotational();
+    private double rotationalDirection(){
+       if (Math.abs(lidarRotational()) > Nuzzle.cZVeloDeadband){
+           return Math.signum(lidarRotational());
+       }
+       else {
+           return 0.0;
+       }
     }
 
     private double lidarRotational(){
@@ -55,22 +61,22 @@ public class NuzzleUpCommand extends LoggedCommand{
         return normalized * -1;
     }
 
-
-
-
     @Override
     public void initialize() {
         super.initialize();
         distanceSubsystem.enableLidar();
+        nuzzlePID.setGoal(0);
     }
 
     @Override
     public void execute() {
         super.execute();
 
+
+
         double xVelo = 0.0;
         double yVelo = 0.0;
-        double zVelo = rotationalSpeed() * Nuzzle.cZVelo;
+        double zVelo = -nuzzlePID.calculate();
 
         if (shouldMoveLatterly()){
             xVelo += (Nuzzle.cXVelo * (left ? 1 : -1));
