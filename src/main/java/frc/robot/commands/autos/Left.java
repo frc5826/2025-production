@@ -57,8 +57,12 @@ public class Left extends SequentialCommandGroup {
         addCommands(
                 Commands.parallel(
                         buildPath(jToSource),
-                        new SourceCommandGroup(e, c)
-                )
+                        Commands.parallel(
+                                new ElevatorPositionCommand(e, 0.24, ReefPosition.ReefLevel.NONE),
+                                new CoralizerWristCommand(c, 25)
+                        )
+                ),
+                new CoralizerIntakeCommand(c, CoralizerIntakeCommand.IntakeDirection.IN)
         );
 
         //Drop second coral

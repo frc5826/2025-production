@@ -65,7 +65,7 @@ public class Right extends SequentialCommandGroup {
                                 new CoralizerWristCommand(c, 25)
                         )
                 ),
-                new CoralizerIntakeCommand(c, CoralizerIntakeCommand.IntakeDirection.IN) //TODO add stuff to left too
+                new CoralizerIntakeCommand(c, CoralizerIntakeCommand.IntakeDirection.IN)
         );
 
         //Drop second coral
