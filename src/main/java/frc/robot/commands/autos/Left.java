@@ -23,31 +23,29 @@ import frc.robot.subsystems.SwerveSubsystem;
 
 public class Left extends SequentialCommandGroup {
 
+    private PathPlannerPath start;
+    private PathPlannerPath jToSource;
+    private PathPlannerPath sourceToKL;
+    private PathPlannerPath KLToSource;
+
     public Left(SwerveSubsystem s, ElevatorSubsystem e, CoralizerSubsystem c) {
 
         PathConstraints alignConstraints = new PathConstraints(1.5, 1.5, Math.PI * 1.5, Math.PI * 2);
         PathConstraints fastConstraints = new PathConstraints(4, 4, Math.PI * 2, Math.PI * 3);
 
-        Command start = Commands.none();
-        Command jToSource = Commands.none();
-        Command sourceToKL = Commands.none();
-        Command KLToSource = Commands.none();
-
         try {
-            start = AutoBuilder.followPath(PathPlannerPath.fromPathFile("Left start"));
-            jToSource = AutoBuilder.followPath(PathPlannerPath.fromPathFile("Left J to source"));
-            sourceToKL = AutoBuilder.followPath(PathPlannerPath.fromPathFile("Left source to KL"));
-            KLToSource = AutoBuilder.followPath(PathPlannerPath.fromPathFile("Left KL to source"));
+            start = PathPlannerPath.fromPathFile("Left start");
+            jToSource = PathPlannerPath.fromPathFile("Left J to source");
+            sourceToKL = PathPlannerPath.fromPathFile("Left source to KL");
+            KLToSource = PathPlannerPath.fromPathFile("Left KL to source");
         } catch (Exception exception) {
             System.err.println(exception.getMessage());
         }
 
-
-
         //First coral
         addCommands(
                 Commands.parallel( //Path while prepping elevator and wrist
-                        start,
+                        buildPath(start),
                         new ElevatorPositionCommand(e, Constants.Elevator.L4Height, ReefPosition.ReefLevel.L4),
                         new CoralizerWristCommand(c, Constants.Elevator.L4Angle)
                 ),
@@ -58,7 +56,7 @@ public class Left extends SequentialCommandGroup {
         //Get next coral
         addCommands(
                 Commands.parallel(
-                        jToSource,
+                        buildPath(jToSource),
                         new SourceCommandGroup(e, c)
                 )
         );
@@ -66,7 +64,7 @@ public class Left extends SequentialCommandGroup {
         //Drop second coral
         addCommands(
                 Commands.parallel(
-                        sourceToKL,
+                        buildPath(sourceToKL),
                         new MovingHeightCommandGroup(e, c)
                 ),
                 Commands.parallel(
@@ -80,7 +78,7 @@ public class Left extends SequentialCommandGroup {
         //Get next coral
         addCommands(
                 Commands.parallel(
-                        KLToSource,
+                        buildPath(KLToSource),
                         new SourceCommandGroup(e, c)
                 )
         );
@@ -88,7 +86,7 @@ public class Left extends SequentialCommandGroup {
         //Drop third coral
         addCommands(
                 Commands.parallel(
-                        sourceToKL,
+                        buildPath(sourceToKL),
                         new MovingHeightCommandGroup(e, c)
                 ),
                 Commands.parallel(
@@ -102,10 +100,14 @@ public class Left extends SequentialCommandGroup {
         //Get next coral
         addCommands(
                 Commands.parallel(
-                        KLToSource,
+                        buildPath(KLToSource),
                         new SourceCommandGroup(e, c)
                 )
         );
+    }
+
+    private Command buildPath(PathPlannerPath path) {
+        return AutoBuilder.followPath(path);
     }
 
 }

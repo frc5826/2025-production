@@ -5,6 +5,7 @@ import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
+import frc.robot.Constants;
 import frc.robot.commands.swerve.pathing.*;
 import frc.robot.math.MathHelper;
 import frc.robot.subsystems.CoralizerSubsystem;
@@ -32,13 +33,14 @@ public class AlignSourceCommandGroup extends SequentialCommandGroup {
 
     public AlignSourceCommandGroup(Pose2d goal, SwerveSubsystem s, ElevatorSubsystem e, CoralizerSubsystem c) {
 
-        PathConstraints constraints = new PathConstraints(4, 4, Math.PI * 2, Math.PI * 3);
+        PathConstraints constraints = new PathConstraints(3, 3, Math.PI * 2, Math.PI * 3);
+        PathConstraints slowConstraints = new PathConstraints(2, 2, Math.PI * 2, Math.PI * 3);
 
         addCommands(
 
-                new PathFindCommand(MathHelper.offsetPoseReverse(goal, 1), constraints, s),
+                new PathFindCommand(MathHelper.offsetPoseReverse(goal, 1), 0.5, constraints, s),
                 Commands.parallel(
-                        new PathToCommand(goal, 0, constraints, s),
+                        new PathToCommand(MathHelper.offsetPoseReverse(goal, (Constants.BluePositions.cRobotLength / 2) - .05), 0, slowConstraints, s),
                         new SourceCommandGroup(e, c)
                 )
 

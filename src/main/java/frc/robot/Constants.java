@@ -28,8 +28,8 @@ public final class Constants
 {
 
     public static class Nuzzle {
-        public static final double cXVelo = 0.5;
-        public static final double cYVelo = 0.5;
+        public static final double cXVelo = 0.4;
+        public static final double cYVelo = 0.4;
         public static final double cZVelo = 0.5*Math.PI;
         public static final double cZVeloDeadband = 0;
     }
@@ -71,18 +71,19 @@ public final class Constants
         public static final double cElevatorD = 0.01;
         public static final double cElevatorMinOutput = -1;
         public static final double cElevatorMaxOutput = 1;
-        public static final double cElevatorVUp = 0.8;
+        public static final double cElevatorVUp = 0.9;
         public static final double cElevatorVDown = 0.8;
-        public static final double cElevatorG = 0.07;
-        public static final double cElevatorMaxAcceleration = 1;
-        public static final double cElevatorMaxVelocity = 1.67;
+        public static final double cElevatorGDown = 0.07;
+        public static final double cElevatorGUp = 0.03;
+        public static final double cElevatorMaxAcceleration = 1.5;
+        public static final double cElevatorMaxVelocity = 1.2;
         public static final double cElevatorHeightMin = 0;
-        public static final double cElevatorHeightMax = 1.71;
+        public static final double cElevatorHeightMax = 1.73;
         public static final double cElevatorDeadband = 0.04;
 
-        public static final double L4Height = 1.71;
-        public static final double L3Height = 1.07;
-        public static final double L2Height = 0.67;
+        public static final double L4Height = 1.73;
+        public static final double L3Height = 1.1;
+        public static final double L2Height = 0.7;
         public static final double L1Height = 0;
 
         public static final double L4Angle = -70;
@@ -95,7 +96,7 @@ public final class Constants
             public static final double cElevatorOverlapPosition = 0.877;
             public static final double cElevatorOverlapConversion = 1.18;
             public static final double cElevatorGearboxRatio = 0.2;
-            public static final double cElevatorPulleyRatio = 1.5;
+            public static final double cElevatorPulleyRatio = 2/3.0;
             public static final double cElevatorPulleyRadius = 1.375 * 0.0254 * Math.PI;
             public static final double cElevatorRPMtoMPS = cElevatorGearboxRatio * cElevatorPulleyRatio * cElevatorPulleyRadius * (1.0 / 60);
         }
@@ -110,7 +111,8 @@ public final class Constants
     public static final double cTeleTurnDeadband = 0.25;
 
     public static class  Swerve {
-        public static final double cMaxVelocity = 5.05968; //DON'T CHANGE!!!!!!!!!!!!!!!!!!!!!!!
+        //public static final double cMaxVelocity = 5.05968; //DON'T CHANGE!!!!!!!!!!!!!!!!!!!!!!!
+        public static final double cMaxVelocity = 4.5;
         public static final double cMaxAngularVelocity = 5;
 
         public static final PIDConstants cDrivePID = new PIDConstants(0.8, 0, 0);

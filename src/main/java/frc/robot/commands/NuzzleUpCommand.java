@@ -10,17 +10,19 @@ import frc.robot.subsystems.DistanceSubsystem;
 import frc.robot.subsystems.SwerveSubsystem;
 import frc.robot.Constants.*;
 
+import java.util.function.BooleanSupplier;
+
 public class NuzzleUpCommand extends LoggedCommand{
 
     private final DistanceSubsystem distanceSubsystem;
     private AprilTag target;
     //If true, target left, if false, target right.
-    private boolean left;
+    private BooleanSupplier left;
     private final CameraSubsystem cameraSubsystem;
     private final SwerveSubsystem swerveSubsystem;
     private final PID nuzzlePID = new PID(10, 0, 0, Nuzzle.cZVelo, 0, Nuzzle.cZVeloDeadband, this::lidarRotational);
 
-    public NuzzleUpCommand(DistanceSubsystem distanceSubsystem, SwerveSubsystem swerveSubsystem, CameraSubsystem cameraSubsystem, AprilTag target, boolean left){
+    public NuzzleUpCommand(DistanceSubsystem distanceSubsystem, SwerveSubsystem swerveSubsystem, CameraSubsystem cameraSubsystem, AprilTag target, BooleanSupplier left){
         this.swerveSubsystem = swerveSubsystem;
         this.distanceSubsystem = distanceSubsystem;
         this.cameraSubsystem = cameraSubsystem;
@@ -34,7 +36,7 @@ public class NuzzleUpCommand extends LoggedCommand{
     }
 
     private boolean lidarLatterly(){
-        return left ? distanceSubsystem.angledLidarHitLeft() : distanceSubsystem.angledLidarHitRight();
+        return left.getAsBoolean() ? distanceSubsystem.angledLidarHitLeft() : distanceSubsystem.angledLidarHitRight();
     }
 
     private boolean shouldMoveForward(){
@@ -79,7 +81,7 @@ public class NuzzleUpCommand extends LoggedCommand{
         double zVelo = -nuzzlePID.calculate();
 
         if (shouldMoveLatterly()){
-            xVelo += (Nuzzle.cXVelo * (left ? 1 : -1));
+            xVelo += (Nuzzle.cXVelo * (left.getAsBoolean() ? 1 : -1));
         }
         if (shouldMoveForward()){
             yVelo += Nuzzle.cYVelo;

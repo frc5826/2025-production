@@ -56,6 +56,8 @@ public class RobotContainer {
 
     public final CoralizerSubsystem coralizerSubsystem = new CoralizerSubsystem();
 
+    public final DistanceSubsystem distanceSubsystem = new DistanceSubsystem();
+
     public final ReefTargeting reefTargeting = new ReefTargeting(swerveSubsystem);
 
     private Field2d field;
@@ -82,7 +84,7 @@ public class RobotContainer {
 
         //Create elastic tabs
         field = new Field2d();
-        setupFieldTab();
+        //setupFieldTab();
 
         setupAutoTab();
     }
@@ -97,7 +99,9 @@ public class RobotContainer {
         
         localization.move();
         localization.measure(swerveSubsystem);
-        updateField();
+        //updateField();
+
+        distanceSubsystem.enableLidar();
     }
 
     public void postPeriodic() {
@@ -118,7 +122,7 @@ public class RobotContainer {
         new Trigger(cXbox::getRightBumperButton).whileTrue(new DriveButtonCommand(new ChassisSpeeds(0, 0, -0.7), swerveSubsystem));
         new Trigger(cXbox::getLeftBumperButton).whileTrue(new DriveButtonCommand(new ChassisSpeeds(0, 0, 0.7), swerveSubsystem));
 
-        new Trigger(cXbox::getAButton).whileTrue(new ScoreCommandGroup(reefTargeting, swerveSubsystem, elevatorSubsystem, coralizerSubsystem));
+        new Trigger(cXbox::getAButton).whileTrue(new ScoreCommandGroup(reefTargeting, swerveSubsystem, elevatorSubsystem, coralizerSubsystem, distanceSubsystem, cameraSubsystem));
         new Trigger(cXbox::getXButton).whileTrue(new AlignReefCommand(reefTargeting, swerveSubsystem));
         new Trigger(cXbox::getBButton).onTrue(new ReefCommand(reefTargeting, elevatorSubsystem, coralizerSubsystem));
 
@@ -153,18 +157,30 @@ public class RobotContainer {
 //        new Trigger(() -> cButtonBoard.getButton(11)).whileTrue(new AlignReefCommand(FieldOrientation.getOrientation().getReefI(), constraints, swerveSubsystem));
 
         //Set pose goals
-        new Trigger(() -> cButtonBoard.getButtonPressed(0)).onTrue(new InstantCommand(() -> reefTargeting.updatePose(FieldOrientation.getOrientation().getReefH())));
-        new Trigger(() -> cButtonBoard.getButtonPressed(1)).onTrue(new InstantCommand(() -> reefTargeting.updatePose(FieldOrientation.getOrientation().getReefG())));
-        new Trigger(() -> cButtonBoard.getButtonPressed(2)).onTrue(new InstantCommand(() -> reefTargeting.updatePose(FieldOrientation.getOrientation().getReefF())));
-        new Trigger(() -> cButtonBoard.getButtonPressed(3)).onTrue(new InstantCommand(() -> reefTargeting.updatePose(FieldOrientation.getOrientation().getReefE())));
-        new Trigger(() -> cButtonBoard.getButtonPressed(4)).onTrue(new InstantCommand(() -> reefTargeting.updatePose(FieldOrientation.getOrientation().getReefD())));
-        new Trigger(() -> cButtonBoard.getButtonPressed(5)).onTrue(new InstantCommand(() -> reefTargeting.updatePose(FieldOrientation.getOrientation().getReefC())));
-        new Trigger(() -> cButtonBoard.getButtonPressed(6)).onTrue(new InstantCommand(() -> reefTargeting.updatePose(FieldOrientation.getOrientation().getReefB())));
-        new Trigger(() -> cButtonBoard.getButtonPressed(7)).onTrue(new InstantCommand(() -> reefTargeting.updatePose(FieldOrientation.getOrientation().getReefA())));
-        new Trigger(() -> cButtonBoard.getButtonPressed(8)).onTrue(new InstantCommand(() -> reefTargeting.updatePose(FieldOrientation.getOrientation().getReefL())));
-        new Trigger(() -> cButtonBoard.getButtonPressed(9)).onTrue(new InstantCommand(() -> reefTargeting.updatePose(FieldOrientation.getOrientation().getReefK())));
-        new Trigger(() -> cButtonBoard.getButtonPressed(10)).onTrue(new InstantCommand(() -> reefTargeting.updatePose(FieldOrientation.getOrientation().getReefJ())));
-        new Trigger(() -> cButtonBoard.getButtonPressed(11)).onTrue(new InstantCommand(() -> reefTargeting.updatePose(FieldOrientation.getOrientation().getReefI())));
+        new Trigger(() -> cButtonBoard.getButtonPressed(0)).onTrue(new InstantCommand(() -> reefTargeting.updatePose(FieldOrientation.getOrientation().getReefH()))
+                .alongWith(new InstantCommand(() -> reefTargeting.setLeft(false))));
+        new Trigger(() -> cButtonBoard.getButtonPressed(1)).onTrue(new InstantCommand(() -> reefTargeting.updatePose(FieldOrientation.getOrientation().getReefG()))
+                .alongWith(new InstantCommand(() -> reefTargeting.setLeft(true))));
+        new Trigger(() -> cButtonBoard.getButtonPressed(2)).onTrue(new InstantCommand(() -> reefTargeting.updatePose(FieldOrientation.getOrientation().getReefF()))
+                .alongWith(new InstantCommand(() -> reefTargeting.setLeft(false))));
+        new Trigger(() -> cButtonBoard.getButtonPressed(3)).onTrue(new InstantCommand(() -> reefTargeting.updatePose(FieldOrientation.getOrientation().getReefE()))
+                .alongWith(new InstantCommand(() -> reefTargeting.setLeft(true))));
+        new Trigger(() -> cButtonBoard.getButtonPressed(4)).onTrue(new InstantCommand(() -> reefTargeting.updatePose(FieldOrientation.getOrientation().getReefD()))
+                .alongWith(new InstantCommand(() -> reefTargeting.setLeft(false))));
+        new Trigger(() -> cButtonBoard.getButtonPressed(5)).onTrue(new InstantCommand(() -> reefTargeting.updatePose(FieldOrientation.getOrientation().getReefC()))
+                .alongWith(new InstantCommand(() -> reefTargeting.setLeft(true))));
+        new Trigger(() -> cButtonBoard.getButtonPressed(6)).onTrue(new InstantCommand(() -> reefTargeting.updatePose(FieldOrientation.getOrientation().getReefB()))
+                .alongWith(new InstantCommand(() -> reefTargeting.setLeft(false))));
+        new Trigger(() -> cButtonBoard.getButtonPressed(7)).onTrue(new InstantCommand(() -> reefTargeting.updatePose(FieldOrientation.getOrientation().getReefA()))
+                .alongWith(new InstantCommand(() -> reefTargeting.setLeft(true))));
+        new Trigger(() -> cButtonBoard.getButtonPressed(8)).onTrue(new InstantCommand(() -> reefTargeting.updatePose(FieldOrientation.getOrientation().getReefL()))
+                .alongWith(new InstantCommand(() -> reefTargeting.setLeft(false))));
+        new Trigger(() -> cButtonBoard.getButtonPressed(9)).onTrue(new InstantCommand(() -> reefTargeting.updatePose(FieldOrientation.getOrientation().getReefK()))
+                .alongWith(new InstantCommand(() -> reefTargeting.setLeft(true))));
+        new Trigger(() -> cButtonBoard.getButtonPressed(10)).onTrue(new InstantCommand(() -> reefTargeting.updatePose(FieldOrientation.getOrientation().getReefJ()))
+                .alongWith(new InstantCommand(() -> reefTargeting.setLeft(false))));
+        new Trigger(() -> cButtonBoard.getButtonPressed(11)).onTrue(new InstantCommand(() -> reefTargeting.updatePose(FieldOrientation.getOrientation().getReefI()))
+                .alongWith(new InstantCommand(() -> reefTargeting.setLeft(true))));
 
         //testing new align
         //new Trigger(() -> cButtonBoard.getButton(0)).whileTrue(new AlignReefCommand(FieldOrientation.getOrientation().getReefH(), FieldOrientation.getOrientation().getReefSideGH(), swerveSubsystem, elevatorSubsystem, coralizerSubsystem));
@@ -223,28 +239,28 @@ public class RobotContainer {
         return autoCommandPicker.getSelected();
     }
 
-    public void updateField() {
-        field.setRobotPose(localization.getPose());
-    }
+//    public void updateField() {
+//        field.setRobotPose(localization.getPose());
+//    }
 
-    private void setupFieldTab() {
-        ShuffleboardTab tab = Shuffleboard.getTab("field");
-
-        tab.add("PDH", new PowerDistribution(1, PowerDistribution.ModuleType.kRev));
-
-        field = new Field2d();
-        tab.add(field)
-                .withPosition(4,0)
-                .withSize(4,3);
-
-        //Filtered position
-        ShuffleboardLayout position = tab.getLayout("Filtered position", BuiltInLayouts.kList)
-                .withPosition(2,0)
-                .withSize(2,3);
-
-        position.addDouble("Robot X", ()-> localization.getPose().getX());
-        position.addDouble("Robot Y", ()-> localization.getPose().getY());
-        position.addDouble("Robot rotation", ()-> localization.getPose().getRotation().getDegrees());
-    }
+//    private void setupFieldTab() {
+//        ShuffleboardTab tab = Shuffleboard.getTab("field");
+//
+//        tab.add("PDH", new PowerDistribution(1, PowerDistribution.ModuleType.kRev));
+//
+//        field = new Field2d();
+//        tab.add(field)
+//                .withPosition(4,0)
+//                .withSize(4,3);
+//
+//        //Filtered position
+//        ShuffleboardLayout position = tab.getLayout("Filtered position", BuiltInLayouts.kList)
+//                .withPosition(2,0)
+//                .withSize(2,3);
+//
+//        position.addDouble("Robot X", ()-> localization.getPose().getX());
+//        position.addDouble("Robot Y", ()-> localization.getPose().getY());
+//        position.addDouble("Robot rotation", ()-> localization.getPose().getRotation().getDegrees());
+//    }
 
 }

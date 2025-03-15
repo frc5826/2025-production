@@ -17,8 +17,8 @@ import static frc.robot.Constants.Elevator.ConversionFactor.*;
 public class ElevatorSubsystem extends LoggedSubsystem {
 
     private PID elevatorPID = new PID(cElevatorP, cElevatorI, cElevatorD, cElevatorMaxOutput, cElevatorMinOutput, 0, this::getPos);
-    private ElevatorController upController = new ElevatorController(cElevatorVUp, cElevatorG, cElevatorMaxVelocity, cElevatorMaxAcceleration, cElevatorMinOutput, cElevatorMaxOutput, elevatorPID );
-    private ElevatorController downController = new ElevatorController(cElevatorVDown, cElevatorG, cElevatorMaxVelocity, cElevatorMaxAcceleration, cElevatorMinOutput, cElevatorMaxOutput, elevatorPID );
+    private ElevatorController upController = new ElevatorController(cElevatorVUp, cElevatorGUp, cElevatorMaxVelocity, cElevatorMaxAcceleration, cElevatorMinOutput, cElevatorMaxOutput, elevatorPID );
+    private ElevatorController downController = new ElevatorController(cElevatorVDown, cElevatorGDown, cElevatorMaxVelocity, cElevatorMaxAcceleration, cElevatorMinOutput, cElevatorMaxOutput, elevatorPID );
     private ElevatorController currentController;
     private SparkMax motor, motorFollower;
     private Encoder encoder;
@@ -54,7 +54,7 @@ public class ElevatorSubsystem extends LoggedSubsystem {
 
         SmartDashboard.putNumber("elevator/Encoder", getPos());
 
-        SmartDashboard.putNumber("elevator/Velocity", motor.getEncoder().getVelocity()* cElevatorRPMtoMPS);
+        SmartDashboard.putNumber("elevator/Velocity", motor.getEncoder().getVelocity() * cElevatorRPMtoMPS);
 
     }
 

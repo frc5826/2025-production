@@ -14,10 +14,11 @@ import java.util.function.Supplier;
 
 import static frc.robot.Constants.BluePositions.cRobotLength;
 
-public class ReefTargeting extends SubsystemBase {
+public class ReefTargeting {
 
     private ReefPosition target;
     private Pose2d pose;
+    private boolean left;
     private ReefPosition.ReefLevel level;
     private Pose2d sourcePose;
 
@@ -30,6 +31,7 @@ public class ReefTargeting extends SubsystemBase {
         pose = new Pose2d(0, 0, new Rotation2d(0));
         level = ReefPosition.ReefLevel.NONE;
         sourcePose = Constants.BluePositions.coralStationLB;
+        this.left = false;
 
         this.s = swerveSubsystem;
     }
@@ -40,6 +42,14 @@ public class ReefTargeting extends SubsystemBase {
 
     public ReefPosition getTarget() {
         return target;
+    }
+
+    public void setLeft(boolean left) {
+        this.left = left;
+    }
+
+    public BooleanSupplier getLeft() {
+        return () -> left;
     }
 
     public void updateSource(Pose2d pose) {

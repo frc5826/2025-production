@@ -17,24 +17,26 @@ public class PathFindCommand extends LoggedCommand {
     private Supplier<Pose2d> goal;
     private PathConstraints constraints;
     private Command command;
+    private double endVel;
 
-    public PathFindCommand(Supplier<Pose2d> goal, PathConstraints constraints, SwerveSubsystem swerveSubsystem) {
+    public PathFindCommand(Supplier<Pose2d> goal, double endVel, PathConstraints constraints, SwerveSubsystem swerveSubsystem) {
         this.s = swerveSubsystem;
         this.goal = goal;
         this.constraints = constraints;
+        this.endVel = endVel;
 
         addRequirements(s);
     }
 
-    public PathFindCommand(Pose2d goal, PathConstraints constraints, SwerveSubsystem swerveSubsystem) {
-        this(() -> goal, constraints, swerveSubsystem);
+    public PathFindCommand(Pose2d goal, double endVel, PathConstraints constraints, SwerveSubsystem swerveSubsystem) {
+        this(() -> goal, endVel, constraints, swerveSubsystem);
     }
 
     @Override
     public void initialize() {
         super.initialize();
 
-        command = AutoBuilder.pathfindToPose(goal.get(), constraints);
+        command = AutoBuilder.pathfindToPose(goal.get(), constraints, endVel);
         command.initialize();
 
         Constants.cXbox.setRumble(GenericHID.RumbleType.kBothRumble, Constants.rumbleHigh);
