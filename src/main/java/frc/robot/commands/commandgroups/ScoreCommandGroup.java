@@ -28,11 +28,11 @@ public class ScoreCommandGroup extends SequentialCommandGroup {
 
         addCommands(
 
-                new PathFindCommand(target.getFindOffsetPose(), fastConstraints, s)
-                        .onlyWhile(target.isFarEnoughToPath()),
+//                new PathFindCommand(target.getFindOffsetPose(), fastConstraints, s)
+//                        .onlyWhile(target.isFarEnoughToPath()),
                 Commands.deadline(
                         Commands.parallel(
-                                new PathFindCommand(target.getAlignmentOffsetPose(), fastConstraints, s),
+                                new PathToCommand(target.getAlignmentOffsetPose(), 0, alignConstraints, s),
                                 new ElevatorPositionCommand(e, () -> target.getLevel().get().height, target.getLevel().get())
                         ),
                         new CoralizerWristCommand(c, () -> target.getLevel().get().angle).onlyWhile(() -> e.getPos() > 0.5)
