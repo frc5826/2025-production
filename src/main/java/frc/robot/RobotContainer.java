@@ -5,6 +5,8 @@
 
 package frc.robot;
 
+import com.pathplanner.lib.auto.AutoBuilder;
+import com.pathplanner.lib.commands.PathfindingCommand;
 import com.pathplanner.lib.path.PathConstraints;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
@@ -191,6 +193,10 @@ public class RobotContainer {
         new Trigger(() -> cButtonBoard.getButton(24)).whileTrue(new CoralizerIntakeCommand(coralizerSubsystem, CoralizerIntakeCommand.IntakeDirection.IN));
     }
 
+    public void warmupPathFinding() {
+        PathfindingCommand.warmupCommand().schedule();
+    }
+
     public void autoInit() {
         swerveSubsystem.zeroOdoGyro(Math.toRadians(FieldOrientation.getOrientation().getStartOrientation()));
         swerveSubsystem.setOrientation(FieldOrientation.getOrientation());
@@ -198,7 +204,6 @@ public class RobotContainer {
     }
 
     private void setupAutoTab(){
-        //Orientation orientation = FieldOrientation.getOrientation();
         ShuffleboardTab autoTab = Shuffleboard.getTab("Auto");
 
         autoCommandPicker.addOption("Right", new Right(swerveSubsystem, elevatorSubsystem, coralizerSubsystem));
@@ -210,65 +215,6 @@ public class RobotContainer {
                 .withWidget(BuiltInWidgets.kComboBoxChooser)
                 .withSize(2, 3)
                 .withPosition(0, 0);
-
-//        autoStationPosition.addOption("LA", orientation::getCoralStationLA);
-//        autoStationPosition.addOption("LB", orientation::getCoralStationLB);
-//        autoStationPosition.addOption("LC", orientation::getCoralStationLC);
-//        autoStationPosition.addOption("RA", orientation::getCoralStationRA);
-//        autoStationPosition.addOption("RB", orientation::getCoralStationRB);
-//        autoStationPosition.addOption("RC", orientation::getCoralStationRC);
-//        autoStationPosition.setDefaultOption("RB", orientation::getCoralStationRB);
-//
-//        autoTab.add("Coral Station Pos", autoStationPosition)
-//                .withWidget(BuiltInWidgets.kComboBoxChooser)
-//                .withSize(2, 2)
-//                .withPosition(2, 3);
-//
-//        pathCoral.addOption("Yes", true);
-//        pathCoral.addOption("No", false);
-//        pathCoral.setDefaultOption("Yes", true);
-//
-//        autoTab.add("Finish Coral?", pathCoral)
-//                .withWidget(BuiltInWidgets.kComboBoxChooser)
-//                .withSize(2, 2)
-//                .withPosition(4, 3);
-//
-//        for (int i = 0; i < 4; i++) {
-//            SendableChooser<Pose2d> reefLocation = new SendableChooser<>();
-//            SendableChooser<ReefPosition.ReefLevel> reefLevel = new SendableChooser<>();
-//            reefLocation.addOption("None", new Pose2d());
-//            reefLocation.addOption("A", orientation.getReefA());
-//            reefLocation.addOption("B", orientation.getReefB());
-//            reefLocation.addOption("C", orientation.getReefC());
-//            reefLocation.addOption("D", orientation.getReefD());
-//            reefLocation.addOption("E", orientation.getReefE());
-//            reefLocation.addOption("F", orientation.getReefF());
-//            reefLocation.addOption("G", orientation.getReefG());
-//            reefLocation.addOption("H", orientation.getReefH());
-//            reefLocation.addOption("I", orientation.getReefI());
-//            reefLocation.addOption("J", orientation.getReefJ());
-//            reefLocation.addOption("K", orientation.getReefK());
-//            reefLocation.addOption("L", orientation.getReefL());
-//            reefLocation.setDefaultOption("None", new Pose2d());
-//            reefLevel.addOption("None", ReefPosition.ReefLevel.NONE);
-//            reefLevel.addOption("L1", ReefPosition.ReefLevel.L1);
-//            reefLevel.addOption("L2", ReefPosition.ReefLevel.L2);
-//            reefLevel.addOption("L3", ReefPosition.ReefLevel.L3);
-//            reefLevel.addOption("L4", ReefPosition.ReefLevel.L4);
-//            reefLevel.setDefaultOption("None", ReefPosition.ReefLevel.NONE);
-//
-//            autoTab.add(("Position " + (i + 1)), reefLocation)
-//                .withWidget(BuiltInWidgets.kComboBoxChooser)
-//                .withSize(1, 1)
-//                .withPosition(i, 0);
-//            autoTab.add(("Level " + (i + 1)), reefLevel)
-//                    .withWidget(BuiltInWidgets.kComboBoxChooser)
-//                    .withSize(1, 1)
-//                    .withPosition(i, 1);
-//
-//            reefLocations.add(reefLocation);
-//            reefLevels.add(reefLevel);
-//        }
     }
 
     public Command getAutoCommand() {
@@ -298,21 +244,5 @@ public class RobotContainer {
         position.addDouble("Robot Y", ()-> localization.getPose().getY());
         position.addDouble("Robot rotation", ()-> localization.getPose().getRotation().getDegrees());
     }
-
-//    public Command getAutoCommand(){
-//        if (dumb.getSelected()){
-//            return new Dumb(swerveSubsystem);
-//        }
-//        List<ReefPosition> reefPositions = new ArrayList<>();
-//        for (int i = 0; i < 4; i++) {
-//            Pose2d reefLocation = reefLocations.get(i).getSelected();
-//            ReefPosition.ReefLevel reefLevel = reefLevels.get(i).getSelected();
-//            if (!reefLocation.equals(new Pose2d()) && !reefLevel.equals(ReefPosition.ReefLevel.NONE)){
-//                reefPositions.add(new ReefPosition(reefLocation, reefLevel));
-//            }
-//        }
-//
-//        return new AutoCommandGroup(elevatorSubsystem, coralizerSubsystem, swerveSubsystem, autoStationPosition.getSelected(), reefPositions, pathCoral.getSelected());
-//    }
 
 }

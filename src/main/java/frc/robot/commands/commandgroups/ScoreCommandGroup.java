@@ -30,8 +30,8 @@ public class ScoreCommandGroup extends SequentialCommandGroup {
 
         addCommands(
 
-//                new PathFindCommand(target.getFindOffsetPose(), fastConstraints, s)
-//                        .onlyWhile(target.isFarEnoughToPath()),
+                new PathFindCommand(target.getFindOffsetPose(), fastConstraints, s)
+                        .onlyIf(target.isFarEnoughToPath()), //TODO test
                 Commands.deadline(
                         Commands.parallel(
                                 new PathToCommand(target.getAlignmentOffsetPose(), 0, alignConstraints, s),
@@ -45,7 +45,7 @@ public class ScoreCommandGroup extends SequentialCommandGroup {
                 ),
                 new CoralizerIntakeCommand(c, CoralizerIntakeCommand.IntakeDirection.OUT),
                 Commands.deadline(
-                        new MoveTimeCommand(0.25, new ChassisSpeeds(-1, 0, 0), true, s),
+                        new MoveTimeCommand(0.35, new ChassisSpeeds(-1, 0, 0), true, s),
                         new HomeCommandGroup(e, c)
                 ),
                 Commands.parallel(
