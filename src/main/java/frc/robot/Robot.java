@@ -39,7 +39,10 @@ public class Robot extends TimedRobot
 
     @Override
     public void robotInit() {
-        //autonomousCommand = robotContainer.getAutoCommand();
+        autonomousCommand = robotContainer.getAutoCommand();
+
+        //warmup pathfinding
+        robotContainer.warmupPathFinding();
     }
 
     @Override
@@ -54,7 +57,7 @@ public class Robot extends TimedRobot
     {
         robotContainer.autoInit();
 
-        //autonomousCommand = robotContainer.getAutoCommand();
+        autonomousCommand = robotContainer.getAutoCommand();
 
         if (autonomousCommand != null)
         {

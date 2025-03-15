@@ -5,6 +5,8 @@
 
 package frc.robot;
 
+import com.pathplanner.lib.auto.AutoBuilder;
+import com.pathplanner.lib.commands.PathfindingCommand;
 import com.pathplanner.lib.path.PathConstraints;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
@@ -14,9 +16,7 @@ import edu.wpi.first.wpilibj.smartdashboard.Field2d;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
-import frc.robot.commands.NuzzleUpCommand;
-import frc.robot.commands.autos.AutoCommandGroup;
-import frc.robot.commands.autos.Dumb;
+import frc.robot.commands.autos.*;
 import frc.robot.commands.commandgroups.*;
 import frc.robot.commands.commandgroups.algae.DealgifyL2CommandGroup;
 import frc.robot.commands.commandgroups.algae.DealgifyL3CommandGroup;
@@ -27,7 +27,7 @@ import frc.robot.commands.coralizer.CoralizerIntakeCommand;
 import frc.robot.commands.swerve.drivercontrol.CrabWalkCommand;
 import frc.robot.commands.swerve.drivercontrol.DriveButtonCommand;
 import frc.robot.commands.swerve.pathing.*;
-import frc.robot.positioning.AprilTag;
+import frc.robot.positioning.Orientation;
 import frc.robot.positioning.ReefPosition;
 import frc.robot.subsystems.*;
 import frc.robot.positioning.FieldOrientation;
@@ -38,6 +38,7 @@ import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.commands.swerve.drivercontrol.TeleopDriveCommand;
 import frc.robot.localization.Localization;
 
+import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Supplier;
@@ -57,8 +58,6 @@ public class RobotContainer {
 
     public final ReefTargeting reefTargeting = new ReefTargeting(swerveSubsystem);
 
-    public final DistanceSubsystem distanceSubsystem = new DistanceSubsystem();
-
     private Field2d field;
 
     List<SendableChooser<Pose2d>> reefLocations = new ArrayList<>();
@@ -66,6 +65,7 @@ public class RobotContainer {
     SendableChooser<Boolean> dumb = new SendableChooser<>();
     SendableChooser<Supplier<Pose2d>> autoStationPosition = new SendableChooser<>();
     SendableChooser<Boolean> pathCoral = new SendableChooser<>();
+    SendableChooser<Command> autoCommandPicker = new SendableChooser<>();
 
     public RobotContainer() {
         DataLogManager.start("/U/logs");
@@ -98,8 +98,6 @@ public class RobotContainer {
         localization.move();
         localization.measure(swerveSubsystem);
         updateField();
-
-        distanceSubsystem.enableLidar();
     }
 
     public void postPeriodic() {
@@ -123,9 +121,7 @@ public class RobotContainer {
         new Trigger(cXbox::getAButton).whileTrue(new ScoreCommandGroup(reefTargeting, swerveSubsystem, elevatorSubsystem, coralizerSubsystem));
         new Trigger(cXbox::getXButton).whileTrue(new AlignReefCommand(reefTargeting, swerveSubsystem));
         new Trigger(cXbox::getBButton).onTrue(new ReefCommand(reefTargeting, elevatorSubsystem, coralizerSubsystem));
-        new Trigger(cXbox::getYButton).whileTrue(new NuzzleUpCommand(distanceSubsystem, swerveSubsystem, cameraSubsystem, new AprilTag(1), false));
 
-        //new Trigger(cXbox::getAButton).whileTrue(new AlignReefCameraCommand(cameraSubsystem, swerveSubsystem));
         //new Trigger(cXbox::getBButtonPressed).onTrue(new MovingHeightCommandGroup(elevatorSubsystem, coralizerSubsystem));
 
         //For testing cuz the button board is being poopy
@@ -188,13 +184,19 @@ public class RobotContainer {
         new Trigger(() -> cButtonBoard.getButtonPressed(17)).onTrue(new HomeCommandGroup(elevatorSubsystem, coralizerSubsystem));
         new Trigger(() -> cButtonBoard.getButtonPressed(18)).onTrue(new SourceCommandGroup(elevatorSubsystem, coralizerSubsystem));
         //For Buttons 19-21, Starts at middle right red button and goes left
-//        new Trigger(() -> cButtonBoard.getButton(19)).whileTrue(new AlignSourceCommandGroup(FieldOrientation.getOrientation().getCoralStationLB(), swerveSubsystem, elevatorSubsystem, coralizerSubsystem));
-//        new Trigger(() -> cButtonBoard.getButton(20)).whileTrue(new AlignSourceCommandGroup(FieldOrientation.getOrientation().getCoralStationRB(), swerveSubsystem, elevatorSubsystem, coralizerSubsystem));
+        new Trigger(() -> cButtonBoard.getButton(19)).whileTrue(new AlignSourceCommandGroup(FieldOrientation.getOrientation().getCoralStationLB(), swerveSubsystem, elevatorSubsystem, coralizerSubsystem)
+                .alongWith(new InstantCommand(() -> reefTargeting.updateSource(FieldOrientation.getOrientation().getCoralStationLB()))));
+        new Trigger(() -> cButtonBoard.getButton(20)).whileTrue(new AlignSourceCommandGroup(FieldOrientation.getOrientation().getCoralStationRB(), swerveSubsystem, elevatorSubsystem, coralizerSubsystem)
+                .alongWith(new InstantCommand(() -> reefTargeting.updateSource(FieldOrientation.getOrientation().getCoralStationLB()))));
         new Trigger(() -> cButtonBoard.getButton(21)).whileTrue(new CoralizerIntakeCommand(coralizerSubsystem, CoralizerIntakeCommand.IntakeDirection.OUT));
         //For Buttons 22-24, Starts at bottom right white button and goes left
-        new Trigger(() -> cButtonBoard.getButtonPressed(22)).onTrue(new DealgifyL2CommandGroup(elevatorSubsystem, coralizerSubsystem, swerveSubsystem));
-        new Trigger(() -> cButtonBoard.getButtonPressed(23)).onTrue(new DealgifyL3CommandGroup(elevatorSubsystem, coralizerSubsystem, swerveSubsystem));
+        new Trigger(() -> cButtonBoard.getButtonPressed(22)).onTrue(new DealgifyL2CommandGroup(elevatorSubsystem, coralizerSubsystem));
+        new Trigger(() -> cButtonBoard.getButtonPressed(23)).onTrue(new DealgifyL3CommandGroup(elevatorSubsystem, coralizerSubsystem));
         new Trigger(() -> cButtonBoard.getButton(24)).whileTrue(new CoralizerIntakeCommand(coralizerSubsystem, CoralizerIntakeCommand.IntakeDirection.IN));
+    }
+
+    public void warmupPathFinding() {
+        PathfindingCommand.warmupCommand().schedule();
     }
 
     public void autoInit() {
@@ -204,76 +206,21 @@ public class RobotContainer {
     }
 
     private void setupAutoTab(){
-//        Orientation orientation = FieldOrientation.getOrientation();
-//        ShuffleboardTab autoTab = Shuffleboard.getTab("Auto");
-//
-//        dumb.addOption("Yes dumb", true);
-//        dumb.addOption("No dumb", false);
-//        dumb.setDefaultOption("No dumb", false);
-//
-//        autoTab.add("Dumb?", dumb)
-//                .withWidget(BuiltInWidgets.kComboBoxChooser)
-//                .withSize(2, 2)
-//                .withPosition(0, 3);
-//
-//        autoStationPosition.addOption("LA", orientation::getCoralStationLA);
-//        autoStationPosition.addOption("LB", orientation::getCoralStationLB);
-//        autoStationPosition.addOption("LC", orientation::getCoralStationLC);
-//        autoStationPosition.addOption("RA", orientation::getCoralStationRA);
-//        autoStationPosition.addOption("RB", orientation::getCoralStationRB);
-//        autoStationPosition.addOption("RC", orientation::getCoralStationRC);
-//        autoStationPosition.setDefaultOption("RB", orientation::getCoralStationRB);
-//
-//        autoTab.add("Coral Station Pos", autoStationPosition)
-//                .withWidget(BuiltInWidgets.kComboBoxChooser)
-//                .withSize(2, 2)
-//                .withPosition(2, 3);
-//
-//        pathCoral.addOption("Yes", true);
-//        pathCoral.addOption("No", false);
-//        pathCoral.setDefaultOption("Yes", true);
-//
-//        autoTab.add("Finish Coral?", pathCoral)
-//                .withWidget(BuiltInWidgets.kComboBoxChooser)
-//                .withSize(2, 2)
-//                .withPosition(4, 3);
-//
-//        for (int i = 0; i < 4; i++) {
-//            SendableChooser<Pose2d> reefLocation = new SendableChooser<>();
-//            SendableChooser<ReefPosition.ReefLevel> reefLevel = new SendableChooser<>();
-//            reefLocation.addOption("None", new Pose2d());
-//            reefLocation.addOption("A", orientation.getReefA());
-//            reefLocation.addOption("B", orientation.getReefB());
-//            reefLocation.addOption("C", orientation.getReefC());
-//            reefLocation.addOption("D", orientation.getReefD());
-//            reefLocation.addOption("E", orientation.getReefE());
-//            reefLocation.addOption("F", orientation.getReefF());
-//            reefLocation.addOption("G", orientation.getReefG());
-//            reefLocation.addOption("H", orientation.getReefH());
-//            reefLocation.addOption("I", orientation.getReefI());
-//            reefLocation.addOption("J", orientation.getReefJ());
-//            reefLocation.addOption("K", orientation.getReefK());
-//            reefLocation.addOption("L", orientation.getReefL());
-//            reefLocation.setDefaultOption("None", new Pose2d());
-//            reefLevel.addOption("None", ReefPosition.ReefLevel.NONE);
-//            reefLevel.addOption("L1", ReefPosition.ReefLevel.L1);
-//            reefLevel.addOption("L2", ReefPosition.ReefLevel.L2);
-//            reefLevel.addOption("L3", ReefPosition.ReefLevel.L3);
-//            reefLevel.addOption("L4", ReefPosition.ReefLevel.L4);
-//            reefLevel.setDefaultOption("None", ReefPosition.ReefLevel.NONE);
-//
-//            autoTab.add(("Position " + (i + 1)), reefLocation)
-//                .withWidget(BuiltInWidgets.kComboBoxChooser)
-//                .withSize(1, 1)
-//                .withPosition(i, 0);
-//            autoTab.add(("Level " + (i + 1)), reefLevel)
-//                    .withWidget(BuiltInWidgets.kComboBoxChooser)
-//                    .withSize(1, 1)
-//                    .withPosition(i, 1);
-//
-//            reefLocations.add(reefLocation);
-//            reefLevels.add(reefLevel);
-//        }
+        ShuffleboardTab autoTab = Shuffleboard.getTab("Auto");
+
+        autoCommandPicker.addOption("Right", new Right(swerveSubsystem, elevatorSubsystem, coralizerSubsystem));
+        autoCommandPicker.addOption("Left", new Left(swerveSubsystem, elevatorSubsystem, coralizerSubsystem));
+        autoCommandPicker.addOption("Mid", new Mid(swerveSubsystem, elevatorSubsystem, coralizerSubsystem));
+        autoCommandPicker.setDefaultOption("Dumb", new Dumb(swerveSubsystem));
+
+        autoTab.add("Auto", autoCommandPicker)
+                .withWidget(BuiltInWidgets.kComboBoxChooser)
+                .withSize(2, 3)
+                .withPosition(0, 0);
+    }
+
+    public Command getAutoCommand() {
+        return autoCommandPicker.getSelected();
     }
 
     public void updateField() {
@@ -299,21 +246,5 @@ public class RobotContainer {
         position.addDouble("Robot Y", ()-> localization.getPose().getY());
         position.addDouble("Robot rotation", ()-> localization.getPose().getRotation().getDegrees());
     }
-
-//    public Command getAutoCommand(){
-//        if (dumb.getSelected()){
-//            return new Dumb(swerveSubsystem);
-//        }
-//        List<ReefPosition> reefPositions = new ArrayList<>();
-//        for (int i = 0; i < 4; i++) {
-//            Pose2d reefLocation = reefLocations.get(i).getSelected();
-//            ReefPosition.ReefLevel reefLevel = reefLevels.get(i).getSelected();
-//            if (!reefLocation.equals(new Pose2d()) && !reefLevel.equals(ReefPosition.ReefLevel.NONE)){
-//                reefPositions.add(new ReefPosition(reefLocation, reefLevel));
-//            }
-//        }
-//
-//        return new AutoCommandGroup(elevatorSubsystem, coralizerSubsystem, swerveSubsystem, autoStationPosition.getSelected(), reefPositions, pathCoral.getSelected());
-//    }
 
 }

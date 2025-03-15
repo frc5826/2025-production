@@ -20,23 +20,25 @@ import frc.robot.subsystems.CoralizerSubsystem;
 import frc.robot.subsystems.ElevatorSubsystem;
 import frc.robot.subsystems.SwerveSubsystem;
 
+import java.nio.file.Path;
+
 public class Right extends SequentialCommandGroup {
+
+    private PathPlannerPath start;
+    private PathPlannerPath eToSource;
+    private PathPlannerPath sourceToCD;
+    private PathPlannerPath CDToSource;
 
     public Right(SwerveSubsystem s, ElevatorSubsystem e, CoralizerSubsystem c) {
 
         PathConstraints alignConstraints = new PathConstraints(1.5, 1.5, Math.PI * 1.5, Math.PI * 2);
         PathConstraints fastConstraints = new PathConstraints(4, 4, Math.PI * 2, Math.PI * 3);
 
-        Command start = Commands.none();
-        Command eToSource = Commands.none();
-        Command sourceToCD = Commands.none();
-        Command CDToSource = Commands.none();
-
         try {
-            start = AutoBuilder.followPath(PathPlannerPath.fromPathFile("Right start"));
-            eToSource = AutoBuilder.followPath(PathPlannerPath.fromPathFile("Right E to source"));
-            sourceToCD = AutoBuilder.followPath(PathPlannerPath.fromPathFile("Right source to CD"));
-            CDToSource = AutoBuilder.followPath(PathPlannerPath.fromPathFile("Right CD to source"));
+            start = PathPlannerPath.fromPathFile("Right start");
+            eToSource = PathPlannerPath.fromPathFile("Right E to source");
+            sourceToCD = PathPlannerPath.fromPathFile("Right source to CD");
+            CDToSource = PathPlannerPath.fromPathFile("Right CD to source");
         } catch (Exception exception) {
             System.err.println(exception.getMessage());
         }
@@ -46,7 +48,7 @@ public class Right extends SequentialCommandGroup {
         //First coral
         addCommands(
                 Commands.parallel( //Path while prepping elevator and wrist
-                        start,
+                        buildPath(start),
                         new ElevatorPositionCommand(e, Constants.Elevator.L4Height, ReefPosition.ReefLevel.L4),
                         new CoralizerWristCommand(c, Constants.Elevator.L4Angle)
                 ),
@@ -57,7 +59,7 @@ public class Right extends SequentialCommandGroup {
         //Get next coral
         addCommands(
                 Commands.parallel(
-                        eToSource,
+                        buildPath(eToSource),
                         new SourceCommandGroup(e, c)
                 )
         );
@@ -65,7 +67,7 @@ public class Right extends SequentialCommandGroup {
         //Drop second coral
         addCommands(
                 Commands.parallel(
-                        sourceToCD,
+                        buildPath(sourceToCD),
                         new MovingHeightCommandGroup(e, c)
                 ),
                 Commands.parallel(
@@ -79,7 +81,7 @@ public class Right extends SequentialCommandGroup {
         //Get next coral
         addCommands(
                 Commands.parallel(
-                        CDToSource,
+                        buildPath(CDToSource),
                         new SourceCommandGroup(e, c)
                 )
         );
@@ -87,7 +89,7 @@ public class Right extends SequentialCommandGroup {
         //Drop third coral
         addCommands(
                 Commands.parallel(
-                        sourceToCD,
+                        buildPath(sourceToCD),
                         new MovingHeightCommandGroup(e, c)
                 ),
                 Commands.parallel(
@@ -101,10 +103,14 @@ public class Right extends SequentialCommandGroup {
         //Get next coral
         addCommands(
                 Commands.parallel(
-                        CDToSource,
+                        buildPath(CDToSource),
                         new SourceCommandGroup(e, c)
                 )
         );
+    }
+
+    private Command buildPath(PathPlannerPath path) {
+        return AutoBuilder.followPath(path);
     }
 
 }

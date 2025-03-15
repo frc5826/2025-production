@@ -3,6 +3,7 @@ package frc.robot.subsystems;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import frc.robot.Constants;
 import frc.robot.math.MathHelper;
 import frc.robot.positioning.FieldOrientation;
 import frc.robot.positioning.ReefPosition;
@@ -18,6 +19,7 @@ public class ReefTargeting extends SubsystemBase {
     private ReefPosition target;
     private Pose2d pose;
     private ReefPosition.ReefLevel level;
+    private Pose2d sourcePose;
 
     private List<ReefPosition> autoList;
 
@@ -27,6 +29,7 @@ public class ReefTargeting extends SubsystemBase {
         target = new ReefPosition(new Pose2d(0, 0, new Rotation2d(0)), ReefPosition.ReefLevel.NONE);
         pose = new Pose2d(0, 0, new Rotation2d(0));
         level = ReefPosition.ReefLevel.NONE;
+        sourcePose = Constants.BluePositions.coralStationLB;
 
         this.s = swerveSubsystem;
     }
@@ -37,6 +40,14 @@ public class ReefTargeting extends SubsystemBase {
 
     public ReefPosition getTarget() {
         return target;
+    }
+
+    public void updateSource(Pose2d pose) {
+        sourcePose = pose;
+    }
+
+    public Pose2d getSource() {
+        return sourcePose;
     }
 
     public void updateLevel(ReefPosition.ReefLevel level) {

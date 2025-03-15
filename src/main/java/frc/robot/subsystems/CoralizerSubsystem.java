@@ -57,10 +57,10 @@ public class CoralizerSubsystem extends LoggedSubsystem{
     public void periodic() {
         if (shouldHold){
             if (hasCoral()){
-                setIntakeSpeed(0.1);
+                setIntakeSpeed(-0.2);
             }
             else {
-                setIntakeSpeed(1);
+                setIntakeSpeed(-1);
             }
         }
 
