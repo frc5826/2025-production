@@ -52,7 +52,7 @@ public class Right extends SequentialCommandGroup {
                         new ElevatorPositionCommand(e, Constants.Elevator.L4Height, ReefPosition.ReefLevel.L4),
                         new CoralizerWristCommand(c, Constants.Elevator.L4Angle)
                 ),
-                new PathToCommand(MathHelper.offsetPoseReverse(FieldOrientation.getOrientation().getReefJ(), Constants.BluePositions.cRobotLength / 2), 0, alignConstraints, s), //Align to reef
+                new PathToCommand(MathHelper.offsetPoseReverse(FieldOrientation.getOrientation().getReefE(), Constants.BluePositions.cRobotLength / 2), 0, alignConstraints, s), //Align to reef
                 new CoralizerIntakeCommand(c, CoralizerIntakeCommand.IntakeDirection.OUT) //Drop
         );
 
@@ -60,8 +60,12 @@ public class Right extends SequentialCommandGroup {
         addCommands(
                 Commands.parallel(
                         buildPath(eToSource),
-                        new SourceCommandGroup(e, c)
-                )
+                        Commands.parallel(
+                                new ElevatorPositionCommand(e, 0.24, ReefPosition.ReefLevel.NONE),
+                                new CoralizerWristCommand(c, 25)
+                        )
+                ),
+                new CoralizerIntakeCommand(c, CoralizerIntakeCommand.IntakeDirection.IN) //TODO add stuff to left too
         );
 
         //Drop second coral
@@ -71,7 +75,7 @@ public class Right extends SequentialCommandGroup {
                         new MovingHeightCommandGroup(e, c)
                 ),
                 Commands.parallel(
-                        new PathToCommand(MathHelper.offsetPoseReverse(FieldOrientation.getOrientation().getReefL(), Constants.BluePositions.cRobotLength / 2), 0, alignConstraints, s), //Align to reef
+                        new PathToCommand(MathHelper.offsetPoseReverse(FieldOrientation.getOrientation().getReefC(), Constants.BluePositions.cRobotLength / 2), 0, alignConstraints, s), //Align to reef
                         new ElevatorPositionCommand(e, Constants.Elevator.L4Height, ReefPosition.ReefLevel.L4),
                         new CoralizerWristCommand(c, Constants.Elevator.L4Angle)
                 ),
@@ -93,7 +97,7 @@ public class Right extends SequentialCommandGroup {
                         new MovingHeightCommandGroup(e, c)
                 ),
                 Commands.parallel(
-                        new PathToCommand(MathHelper.offsetPoseReverse(FieldOrientation.getOrientation().getReefK(), Constants.BluePositions.cRobotLength / 2), 0, alignConstraints, s), //Align to reef
+                        new PathToCommand(MathHelper.offsetPoseReverse(FieldOrientation.getOrientation().getReefD(), Constants.BluePositions.cRobotLength / 2), 0, alignConstraints, s), //Align to reef
                         new ElevatorPositionCommand(e, Constants.Elevator.L4Height, ReefPosition.ReefLevel.L4),
                         new CoralizerWristCommand(c, Constants.Elevator.L4Angle)
                 ),
