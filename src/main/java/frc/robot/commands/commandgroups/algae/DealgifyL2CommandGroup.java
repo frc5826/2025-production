@@ -20,9 +20,9 @@ public class DealgifyL2CommandGroup extends SequentialCommandGroup {
         addCommands(
                 Commands.parallel(
                         new ElevatorPositionCommand(elevatorSubsystem, 0.55, ReefPosition.ReefLevel.NONE),
-                        new CoralizerWristCommand(coralizerSubsystem, 10),
-                        new CoralizerIntakeCommand(coralizerSubsystem, CoralizerIntakeCommand.IntakeDirection.IN)
-                )
+                        new CoralizerWristCommand(coralizerSubsystem, 10)
+                ),
+                new CoralizerIntakeCommand(coralizerSubsystem, CoralizerIntakeCommand.IntakeDirection.IN)
 //                new AlgaeIntakeCommand(coralizerSubsystem),
 //                new MoveTimeCommand(1, new ChassisSpeeds(-0.75, 0, 0), true, swerveSubsystem).asProxy(),
 //                new ElevatorPositionCommand(elevatorSubsystem, 0.1, ReefPosition.ReefLevel.NONE)
