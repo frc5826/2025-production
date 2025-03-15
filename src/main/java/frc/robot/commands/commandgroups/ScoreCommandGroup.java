@@ -28,8 +28,8 @@ public class ScoreCommandGroup extends SequentialCommandGroup {
 
         addCommands(
 
-                new PathFindCommand(target.getFindOffsetPose(), fastConstraints, s)
-                        .onlyWhile(target.isFarEnoughToPath()),
+                //new PathFindCommand(target.getFindOffsetPose(), fastConstraints, s)
+                        //.onlyWhile(target.isFarEnoughToPath()),
                 Commands.deadline(
                         Commands.parallel(
                                 new PathFindCommand(target.getAlignmentOffsetPose(), fastConstraints, s),
