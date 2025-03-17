@@ -52,12 +52,12 @@ public class NuzzleUpCommand extends LoggedCommand{
     }
     //return between -1 to 1
     private double rotationalDirection(){
-       if (Math.abs(lidarRotational()) > Nuzzle.cZVeloDeadband){
-           return Math.signum(lidarRotational());
-       }
-       else {
-           return 0.0;
-       }
+        if (Math.abs(lidarRotational()) > Nuzzle.cZVeloDeadband){
+            return Math.signum(lidarRotational());
+        }
+        else {
+            return 0.0;
+        }
     }
 
     private double lidarRotational(){
@@ -84,23 +84,28 @@ public class NuzzleUpCommand extends LoggedCommand{
         double yVelo = 0.0;
         double zVelo = 0.0; //-nuzzlePID.calculate();
 
-        if (robotShouldMoveLatterly() && distanceSubsystem.getDistanceFromReef() < 0.4){
+        if (shouldMoveForward() && !(distanceSubsystem.getDistanceFromReef() < 0.05 && robotShouldMoveLatterly())){
+            yVelo += Nuzzle.cYVelo;
+        }
+        else if (robotShouldMoveLatterly() && distanceSubsystem.getDistanceFromReef() < 0.4){
             if (robotTooClose()){
                 xVelo += (Nuzzle.cXVelo * (left.getAsBoolean() ? 1 : -1));
             } else if (robotTooFar()) {
                 xVelo -= (Nuzzle.cXVelo * (left.getAsBoolean() ? 1 : -1));
             }
         }
-        if (shouldMoveForward() && !(distanceSubsystem.getDistanceFromReef() < 0.1 && robotShouldMoveLatterly())){
-            yVelo += Nuzzle.cYVelo;
-        }
 
         swerveSubsystem.driveRobotOriented(new ChassisSpeeds(yVelo, xVelo, zVelo));
     }
 
+//    @Override
+//    public boolean isFinished() {
+//        return !shouldMoveForward() && !robotShouldMoveLatterly();
+//    }
+
     @Override
     public boolean isFinished() {
-        return distanceSubsystem.getDistanceFromReef() < 0.02 && !robotShouldMoveLatterly();
+         return distanceSubsystem.getDistanceFromReef() < 0.01 && !robotShouldMoveLatterly();
     }
 
     @Override

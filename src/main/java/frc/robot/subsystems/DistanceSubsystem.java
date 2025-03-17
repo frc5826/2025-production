@@ -47,8 +47,13 @@ public class DistanceSubsystem extends LoggedSubsystem {
     public void periodic() {
         super.periodic();
         SmartDashboard.putBoolean("lidars/AngledHitRight", angledLidarHitRightClose());
+        SmartDashboard.putBoolean("lidars/AngledHitLeft", angledLidarHitLeftClose());
+
         SmartDashboard.putBoolean("lidars/TouchingWall", isTouching());
+
         SmartDashboard.putNumber("lidars/AngledRightDistance", angledLidarRightDistance());
+        SmartDashboard.putNumber("lidars/AngledLeftDistance", angledLidarLeftDistance());
+        
         SmartDashboard.putNumber("lidars/DistanceFromReef", getDistanceFromReef());
         SmartDashboard.putNumber("lidars/Skew", getSkew());
 
