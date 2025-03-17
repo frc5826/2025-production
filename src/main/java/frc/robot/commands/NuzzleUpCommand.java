@@ -100,7 +100,7 @@ public class NuzzleUpCommand extends LoggedCommand{
 
     @Override
     public boolean isFinished() {
-        return !shouldMoveForward() && !robotShouldMoveLatterly();
+        return distanceSubsystem.getDistanceFromReef() < 0.02 && !robotShouldMoveLatterly();
     }
 
     @Override

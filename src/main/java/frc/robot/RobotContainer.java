@@ -228,7 +228,7 @@ public class RobotContainer {
     private void setupAutoTab(){
         ShuffleboardTab autoTab = Shuffleboard.getTab("Auto");
 
-        autoCommandPicker.addOption("Right", new Right(swerveSubsystem, elevatorSubsystem, coralizerSubsystem));
+        autoCommandPicker.addOption("Right", new Right(swerveSubsystem, elevatorSubsystem, coralizerSubsystem, distanceSubsystem, cameraSubsystem));
         autoCommandPicker.addOption("Left", new Left(swerveSubsystem, elevatorSubsystem, coralizerSubsystem));
         autoCommandPicker.addOption("Mid", new Mid(swerveSubsystem, elevatorSubsystem, coralizerSubsystem));
         autoCommandPicker.setDefaultOption("Dumb", new Dumb(swerveSubsystem));

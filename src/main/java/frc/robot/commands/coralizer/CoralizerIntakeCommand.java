@@ -41,13 +41,11 @@ public class CoralizerIntakeCommand extends LoggedCommand {
 
     @Override
     public boolean isFinished() {
-        if(releaseTimer.get() >= 0.25){
-            if (direction == IntakeDirection.IN) {
-                return coralizerSubsystem.hasCoral();
-            }
+        if(releaseTimer.get() >= 0.25 && direction == IntakeDirection.IN){
+            return coralizerSubsystem.hasCoral();
+        } else if (releaseTimer.get() >= 0.4 && direction == IntakeDirection.OUT) {
             return !coralizerSubsystem.hasCoral();
         }
-
         return false;
 
 //        if (expirationTimer.get() >= 7) {return true;}

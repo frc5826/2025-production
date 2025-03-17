@@ -39,10 +39,10 @@ public class ScoreCommandGroup extends SequentialCommandGroup {
                         new CoralizerWristCommand(c, () -> target.getLevel().get().angle).onlyWhile(() -> e.getPos() > 0.5)
                 ),
                 Commands.parallel(
-//                        new PathToCommand(target.getAlignmentPose(), 0, alignConstraints, s),
-                        new NuzzleUpCommand(d, s, ca, new AprilTag(0), target.getLeft()),
+                        new PathToCommand(target.getAlignmentPose(), 0, alignConstraints, s),
                         new CoralizerWristCommand(c, () -> target.getLevel().get().angle)
                 ),
+                new NuzzleUpCommand(d, s, ca, new AprilTag(0), target.getLeft()),
                 new CoralizerIntakeCommand(c, CoralizerIntakeCommand.IntakeDirection.OUT),
                 Commands.deadline(
                         new MoveTimeCommand(0.35, new ChassisSpeeds(-1, 0, 0), true, s),
