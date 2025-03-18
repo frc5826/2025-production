@@ -24,12 +24,12 @@ public class ScoreCommandGroup extends SequentialCommandGroup {
 
     public ScoreCommandGroup(ReefTargeting target, SwerveSubsystem s, ElevatorSubsystem e, CoralizerSubsystem c, DistanceSubsystem d, CameraSubsystem ca) {
 
-        PathConstraints alignConstraints = new PathConstraints(1.5, 1.5, Math.PI * 1.5, Math.PI * 2);
+        PathConstraints alignConstraints = new PathConstraints(1, 1, Math.PI * 1.5, Math.PI * 2);
         PathConstraints fastConstraints = new PathConstraints(3, 3, Math.PI * 2, Math.PI * 3);
 
         addCommands(
 
-                new PathFindCommand(target.getFindOffsetPose(), 0, fastConstraints, s)
+                new PathFindCommand(target.getFindOffsetPose(), 0.25, fastConstraints, s)
                         .onlyIf(target.isFarEnoughToPath()), //TODO test
                 Commands.deadline(
                         Commands.parallel(
@@ -39,7 +39,7 @@ public class ScoreCommandGroup extends SequentialCommandGroup {
                         new CoralizerWristCommand(c, () -> target.getLevel().get().angle).onlyWhile(() -> e.getPos() > 0.5)
                 ),
                 Commands.parallel(
-                        new PathToCommand(target.getAlignmentPose(), 0, alignConstraints, s),
+                        new PathToCommand(target.getAlignmentPose(), 0.25, alignConstraints, s),
                         new CoralizerWristCommand(c, () -> target.getLevel().get().angle)
                 ),
                 new NuzzleUpCommand(d, s, ca, new AprilTag(0), target.getLeft()),

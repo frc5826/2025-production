@@ -63,15 +63,15 @@ public class CameraSystem {
                         "R0")
         );
 
-        reefCamera = new Camera(new Translation3d(inToM(14), 0, inToM(4)),
-                new Rotation3d(0, Math.toRadians(80), 0),
-                "Center");
+//        reefCamera = new Camera(new Translation3d(inToM(14), 0, inToM(4)),
+//                new Rotation3d(0, Math.toRadians(80), 0),
+//                "Center");
 
-        DataLog log = DataLogManager.getLog();
-        xLog = new DoubleLogEntry(log, "/robot/vision/position/x");
-        yLog = new DoubleLogEntry(log, "/robot/vision/position/y");
-        rotationLog = new DoubleLogEntry(log, "/robot/vision/position/rotation");
-        ambiguityLog = new DoubleLogEntry(log, "/robot/vision/ambiguity");
+//        DataLog log = DataLogManager.getLog();
+//        xLog = new DoubleLogEntry(log, "/robot/vision/position/x");
+//        yLog = new DoubleLogEntry(log, "/robot/vision/position/y");
+//        rotationLog = new DoubleLogEntry(log, "/robot/vision/position/rotation");
+//        ambiguityLog = new DoubleLogEntry(log, "/robot/vision/ambiguity");
 
         filter = new FilterLOF2D(cLOFk);
 
@@ -88,10 +88,10 @@ public class CameraSystem {
         return Optional.empty();
     }
 
-    public List<Pose3d> getCameraMeasurements() {
+    public List<VisionMeasurement> getCameraMeasurements() {
 
-        LinkedList<Pose3d> results = new LinkedList<>();
-        LinkedList<Pose3d> filteredResults = new LinkedList<>();
+        LinkedList<VisionMeasurement> results = new LinkedList<>();
+        LinkedList<VisionMeasurement> filteredResults = new LinkedList<>();
 
         for (Camera camera : aprilTagCameras) {
 
@@ -107,10 +107,10 @@ public class CameraSystem {
 
                             Pose3d robotPose = getRobotLocation(camera.getCameraToRobot(), target.getBestCameraToTarget(), target.getFiducialId());
 
-                            xLog.append(robotPose.getX());
-                            yLog.append(robotPose.getY());
-                            rotationLog.append(robotPose.getRotation().getZ());
-                            ambiguityLog.append(target.getPoseAmbiguity());
+//                            xLog.append(robotPose.getX());
+//                            yLog.append(robotPose.getY());
+//                            rotationLog.append(robotPose.getRotation().getZ());
+//                            ambiguityLog.append(target.getPoseAmbiguity());
 
 //                            SmartDashboard.putNumber("Cameras/" + camera.getName() + "/x", robotPose.getX());
 //                            SmartDashboard.putNumber("Cameras/" + camera.getName() + "/y", robotPose.getY());
@@ -118,7 +118,7 @@ public class CameraSystem {
 //                            SmartDashboard.putNumber("Cameras/" + camera.getName() + "/time_stamp", result.getTimestampSeconds());
 //                            SmartDashboard.putNumber("Ambiguity", target.getPoseAmbiguity());
 
-                            results.add(robotPose);
+                            results.add(new VisionMeasurement(robotPose,target.getFiducialId()));
                             tagLog.add(robotPose);
                             if (tagLog.size() > cLOFTagLimit) {
                                 tagLog.removeFirst();
@@ -131,8 +131,8 @@ public class CameraSystem {
             }
         }
 
-        for (Pose3d possible : results) {
-            double factor = filter.LOF(possible, tagLog);
+        for (var possible : results) {
+            double factor = filter.LOF(possible.robotPose(), tagLog);
             if (factor <= cLOFRejectionValue) {
                 filteredResults.add(possible);
             }

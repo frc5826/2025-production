@@ -31,6 +31,7 @@ import frc.robot.commands.swerve.pathing.*;
 import frc.robot.positioning.AprilTag;
 import frc.robot.positioning.Orientation;
 import frc.robot.positioning.ReefPosition;
+import frc.robot.sensors.DriverCamera;
 import frc.robot.subsystems.*;
 import frc.robot.positioning.FieldOrientation;
 import edu.wpi.first.wpilibj.DataLogManager;
@@ -79,7 +80,7 @@ public class RobotContainer {
 //                event -> entry.append(event.logMessage.filename + ":" + event.logMessage.line + ":" + event.logMessage.message));
         CommandScheduler.getInstance().setDefaultCommand(swerveSubsystem, new TeleopDriveCommand(swerveSubsystem));
 
-//        new DriverCamera(); Removed usb camera
+        new DriverCamera();
 
         // Setup button bindings
         bindXbox();
@@ -87,7 +88,7 @@ public class RobotContainer {
 
         //Create elastic tabs
         field = new Field2d();
-        //setupFieldTab();
+        setupFieldTab();
 
         setupAutoTab();
     }
@@ -102,7 +103,7 @@ public class RobotContainer {
         
         localization.move();
         localization.measure(swerveSubsystem);
-        //updateField();
+        updateField();
 
         distanceSubsystem.enableLidar();
     }
@@ -207,7 +208,7 @@ public class RobotContainer {
         new Trigger(() -> cButtonBoard.getButton(19)).whileTrue(new AlignSourceCommandGroup(FieldOrientation.getOrientation().getCoralStationLB(), swerveSubsystem, elevatorSubsystem, coralizerSubsystem)
                 .alongWith(new InstantCommand(() -> reefTargeting.updateSource(FieldOrientation.getOrientation().getCoralStationLB()))));
         new Trigger(() -> cButtonBoard.getButton(20)).whileTrue(new AlignSourceCommandGroup(FieldOrientation.getOrientation().getCoralStationRB(), swerveSubsystem, elevatorSubsystem, coralizerSubsystem)
-                .alongWith(new InstantCommand(() -> reefTargeting.updateSource(FieldOrientation.getOrientation().getCoralStationLB()))));
+                .alongWith(new InstantCommand(() -> reefTargeting.updateSource(FieldOrientation.getOrientation().getCoralStationRB()))));
         new Trigger(() -> cButtonBoard.getButton(21)).whileTrue(new CoralizerIntakeCommand(coralizerSubsystem, CoralizerIntakeCommand.IntakeDirection.OUT));
         //For Buttons 22-24, Starts at bottom right white button and goes left
         new Trigger(() -> cButtonBoard.getButtonPressed(22)).onTrue(new DealgifyL2CommandGroup(elevatorSubsystem, coralizerSubsystem));
@@ -229,7 +230,7 @@ public class RobotContainer {
         ShuffleboardTab autoTab = Shuffleboard.getTab("Auto");
 
         autoCommandPicker.addOption("Right", new Right(swerveSubsystem, elevatorSubsystem, coralizerSubsystem, distanceSubsystem, cameraSubsystem));
-        autoCommandPicker.addOption("Left", new Left(swerveSubsystem, elevatorSubsystem, coralizerSubsystem));
+        autoCommandPicker.addOption("Left", new Left(swerveSubsystem, elevatorSubsystem, coralizerSubsystem, distanceSubsystem, cameraSubsystem));
         autoCommandPicker.addOption("Mid", new Mid(swerveSubsystem, elevatorSubsystem, coralizerSubsystem));
         autoCommandPicker.setDefaultOption("Dumb", new Dumb(swerveSubsystem));
 
@@ -243,28 +244,28 @@ public class RobotContainer {
         return autoCommandPicker.getSelected();
     }
 
-//    public void updateField() {
-//        field.setRobotPose(localization.getPose());
-//    }
+    public void updateField() {
+        field.setRobotPose(localization.getPose());
+    }
 
-//    private void setupFieldTab() {
-//        ShuffleboardTab tab = Shuffleboard.getTab("field");
-//
-//        tab.add("PDH", new PowerDistribution(1, PowerDistribution.ModuleType.kRev));
-//
-//        field = new Field2d();
-//        tab.add(field)
-//                .withPosition(4,0)
-//                .withSize(4,3);
-//
-//        //Filtered position
-//        ShuffleboardLayout position = tab.getLayout("Filtered position", BuiltInLayouts.kList)
-//                .withPosition(2,0)
-//                .withSize(2,3);
-//
-//        position.addDouble("Robot X", ()-> localization.getPose().getX());
-//        position.addDouble("Robot Y", ()-> localization.getPose().getY());
-//        position.addDouble("Robot rotation", ()-> localization.getPose().getRotation().getDegrees());
-//    }
+    private void setupFieldTab() {
+        ShuffleboardTab tab = Shuffleboard.getTab("field");
+
+        tab.add("PDH", new PowerDistribution(1, PowerDistribution.ModuleType.kRev));
+
+        field = new Field2d();
+        tab.add(field)
+                .withPosition(4,0)
+                .withSize(4,3);
+
+        //Filtered position
+        ShuffleboardLayout position = tab.getLayout("Filtered position", BuiltInLayouts.kList)
+                .withPosition(2,0)
+                .withSize(2,3);
+
+        position.addDouble("Robot X", ()-> localization.getPose().getX());
+        position.addDouble("Robot Y", ()-> localization.getPose().getY());
+        position.addDouble("Robot rotation", ()-> localization.getPose().getRotation().getDegrees());
+    }
 
 }

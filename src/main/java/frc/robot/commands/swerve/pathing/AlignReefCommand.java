@@ -78,8 +78,11 @@ public class AlignReefCommand extends SequentialCommandGroup {
     public AlignReefCommand(ReefTargeting reefTargeting, SwerveSubsystem swerveSubsystem) {
 
         PathConstraints alignConstraints = new PathConstraints(1.5, 1.5, Math.PI * 2, Math.PI * 2);
+        PathConstraints fastConstraints = new PathConstraints(3, 3, Math.PI * 2, Math.PI * 2);
 
         addCommands(
+                new PathFindCommand(reefTargeting.getFindOffsetPose(), 0, fastConstraints, swerveSubsystem)
+                        .onlyIf(reefTargeting.isFarEnoughToPath()), //TODO test
                 new PathToCommand(reefTargeting.getAlignmentOffsetPose(), 0, alignConstraints, swerveSubsystem),
                 new PathToCommand(reefTargeting.getAlignmentPose(), 0, alignConstraints, swerveSubsystem)
         );

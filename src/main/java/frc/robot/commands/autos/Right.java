@@ -3,6 +3,7 @@ package frc.robot.commands.autos;
 import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.path.PathConstraints;
 import com.pathplanner.lib.path.PathPlannerPath;
+import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
@@ -31,7 +32,7 @@ public class Right extends SequentialCommandGroup {
 
     public Right(SwerveSubsystem s, ElevatorSubsystem e, CoralizerSubsystem c, DistanceSubsystem d, CameraSubsystem ca) {
 
-        PathConstraints alignConstraints = new PathConstraints(1.5, 1.5, Math.PI * 1.5, Math.PI * 2);
+        PathConstraints alignConstraints = new PathConstraints(1, 1, Math.PI * 1.5, Math.PI * 2);
         PathConstraints fastConstraints = new PathConstraints(4, 4, Math.PI * 2, Math.PI * 3);
 
         try {
@@ -50,7 +51,7 @@ public class Right extends SequentialCommandGroup {
                         new ElevatorPositionCommand(e, Constants.Elevator.L4Height, ReefPosition.ReefLevel.L4),
                         new CoralizerWristCommand(c, Constants.Elevator.L4Angle)
                 ),
-                new PathToCommand(() -> MathHelper.offsetPoseReverse(FieldOrientation.getOrientation().getReefE(), (Constants.BluePositions.cRobotLength / 2) - 0.03), 0, alignConstraints, s), //Align to reef
+                new PathToCommand(() -> MathHelper.offsetPoseReverse(FieldOrientation.getOrientation().getReefE(), (Constants.BluePositions.cRobotLength / 2) - 0.03), 0.25, alignConstraints, s), //Align to reef
                 new NuzzleUpCommand(d, s, ca, new AprilTag(0), () -> true), //Align to reef
                 new CoralizerIntakeCommand(c, CoralizerIntakeCommand.IntakeDirection.OUT) //Drop
         );
@@ -59,12 +60,10 @@ public class Right extends SequentialCommandGroup {
         addCommands(
                 Commands.parallel(
                         buildPath(eToSource),
-                        Commands.parallel(
-                                new ElevatorPositionCommand(e, 0.24, ReefPosition.ReefLevel.NONE),
-                                Commands.sequence(
-                                        new CoralizerWristCommand(c, 25),
-                                        new CoralizerIntakeCommand(c, CoralizerIntakeCommand.IntakeDirection.IN)
-                                )
+                        new ElevatorPositionCommand(e, Constants.Elevator.intakeHeight, ReefPosition.ReefLevel.NONE),
+                        Commands.sequence(
+                                new CoralizerWristCommand(c, Constants.Elevator.intakeAngle),
+                                new CoralizerIntakeCommand(c, CoralizerIntakeCommand.IntakeDirection.IN)
                         )
                 )
         );
@@ -76,11 +75,11 @@ public class Right extends SequentialCommandGroup {
                         new MovingHeightCommandGroup(e, c)
                 ),
                 Commands.parallel(
-                        new PathToCommand(() -> MathHelper.offsetPoseReverse(FieldOrientation.getOrientation().getReefC(), (Constants.BluePositions.cRobotLength / 2) + 0.35), 0.25, alignConstraints, s),
+                        new PathToCommand(() -> MathHelper.offsetPoseReverse(FieldOrientation.getOrientation().getReefC(), (Constants.BluePositions.cRobotLength / 2) + 0.35), 0.1, alignConstraints, s),
                         new ElevatorPositionCommand(e, Constants.Elevator.L4Height, ReefPosition.ReefLevel.L4),
                         new CoralizerWristCommand(c, Constants.Elevator.L4Angle)
                 ),
-                new PathToCommand(() -> MathHelper.offsetPoseReverse(FieldOrientation.getOrientation().getReefC(), (Constants.BluePositions.cRobotLength / 2) - 0.03), 0, alignConstraints, s),
+                new PathToCommand(() -> MathHelper.offsetPoseReverse(FieldOrientation.getOrientation().getReefC(), (Constants.BluePositions.cRobotLength / 2) - 0.03), 0.25, alignConstraints, s),
                 new NuzzleUpCommand(d, s, ca, new AprilTag(0), () -> true), //Align to reef
                 new CoralizerIntakeCommand(c, CoralizerIntakeCommand.IntakeDirection.OUT)
         );
@@ -89,7 +88,11 @@ public class Right extends SequentialCommandGroup {
         addCommands(
                 Commands.parallel(
                         buildPath(CDToSource),
-                        new SourceCommandGroup(e, c)
+                        new ElevatorPositionCommand(e, Constants.Elevator.intakeHeight, ReefPosition.ReefLevel.NONE),
+                        Commands.sequence(
+                                new CoralizerWristCommand(c, Constants.Elevator.intakeAngle),
+                                new CoralizerIntakeCommand(c, CoralizerIntakeCommand.IntakeDirection.IN)
+                        )
                 )
         );
 
@@ -111,13 +114,25 @@ public class Right extends SequentialCommandGroup {
         addCommands(
                 Commands.parallel(
                         buildPath(CDToSource),
-                        new SourceCommandGroup(e, c)
+                        new ElevatorPositionCommand(e, Constants.Elevator.intakeHeight, ReefPosition.ReefLevel.NONE),
+                        Commands.sequence(
+                                new CoralizerWristCommand(c, Constants.Elevator.intakeAngle),
+                                new CoralizerIntakeCommand(c, CoralizerIntakeCommand.IntakeDirection.IN)
+                        )
                 )
         );
+
     }
 
     private Command buildPath(PathPlannerPath path) {
-        return AutoBuilder.followPath(path);
+        if (DriverStation.getAlliance().get() == DriverStation.Alliance.Blue) {
+            return AutoBuilder.followPath(path);
+        } else if (DriverStation.getAlliance().get() == DriverStation.Alliance.Red) {
+            return AutoBuilder.followPath(path.flipPath());
+        } else {
+            System.err.println("Auto paths set to none. No alliance found.");
+            return Commands.none();
+        }
     }
 
 }

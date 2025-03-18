@@ -7,6 +7,8 @@ import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation3d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.wpilibj.Timer;
+import frc.robot.sensors.CameraSystem;
+import frc.robot.sensors.VisionMeasurement;
 import frc.robot.subsystems.CameraSubsystem;
 import frc.robot.subsystems.SwerveSubsystem;
 import org.apache.commons.math3.distribution.MultivariateNormalDistribution;
@@ -26,7 +28,7 @@ public class Localization {
     public Localization(CameraSubsystem cameraSubsystem) {
         kalmanFilter = new KalmanFilter(new MultivariateNormalDistribution(new double[]{0, 0, 0, 0, 0, 0, 0, 0, 0}, initCovar()));
         //TODO adjust variances
-        this.measVar = new Variances(30, 4, 12, 4, 4, 10);
+        this.measVar = new Variances(30, 4, 12, 10, 4, 10);
         this.cameraSubsystem = cameraSubsystem;
         timer = new Timer();
     }
@@ -40,21 +42,30 @@ public class Localization {
         RealVector zOdo = kalmanFilter.getX().copy();
         RealMatrix ROdo = kalmanFilter.getP().copy();
 
+        double x1 = kalmanFilter.getX().getEntry(0);
+        double y1 = kalmanFilter.getX().getEntry(1);
+
         //Position from cameras
-        for(Pose3d p: cameraSubsystem.getCameraMeasurements()) {
-            cameraPose = p.toPose2d();
+        for(VisionMeasurement p: cameraSubsystem.getCameraMeasurements()) {
+            //TODO Comment this out maybe
+            Pose3d tagPose = CameraSystem.getFieldLayout().getTagPose(p.tagID()).get();
+            double x2 = tagPose.getX();
+            double y2 = tagPose.getY();
+            double d = Math.pow(x2-x1, 2) + Math.pow(y2-y1, 2);
 
-            zOdo.setEntry(0, p.getX());
-            zOdo.setEntry(1, p.getY());
+            zOdo.setEntry(0, p.robotPose().getX());
+            zOdo.setEntry(1, p.robotPose().getY());
 
-            ROdo.setEntry(0, 0, measVar.xyPos());
-            ROdo.setEntry(1, 1, measVar.xyPos()); //TODO use ambiguity for variance
+//            ROdo.setEntry(0, 0, measVar.xyPos());
+//            ROdo.setEntry(1, 1, measVar.xyPos()); //TODO maybe use this instead
+            ROdo.setEntry(0, 0, d + measVar.xyPos()/30);
+            ROdo.setEntry(1, 1, d + measVar.xyPos()/30);
 
-            Rotation2d angleDiff = p.getRotation().toRotation2d().minus(s.getAdjustedIMUContinuousAngle());
+            Rotation2d angleDiff = p.robotPose().getRotation().toRotation2d().minus(s.getAdjustedIMUContinuousAngle());
 
             zOdo.setEntry(2, s.getAdjustedIMUContinuousAngle().getRadians()+angleDiff.getRadians());
 
-            ROdo.setEntry(2, 2, 20); //camera heading variance
+            ROdo.setEntry(2, 2, 10); //camera heading variance
 
             kalmanFilter.measure(ROdo, zOdo);
         }

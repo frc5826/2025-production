@@ -6,8 +6,12 @@ import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import frc.robot.Constants;
+import frc.robot.commands.coralizer.CoralizerIntakeCommand;
+import frc.robot.commands.coralizer.CoralizerWristCommand;
+import frc.robot.commands.elevator.ElevatorPositionCommand;
 import frc.robot.commands.swerve.pathing.*;
 import frc.robot.math.MathHelper;
+import frc.robot.positioning.ReefPosition;
 import frc.robot.subsystems.CoralizerSubsystem;
 import frc.robot.subsystems.ElevatorSubsystem;
 import frc.robot.subsystems.SwerveSubsystem;
@@ -41,7 +45,12 @@ public class AlignSourceCommandGroup extends SequentialCommandGroup {
                 new PathFindCommand(MathHelper.offsetPoseReverse(goal, 1), 0.5, constraints, s),
                 Commands.parallel(
                         new PathToCommand(MathHelper.offsetPoseReverse(goal, (Constants.BluePositions.cRobotLength / 2) - .05), 0, slowConstraints, s),
-                        new SourceCommandGroup(e, c)
+                        new ElevatorPositionCommand(e, Constants.Elevator.intakeHeight, ReefPosition.ReefLevel.NONE),
+                        Commands.sequence(
+                                new CoralizerWristCommand(c, Constants.Elevator.intakeAngle),
+                                new CoralizerIntakeCommand(c, CoralizerIntakeCommand.IntakeDirection.IN)
+                        )
+
                 )
 
         );

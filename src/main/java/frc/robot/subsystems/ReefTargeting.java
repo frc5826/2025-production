@@ -80,7 +80,7 @@ public class ReefTargeting {
     }
 
     public Supplier<Pose2d> getAlignmentPose() {
-        return () -> MathHelper.offsetPoseReverse(pose, cRobotLength / 2);
+        return () -> MathHelper.offsetPoseReverse(pose, (cRobotLength / 2) - 0.02);
     }
 
     public Supplier<Pose2d> getAlignmentOffsetPose() {

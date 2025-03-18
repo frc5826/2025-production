@@ -83,7 +83,7 @@ public final class Constants
         public static final double cElevatorDeadband = 0.04;
 
         public static final double L4Height = 1.75;
-        public static final double L3Height = 1.1;
+        public static final double L3Height = 1.12;
         public static final double L2Height = 0.7;
         public static final double L1Height = 0;
 
@@ -91,6 +91,9 @@ public final class Constants
         public static final double L3Angle = -66;
         public static final double L2Angle = -66;
         public static final double L1Angle = -15;
+
+        public static final double intakeAngle = 28;
+        public static final double intakeHeight = .23;
 
         public static class ConversionFactor {
             public static final double cElevatorClicksPerMeter = 17777;
@@ -121,7 +124,7 @@ public final class Constants
 
         public static final double cHighSpeedMultiplier = 1;
         public static final double cLowSpeedMultiplier = 0.6;
-        public static final double cHighCrabSpeedMult = 1;
+        public static final double cHighCrabSpeedMult = 1.3;
         public static final double cLowCrabSpeedMult = 0.5;
     }
 

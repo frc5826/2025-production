@@ -23,7 +23,10 @@ public class RedOrientation implements Orientation {
     public Pose2d getReefD() { return FlippingUtil.flipFieldPose(reefD); }
 
     @Override
-    public Pose2d getReefE() { return FlippingUtil.flipFieldPose(reefE); }
+    public Pose2d getReefE() {
+        System.out.println("Getting reefE RED!!!!!!!");
+        return FlippingUtil.flipFieldPose(reefE);
+    }
 
     @Override
     public Pose2d getReefF() { return FlippingUtil.flipFieldPose(reefF); }

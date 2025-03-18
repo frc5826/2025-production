@@ -23,7 +23,10 @@ public class BlueOrientation implements Orientation{
     public Pose2d getReefD() { return reefD; }
 
     @Override
-    public Pose2d getReefE() { return reefE; }
+    public Pose2d getReefE() {
+        System.out.println("Getting reefE BLUE!!!!!!!");
+        return reefE;
+    }
 
     @Override
     public Pose2d getReefF() { return reefF; }

@@ -3,6 +3,7 @@ package frc.robot.subsystems;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Pose3d;
 import frc.robot.sensors.CameraSystem;
+import frc.robot.sensors.VisionMeasurement;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -11,7 +12,7 @@ import java.util.Optional;
 public class CameraSubsystem extends LoggedSubsystem {
 
     private CameraSystem cameraSystem;
-    private List<Pose3d> measurements;
+    private List<VisionMeasurement> measurements;
 
     private Pose2d aligningPose;
 
@@ -27,7 +28,7 @@ public class CameraSubsystem extends LoggedSubsystem {
         measurements = cameraSystem.getCameraMeasurements();
     }
 
-    public List<Pose3d> getCameraMeasurements() {
+    public List<VisionMeasurement> getCameraMeasurements() {
         return measurements;
     }
 
