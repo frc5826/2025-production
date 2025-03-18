@@ -7,14 +7,12 @@ package frc.robot;
 
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.Joystick;
-import edu.wpi.first.wpilibj.PowerDistribution;
 import com.pathplanner.lib.config.PIDConstants;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj.XboxController;
 import frc.robot.math.MathHelper;
 import frc.robot.subsystems.ButtonBoard;
-import org.opencv.core.Mat;
 
 /**
  * The Constants class provides a convenient place for teams to hold robot-wide numerical or boolean
@@ -54,7 +52,7 @@ public final class Constants
 
         public static final double bumperDistance = 0.55;
 
-        public static final double hitDistance = 0.05;
+        public static final double minHitDistance = 0.05;
         public static final double maxHitDistance = 0.10;
         public static final double touchingDistance = 0.01;
 

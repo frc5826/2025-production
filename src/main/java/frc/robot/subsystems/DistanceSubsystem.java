@@ -79,7 +79,7 @@ public class DistanceSubsystem extends LoggedSubsystem {
     }
 
     public boolean angledLidarHitLeftClose(){
-        return angledLidarLeftDistance() - getFromBumperMeasurement(lidarPWMLeft0Buffer) < hitDistance;
+        return angledLidarLeftDistance() - getFromBumperMeasurement(lidarPWMLeft0Buffer) < minHitDistance;
     }
 
     public boolean angledLidarHitLeftFar(){
@@ -87,7 +87,7 @@ public class DistanceSubsystem extends LoggedSubsystem {
     }
 
     public boolean angledLidarHitRightClose(){
-        return angledLidarRightDistance() - getFromBumperMeasurement(lidarPWMRight0Buffer) < hitDistance;
+        return angledLidarRightDistance() - getFromBumperMeasurement(lidarPWMRight0Buffer) < minHitDistance;
     }
 
     public boolean angledLidarHitRightFar(){
