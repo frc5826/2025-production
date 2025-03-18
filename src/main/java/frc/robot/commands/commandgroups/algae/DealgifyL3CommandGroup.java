@@ -7,6 +7,7 @@ import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import frc.robot.commands.coralizer.AlgaeIntakeCommand;
 import frc.robot.commands.coralizer.CoralizerIntakeCommand;
 import frc.robot.commands.coralizer.CoralizerWristCommand;
+import frc.robot.commands.coralizer.DealgCoralizerCommand;
 import frc.robot.commands.elevator.ElevatorPositionCommand;
 import frc.robot.commands.swerve.pathing.MoveTimeCommand;
 import frc.robot.positioning.ReefPosition;
@@ -23,7 +24,7 @@ public class DealgifyL3CommandGroup extends SequentialCommandGroup {
                         new ElevatorPositionCommand(elevatorSubsystem, 0.95, ReefPosition.ReefLevel.NONE),
                         new CoralizerWristCommand(coralizerSubsystem, 10)
                 ),
-                new CoralizerIntakeCommand(coralizerSubsystem, CoralizerIntakeCommand.IntakeDirection.IN)
+                new DealgCoralizerCommand(coralizerSubsystem)
         );
 
 

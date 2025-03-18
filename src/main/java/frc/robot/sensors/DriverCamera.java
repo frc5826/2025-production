@@ -7,6 +7,7 @@ import edu.wpi.first.cscore.UsbCamera;
 import org.opencv.core.Mat;
 import org.opencv.core.Point;
 import org.opencv.core.Scalar;
+import org.opencv.core.Size;
 import org.opencv.imgproc.Imgproc;
 
 public class DriverCamera {
@@ -26,17 +27,22 @@ public class DriverCamera {
             CvSink sink = CameraServer.getVideo();
             CvSource source = CameraServer.putVideo("Driver", WIDTH, HEIGHT);
 
-            Mat mat = new Mat();
+            Mat matIn = new Mat();
+            Mat matOut = new Mat();
             Point p1 = new Point(HEIGHT-4,0);
             Point p2 = new Point(HEIGHT-4, 400);
+            Point center = new Point(WIDTH/2,HEIGHT/2);
+            Size s = new Size(HEIGHT, WIDTH);
 
             while(!thread.isInterrupted()) {
-                if(sink.grabFrame(mat) == 0){
+                if(sink.grabFrame(matIn) == 0){
                     source.notifyError("error");
                     continue;
                 }
-                Imgproc.line(mat, p1, p2, new Scalar(0, 255, 0, 255),2, Imgproc.LINE_8);
-                source.putFrame(mat);
+//                var rotationMatrix = Imgproc.getRotationMatrix2D(center, 270, 1);
+//                Imgproc.warpAffine(matIn, matOut, rotationMatrix, s);
+                Imgproc.line(matOut, p1, p2, new Scalar(0, 255, 0, 255),2, Imgproc.LINE_8);
+                source.putFrame(matIn);
             }
         });
         thread.setDaemon(true);

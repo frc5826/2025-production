@@ -211,8 +211,8 @@ public class RobotContainer {
                 .alongWith(new InstantCommand(() -> reefTargeting.updateSource(FieldOrientation.getOrientation().getCoralStationRB()))));
         new Trigger(() -> cButtonBoard.getButton(21)).whileTrue(new CoralizerIntakeCommand(coralizerSubsystem, CoralizerIntakeCommand.IntakeDirection.OUT));
         //For Buttons 22-24, Starts at bottom right white button and goes left
-        new Trigger(() -> cButtonBoard.getButtonPressed(22)).onTrue(new DealgifyL2CommandGroup(elevatorSubsystem, coralizerSubsystem));
-        new Trigger(() -> cButtonBoard.getButtonPressed(23)).onTrue(new DealgifyL3CommandGroup(elevatorSubsystem, coralizerSubsystem));
+        new Trigger(() -> cButtonBoard.getButton(22)).whileTrue(new DealgifyL2CommandGroup(elevatorSubsystem, coralizerSubsystem));
+        new Trigger(() -> cButtonBoard.getButton(23)).whileTrue(new DealgifyL3CommandGroup(elevatorSubsystem, coralizerSubsystem));
         new Trigger(() -> cButtonBoard.getButton(24)).whileTrue(new CoralizerIntakeCommand(coralizerSubsystem, CoralizerIntakeCommand.IntakeDirection.IN));
     }
 
