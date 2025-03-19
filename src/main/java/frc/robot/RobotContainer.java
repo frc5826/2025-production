@@ -231,7 +231,7 @@ public class RobotContainer {
 
         autoCommandPicker.addOption("Right", new Right(swerveSubsystem, elevatorSubsystem, coralizerSubsystem, distanceSubsystem, cameraSubsystem));
         autoCommandPicker.addOption("Left", new Left(swerveSubsystem, elevatorSubsystem, coralizerSubsystem, distanceSubsystem, cameraSubsystem));
-        autoCommandPicker.addOption("Mid", new Mid(swerveSubsystem, elevatorSubsystem, coralizerSubsystem));
+        autoCommandPicker.addOption("Mid", new Mid(swerveSubsystem, elevatorSubsystem, coralizerSubsystem, distanceSubsystem, cameraSubsystem));
         autoCommandPicker.setDefaultOption("Dumb", new Dumb(swerveSubsystem));
 
         autoTab.add("Auto", autoCommandPicker)
