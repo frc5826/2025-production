@@ -5,6 +5,7 @@
 
 package frc.robot;
 
+import com.ctre.phoenix6.SignalLogger;
 import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.commands.PathfindingCommand;
 import com.pathplanner.lib.path.PathConstraints;
@@ -75,6 +76,7 @@ public class RobotContainer {
 
     public RobotContainer() {
         DataLogManager.start("/U/logs");
+        SignalLogger.enableAutoLogging(false);
 //        StringLogEntry entry = new StringLogEntry(DataLogManager.getLog(), "/ntlog");
 //        NetworkTableInstance.getDefault().addLogger(0, 100,
 //                event -> entry.append(event.logMessage.filename + ":" + event.logMessage.line + ":" + event.logMessage.message));

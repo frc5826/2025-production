@@ -1,6 +1,7 @@
 package frc.robot.commands;
 
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.math.MathHelper;
 import frc.robot.math.PID;
 import frc.robot.positioning.AprilTag;
@@ -70,7 +71,7 @@ public class NuzzleUpCommand extends LoggedCommand{
     @Override
     public void initialize() {
         super.initialize();
-        distanceSubsystem.enableLidar();
+//        distanceSubsystem.enableLidar();
         nuzzlePID.setGoal(0);
     }
 
@@ -95,6 +96,9 @@ public class NuzzleUpCommand extends LoggedCommand{
             }
         }
 
+        SmartDashboard.putNumber("lidars/Lidar x vel", xVelo);
+        SmartDashboard.putNumber("lidars/Lidar y vel", yVelo);
+
         swerveSubsystem.driveRobotOriented(new ChassisSpeeds(yVelo, xVelo, zVelo));
     }
 
@@ -111,6 +115,9 @@ public class NuzzleUpCommand extends LoggedCommand{
     @Override
     public void end(boolean interrupted) {
         super.end(interrupted);
-        distanceSubsystem.disableLidar();
+
+        SmartDashboard.putNumber("lidars/Lidar x vel", 0);
+        SmartDashboard.putNumber("lidars/Lidar y vel", 0);
+//        distanceSubsystem.disableLidar();
     }
 }

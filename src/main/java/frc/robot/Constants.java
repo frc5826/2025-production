@@ -52,8 +52,10 @@ public final class Constants
 
         public static final double bumperDistance = 0.55;
 
-        public static final double minHitDistance = 0.05;
-        public static final double maxHitDistance = 0.10;
+        public static final double rightMinHitDistance = 0.08;
+        public static final double rightMaxHitDistance = 0.13;
+        public static final double leftMinHitDistance = 0.08;
+        public static final double leftMaxHitDistance = 0.13;
         public static final double touchingDistance = 0.01;
 
     }
@@ -77,10 +79,10 @@ public final class Constants
         public static final double cElevatorMaxAcceleration = 1.5;
         public static final double cElevatorMaxVelocity = 1.2;
         public static final double cElevatorHeightMin = 0;
-        public static final double cElevatorHeightMax = 1.75;
+        public static final double cElevatorHeightMax = 1.77;
         public static final double cElevatorDeadband = 0.04;
 
-        public static final double L4Height = 1.75;
+        public static final double L4Height = 1.77;
         public static final double L3Height = 1.12;
         public static final double L2Height = 0.7;
         public static final double L1Height = 0;

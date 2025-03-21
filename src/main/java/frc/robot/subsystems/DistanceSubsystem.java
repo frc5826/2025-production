@@ -46,8 +46,8 @@ public class DistanceSubsystem extends LoggedSubsystem {
     @Override
     public void periodic() {
         super.periodic();
-        SmartDashboard.putBoolean("lidars/AngledHitRight", angledLidarHitRightClose());
-        SmartDashboard.putBoolean("lidars/AngledHitLeft", angledLidarHitLeftClose());
+        SmartDashboard.putBoolean("lidars/AngledHitRight", !angledLidarHitRightClose() && !angledLidarHitRightFar());
+        SmartDashboard.putBoolean("lidars/AngledHitLeft", !angledLidarHitLeftClose() && !angledLidarHitLeftFar());
 
         SmartDashboard.putBoolean("lidars/TouchingWall", isTouching());
 
@@ -79,19 +79,19 @@ public class DistanceSubsystem extends LoggedSubsystem {
     }
 
     public boolean angledLidarHitLeftClose(){
-        return angledLidarLeftDistance() - getFromBumperMeasurement(lidarPWMLeft0Buffer) < minHitDistance;
+        return angledLidarLeftDistance() - getFromBumperMeasurement(lidarPWMLeft0Buffer) < leftMinHitDistance && !(angledLidarLeftDistance() < -0.2);
     }
 
     public boolean angledLidarHitLeftFar(){
-        return angledLidarLeftDistance() - getFromBumperMeasurement(lidarPWMLeft0Buffer) > maxHitDistance;
+        return angledLidarLeftDistance() - getFromBumperMeasurement(lidarPWMLeft0Buffer) > leftMaxHitDistance || angledLidarLeftDistance() < -0.2;
     }
 
     public boolean angledLidarHitRightClose(){
-        return angledLidarRightDistance() - getFromBumperMeasurement(lidarPWMRight0Buffer) < minHitDistance;
+        return angledLidarRightDistance() - getFromBumperMeasurement(lidarPWMRight0Buffer) < rightMinHitDistance && !(angledLidarRightDistance() < -0.2);
     }
 
     public boolean angledLidarHitRightFar(){
-        return angledLidarRightDistance() - getFromBumperMeasurement(lidarPWMRight0Buffer) > maxHitDistance;
+        return angledLidarRightDistance() - getFromBumperMeasurement(lidarPWMRight0Buffer) > rightMaxHitDistance || angledLidarRightDistance() < -0.2;
     }
 
     public double angledLidarLeftDistance(){

@@ -24,7 +24,6 @@ public class RedOrientation implements Orientation {
 
     @Override
     public Pose2d getReefE() {
-        System.out.println("Getting reefE RED!!!!!!!");
         return FlippingUtil.flipFieldPose(reefE);
     }
 
