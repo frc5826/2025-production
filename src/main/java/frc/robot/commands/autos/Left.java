@@ -3,9 +3,11 @@ package frc.robot.commands.autos;
 import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.path.PathConstraints;
 import com.pathplanner.lib.path.PathPlannerPath;
+import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
+import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import frc.robot.Constants;
 import frc.robot.commands.NuzzleUpCommand;
@@ -15,6 +17,7 @@ import frc.robot.commands.commandgroups.reef.L4CommandGroup;
 import frc.robot.commands.coralizer.CoralizerIntakeCommand;
 import frc.robot.commands.coralizer.CoralizerWristCommand;
 import frc.robot.commands.elevator.ElevatorPositionCommand;
+import frc.robot.commands.swerve.pathing.MoveTimeCommand;
 import frc.robot.commands.swerve.pathing.PathToCommand;
 import frc.robot.math.MathHelper;
 import frc.robot.positioning.AprilTag;
@@ -60,10 +63,11 @@ public class Left extends SequentialCommandGroup {
                 Commands.parallel(
                         buildPath(jToSource),
                         new ElevatorPositionCommand(e, Constants.Elevator.intakeHeight, ReefPosition.ReefLevel.NONE),
-                        Commands.sequence(
-                                new CoralizerWristCommand(c, Constants.Elevator.intakeAngle),
-                                new CoralizerIntakeCommand(c, CoralizerIntakeCommand.IntakeDirection.IN)
-                        )
+                        new CoralizerWristCommand(c, Constants.Elevator.intakeAngle)
+                ),
+                Commands.deadline(
+                        new CoralizerIntakeCommand(c, CoralizerIntakeCommand.IntakeDirection.IN),
+                        new MoveTimeCommand(5, new ChassisSpeeds(0.3, 0, 0), true, s)
                 )
         );
 

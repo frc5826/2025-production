@@ -20,6 +20,8 @@ public class ReefCommand extends Command {
         this.reefTargeting = reefTargeting;
         this.e = elevatorSubsystem;
         this.c = coralizerSubsystem;
+
+        addRequirements(e,c);
     }
 
     @Override

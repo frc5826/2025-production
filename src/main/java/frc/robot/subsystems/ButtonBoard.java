@@ -10,14 +10,11 @@ public class ButtonBoard {
 
     private BooleanSubscriber[] buttons;
     private boolean[] buttonPressed;
-    private StringLogEntry buttonLog;
 
     public ButtonBoard(int totalButtons) {
         buttonPressed = new boolean[totalButtons];
         buttons = new BooleanSubscriber[totalButtons];
         NetworkTableInstance instance = NetworkTableInstance.getDefault();
-        if(!DataLogManager.getLogDir().isEmpty())
-            buttonLog = new StringLogEntry(DataLogManager.getLog(),"NT/buttons/log");
         for (int i = 0; i < totalButtons; i++) {
             buttons[i] = instance.getBooleanTopic("buttons/" + i).subscribe(false, PubSubOption.hidden(false));
         }
@@ -25,13 +22,7 @@ public class ButtonBoard {
 
     public boolean getButton(int button) {
         if (button < buttons.length && button >= 0) {
-            boolean buttonValue = buttons[button].get();
-            if (!buttonPressed[button] && buttonValue) {
-                buttonLog.append("Button " + button + " was pressed");
-                buttonPressed[button] = true;
-            } else
-                buttonPressed[button] = buttonValue;
-            return buttonValue;
+            return buttons[button].get();
         } else {
             System.err.println("Button " + button + " does not exist!");
             return false;
@@ -45,7 +36,6 @@ public class ButtonBoard {
                 buttonPressed[button] = buttonValue;
                 return false;
             } else {
-                buttonLog.append("Button " + button + " was pressed");
                 buttonPressed[button] = buttonValue;
                 return buttonValue;
             }

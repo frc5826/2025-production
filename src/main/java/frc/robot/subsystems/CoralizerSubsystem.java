@@ -5,6 +5,7 @@ import com.revrobotics.spark.SparkLowLevel;
 import com.revrobotics.spark.SparkMax;
 import com.revrobotics.spark.config.SparkBaseConfig;
 import com.revrobotics.spark.config.SparkMaxConfig;
+import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.PowerDistribution;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
@@ -19,6 +20,7 @@ public class CoralizerSubsystem extends LoggedSubsystem{
     private SparkMax intakeMotor;
     private SparkMax wristMotor;
     private boolean shouldHold;
+    private boolean starting;
 
     private PID pid;
 
@@ -27,7 +29,7 @@ public class CoralizerSubsystem extends LoggedSubsystem{
     private Timer wristEnableTimer;
 
     public CoralizerSubsystem() {
-
+        starting = false;
         shouldHold = false;
         intakeMotor = new SparkMax(4, SparkLowLevel.MotorType.kBrushless);
         wristMotor = new SparkMax(3, SparkLowLevel.MotorType.kBrushless);
@@ -64,8 +66,17 @@ public class CoralizerSubsystem extends LoggedSubsystem{
             }
         }
 
+
         double speed = pid.calculate() + cCoralizerG * Math.cos(getRotation() * (Math.PI / 180));
-        wristMotor.set(speed);
+
+        if(starting) {
+            if(!DriverStation.isTest()){
+                starting = false;
+            }
+            wristMotor.set(0.05);
+        } else {
+            wristMotor.set(speed);
+        }
         SmartDashboard.putNumber("coralizer/Output", speed);
 
         SmartDashboard.putNumber("coralizer/Encoder", getRotation());
@@ -107,5 +118,9 @@ public class CoralizerSubsystem extends LoggedSubsystem{
 
     public void setShouldHold(boolean shouldHold) {
         this.shouldHold = shouldHold;
+    }
+
+    public void setStarting() {
+        starting = true;
     }
 }

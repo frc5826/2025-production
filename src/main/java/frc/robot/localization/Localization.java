@@ -6,6 +6,7 @@ import edu.wpi.first.math.geometry.Pose3d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation3d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
+import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.Timer;
 import frc.robot.sensors.CameraSystem;
 import frc.robot.sensors.VisionMeasurement;
@@ -35,6 +36,20 @@ public class Localization {
 
     public void move() {
         kalmanFilter.move(timer.get());
+        RealVector positionVector = kalmanFilter.getX();
+
+        if(positionVector.getEntry(0) < 0) {
+            positionVector.setEntry(0, 0);
+        } else if (positionVector.getEntry(0) > CameraSystem.getFieldLayout().getFieldLength()) {
+            positionVector.setEntry(0, CameraSystem.getFieldLayout().getFieldLength());
+        }
+
+        if(positionVector.getEntry(1) < 0) {
+            positionVector.setEntry(1,0);
+        } else if(positionVector.getEntry(1) > CameraSystem.getFieldLayout().getFieldWidth()) {
+            positionVector.setEntry(1, CameraSystem.getFieldLayout().getFieldWidth());
+        }
+
         timer.restart();
     }
 

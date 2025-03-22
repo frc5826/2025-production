@@ -270,4 +270,7 @@ public class RobotContainer {
         position.addDouble("Robot rotation", ()-> localization.getPose().getRotation().getDegrees());
     }
 
+    public void testInit() {
+        coralizerSubsystem.setStarting();
+    }
 }

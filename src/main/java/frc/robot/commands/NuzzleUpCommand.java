@@ -45,12 +45,9 @@ public class NuzzleUpCommand extends LoggedCommand{
     }
 
     private boolean shouldMoveForward(){
-        return lidarForward();
+        return distanceSubsystem.getDistanceFromReef()>=0.01;
     }
 
-    private boolean lidarForward(){
-        return !distanceSubsystem.isTouching();
-    }
     //return between -1 to 1
     private double rotationalDirection(){
         if (Math.abs(lidarRotational()) > Nuzzle.cZVeloDeadband){
@@ -85,10 +82,12 @@ public class NuzzleUpCommand extends LoggedCommand{
         double yVelo = 0.0;
         double zVelo = 0.0; //-nuzzlePID.calculate();
 
-        if (shouldMoveForward() && !(distanceSubsystem.getDistanceFromReef() < 0.05 && robotShouldMoveLatterly())){
+//        if (shouldMoveForward() && !(distanceSubsystem.getDistanceFromReef() < 0.05 && robotShouldMoveLatterly())){
+        if (shouldMoveForward()){
             yVelo += Nuzzle.cYVelo;
         }
-        else if (robotShouldMoveLatterly() && distanceSubsystem.getDistanceFromReef() < 0.4){
+
+        if (robotShouldMoveLatterly() && distanceSubsystem.getDistanceFromReef() < 0.4){
             if (robotTooClose()){
                 xVelo += (Nuzzle.cXVelo * (left.getAsBoolean() ? 1 : -1));
             } else if (robotTooFar()) {
