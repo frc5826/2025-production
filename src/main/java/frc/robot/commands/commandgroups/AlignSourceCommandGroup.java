@@ -14,6 +14,7 @@ import frc.robot.math.MathHelper;
 import frc.robot.positioning.ReefPosition;
 import frc.robot.subsystems.CoralizerSubsystem;
 import frc.robot.subsystems.ElevatorSubsystem;
+import frc.robot.subsystems.ShooterSubsystem;
 import frc.robot.subsystems.SwerveSubsystem;
 
 public class AlignSourceCommandGroup extends SequentialCommandGroup {
@@ -35,7 +36,7 @@ public class AlignSourceCommandGroup extends SequentialCommandGroup {
 //
 //    }
 
-    public AlignSourceCommandGroup(Pose2d goal, SwerveSubsystem s, ElevatorSubsystem e, CoralizerSubsystem c) {
+    public AlignSourceCommandGroup(Pose2d goal, SwerveSubsystem s, ElevatorSubsystem e, CoralizerSubsystem c, ShooterSubsystem sh) {
 
         PathConstraints constraints = new PathConstraints(3, 3, Math.PI * 2, Math.PI * 3);
         PathConstraints slowConstraints = new PathConstraints(2, 2, Math.PI * 2, Math.PI * 3);
@@ -48,7 +49,7 @@ public class AlignSourceCommandGroup extends SequentialCommandGroup {
                         new ElevatorPositionCommand(e, Constants.Elevator.intakeHeight, ReefPosition.ReefLevel.NONE),
                         Commands.sequence(
                                 new CoralizerWristCommand(c, Constants.Elevator.intakeAngle),
-                                new CoralizerIntakeCommand(c, CoralizerIntakeCommand.IntakeDirection.IN)
+                                new CoralizerIntakeCommand(sh, CoralizerIntakeCommand.IntakeDirection.IN)
                         )
 
                 )

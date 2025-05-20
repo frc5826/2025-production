@@ -11,13 +11,14 @@ import frc.robot.commands.swerve.pathing.MoveTimeCommand;
 import frc.robot.commands.swerve.drivercontrol.TeleopDriveCommand;
 import frc.robot.subsystems.CoralizerSubsystem;
 import frc.robot.subsystems.ElevatorSubsystem;
+import frc.robot.subsystems.ShooterSubsystem;
 import frc.robot.subsystems.SwerveSubsystem;
 
 import static frc.robot.commands.coralizer.CoralizerIntakeCommand.IntakeDirection.OUT;
 
 public class L4DropoffCommandGroup extends SequentialCommandGroup {
 
-    public L4DropoffCommandGroup(ElevatorSubsystem elevatorSubsystem, CoralizerSubsystem coralizerSubsystem){
+    public L4DropoffCommandGroup(ElevatorSubsystem elevatorSubsystem, CoralizerSubsystem coralizerSubsystem, ShooterSubsystem shooterSubsystem){
         addCommands(
 //                Commands.deadline(
 //                        new CoralizerWristCommand(coralizerSubsystem, -20).withTimeout(0.75),
@@ -37,7 +38,7 @@ public class L4DropoffCommandGroup extends SequentialCommandGroup {
 //                        new TeleopDriveCommand(swerveSubsystem)
 //                )
 
-                new CoralizerIntakeCommand(coralizerSubsystem, OUT),
+                new CoralizerIntakeCommand(shooterSubsystem, OUT),
                 new HomeCommandGroup(elevatorSubsystem, coralizerSubsystem)
         );
     }

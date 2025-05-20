@@ -3,18 +3,19 @@ package frc.robot.commands.coralizer;
 import edu.wpi.first.wpilibj.Timer;
 import frc.robot.commands.LoggedCommand;
 import frc.robot.subsystems.CoralizerSubsystem;
+import frc.robot.subsystems.ShooterSubsystem;
 
 public class CoralizerIntakeCommand extends LoggedCommand {
 
-    private CoralizerSubsystem coralizerSubsystem;
+    private ShooterSubsystem shooterSubsystem;
     private IntakeDirection direction;
     private Timer releaseTimer;
     private Timer expirationTimer;
 
-    public CoralizerIntakeCommand(CoralizerSubsystem coralizerSubsystem, IntakeDirection direction) {
-        this.coralizerSubsystem = coralizerSubsystem;
+    public CoralizerIntakeCommand(ShooterSubsystem shooterSubsystem, IntakeDirection direction) {
+        this.shooterSubsystem = shooterSubsystem;
         this.direction = direction;
-        addRequirements(coralizerSubsystem);
+        addRequirements(shooterSubsystem);
 
         releaseTimer = new Timer();
         expirationTimer = new Timer();
@@ -23,11 +24,12 @@ public class CoralizerIntakeCommand extends LoggedCommand {
     @Override
     public void initialize() {
         super.initialize();
-        coralizerSubsystem.setShouldHold(false);
+        shooterSubsystem.setShouldHold(false);
         switch (direction){
-            case IN -> coralizerSubsystem.setIntakeSpeed(-0.6);
-            case OUT -> coralizerSubsystem.setIntakeSpeed(0.8);
-            case SHOOT -> coralizerSubsystem.setIntakeSpeed(1);
+            case IN -> shooterSubsystem.setIntakeSpeed(-1);
+            case OUT, ALGAE -> shooterSubsystem.setIntakeSpeed(0.9);
+            case SHOOT -> shooterSubsystem.setIntakeSpeed(1);
+            case L1INTAKE -> shooterSubsystem.setIntakeSpeed(0.6);
         }
         releaseTimer.reset();
         expirationTimer.reset();
@@ -36,15 +38,16 @@ public class CoralizerIntakeCommand extends LoggedCommand {
 
     @Override
     public void execute() {
-        if((direction == IntakeDirection.IN && coralizerSubsystem.hasCoral()) || (direction != IntakeDirection.IN && !coralizerSubsystem.hasCoral())) {releaseTimer.start();}
+        if((direction == IntakeDirection.IN && shooterSubsystem.hasCoral()) || (direction != IntakeDirection.IN && !shooterSubsystem.hasCoral())) {releaseTimer.start();}
     }
 
     @Override
     public boolean isFinished() {
         if(releaseTimer.get() >= 0.25 && direction == IntakeDirection.IN){
-            return coralizerSubsystem.hasCoral();
+            return shooterSubsystem.hasCoral();
         } else if (releaseTimer.get() >= 0.6 && direction == IntakeDirection.OUT) {
-            return !coralizerSubsystem.hasCoral();
+            return !shooterSubsystem.hasCoral();
+            //return false;
         }
         return false;
 
@@ -55,7 +58,7 @@ public class CoralizerIntakeCommand extends LoggedCommand {
     @Override
     public void end(boolean interrupted) {
         super.end(interrupted);
-        coralizerSubsystem.setIntakeSpeed(-0.05);
+        shooterSubsystem.setIntakeSpeed(-0.05);
         expirationTimer.reset();
         releaseTimer.reset();
     }
@@ -63,7 +66,9 @@ public class CoralizerIntakeCommand extends LoggedCommand {
     public static enum IntakeDirection{
         IN,
         OUT,
-        SHOOT
+        SHOOT,
+        ALGAE,
+        L1INTAKE
     }
 
 }

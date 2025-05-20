@@ -22,7 +22,7 @@ import static frc.robot.Constants.BluePositions.cRobotLength;
 
 public class Mid extends SequentialCommandGroup {
 
-    public Mid(SwerveSubsystem s, ElevatorSubsystem e, CoralizerSubsystem c, DistanceSubsystem d, CameraSubsystem ca) {
+    public Mid(SwerveSubsystem s, ElevatorSubsystem e, CoralizerSubsystem c, DistanceSubsystem d, CameraSubsystem ca, ShooterSubsystem sh) {
 
         PathConstraints alignConstraints = new PathConstraints(1.5, 1.5, Math.PI * 1.5, Math.PI * 2);
 
@@ -35,7 +35,7 @@ public class Mid extends SequentialCommandGroup {
                 ),
                 new PathToCommand(MathHelper.offsetPoseReverse(FieldOrientation.getOrientation().getReefG(), Constants.BluePositions.cRobotLength / 2), 0.25, alignConstraints, s), //Align to reef
                 new NuzzleUpCommand(d, s, ca, new AprilTag(0), () -> true), //Align to reef
-                new CoralizerIntakeCommand(c, CoralizerIntakeCommand.IntakeDirection.OUT), //Drop
+                new CoralizerIntakeCommand(sh, CoralizerIntakeCommand.IntakeDirection.OUT), //Drop
                 Commands.parallel(
                         new MoveTimeCommand(0.35, new ChassisSpeeds(-1, 0, 0), true, s),
                         new HomeCommandGroup(e, c)

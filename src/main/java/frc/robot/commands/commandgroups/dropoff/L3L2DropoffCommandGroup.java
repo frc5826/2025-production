@@ -9,11 +9,12 @@ import frc.robot.commands.coralizer.CoralizerWristCommand;
 import frc.robot.commands.swerve.pathing.MoveTimeCommand;
 import frc.robot.subsystems.CoralizerSubsystem;
 import frc.robot.subsystems.ElevatorSubsystem;
+import frc.robot.subsystems.ShooterSubsystem;
 import frc.robot.subsystems.SwerveSubsystem;
 
 public class L3L2DropoffCommandGroup extends SequentialCommandGroup {
 
-    public L3L2DropoffCommandGroup(ElevatorSubsystem elevatorSubsystem, CoralizerSubsystem coralizerSubsystem){
+    public L3L2DropoffCommandGroup(ElevatorSubsystem elevatorSubsystem, CoralizerSubsystem coralizerSubsystem, ShooterSubsystem shooterSubsystem){
         addCommands(
 //                Commands.parallel(
 //                        new ElevatorRepositionCommand(elevatorSubsystem, -0.3, ElevatorSubsystem.LevelTarget.NONE),
@@ -23,7 +24,7 @@ public class L3L2DropoffCommandGroup extends SequentialCommandGroup {
 //                    new CoralizerIntakeCommand(coralizerSubsystem, CoralizerIntakeCommand.IntakeDirection.OUT),
 //                    new MoveTimeCommand(0.75, new ChassisSpeeds(-0.75, 0, 0), true, swerveSubsystem).asProxy()
 //                ),
-                new CoralizerIntakeCommand(coralizerSubsystem, CoralizerIntakeCommand.IntakeDirection.OUT),
+                new CoralizerIntakeCommand(shooterSubsystem, CoralizerIntakeCommand.IntakeDirection.OUT),
                 new HomeCommandGroup(elevatorSubsystem, coralizerSubsystem)
         );
     }

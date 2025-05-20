@@ -2,17 +2,18 @@ package frc.robot.commands.coralizer;
 
 import frc.robot.commands.LoggedCommand;
 import frc.robot.subsystems.CoralizerSubsystem;
+import frc.robot.subsystems.ShooterSubsystem;
 
 public class AlgaeIntakeCommand extends LoggedCommand {
 
-    private CoralizerSubsystem coralizerSubsystem;
+    private ShooterSubsystem shooterSubsystem;
 
 
 
-    public AlgaeIntakeCommand(CoralizerSubsystem coralizerSubsystem) {
-        this.coralizerSubsystem = coralizerSubsystem;
+    public AlgaeIntakeCommand(ShooterSubsystem shooterSubsystem) {
+        this.shooterSubsystem = shooterSubsystem;
 
-        addRequirements(coralizerSubsystem);
+        addRequirements(shooterSubsystem);
 
 
     }
@@ -21,12 +22,12 @@ public class AlgaeIntakeCommand extends LoggedCommand {
 
     @Override
     public void initialize() {
-        coralizerSubsystem.setShouldHold(true);
+        shooterSubsystem.setShouldHold(true);
     }
 
     @Override
     public boolean isFinished() {
-        return coralizerSubsystem.hasCoral();
+        return shooterSubsystem.hasCoral();
     }
 
 

@@ -20,9 +20,11 @@ import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.commands.NuzzleUpCommand;
 import frc.robot.commands.autos.*;
 import frc.robot.commands.commandgroups.*;
+import frc.robot.commands.commandgroups.algae.BargeCommandGroup;
 import frc.robot.commands.commandgroups.algae.DealgifyL2CommandGroup;
 import frc.robot.commands.commandgroups.algae.DealgifyL3CommandGroup;
 import frc.robot.commands.commandgroups.SourceCommandGroup;
+import frc.robot.commands.commandgroups.algae.HomeAlgaeCommandGroup;
 import frc.robot.commands.commandgroups.dropoff.DropoffCommandGroup;
 import frc.robot.commands.commandgroups.reef.*;
 import frc.robot.commands.coralizer.CoralizerIntakeCommand;
@@ -59,7 +61,9 @@ public class RobotContainer {
 
     public final ElevatorSubsystem elevatorSubsystem = new ElevatorSubsystem();
 
-    public final CoralizerSubsystem coralizerSubsystem = new CoralizerSubsystem();
+    public final ShooterSubsystem shooterSubsystem = new ShooterSubsystem();
+
+    public final CoralizerSubsystem coralizerSubsystem = new CoralizerSubsystem(shooterSubsystem);
 
     public final DistanceSubsystem distanceSubsystem = new DistanceSubsystem();
 
@@ -128,13 +132,12 @@ public class RobotContainer {
         new Trigger(cXbox::getRightBumperButton).whileTrue(new DriveButtonCommand(new ChassisSpeeds(0, 0, -0.7), swerveSubsystem));
         new Trigger(cXbox::getLeftBumperButton).whileTrue(new DriveButtonCommand(new ChassisSpeeds(0, 0, 0.7), swerveSubsystem));
 
-        new Trigger(cXbox::getAButton).whileTrue(new ScoreCommandGroup(reefTargeting, swerveSubsystem, elevatorSubsystem, coralizerSubsystem, distanceSubsystem, cameraSubsystem));
+        new Trigger(cXbox::getAButton).whileTrue(new ScoreCommandGroup(reefTargeting, swerveSubsystem, elevatorSubsystem, coralizerSubsystem, distanceSubsystem, cameraSubsystem, shooterSubsystem));
         new Trigger(cXbox::getXButton).whileTrue(new AlignReefCommand(reefTargeting, swerveSubsystem));
         new Trigger(cXbox::getBButton).onTrue(new ReefCommand(reefTargeting, elevatorSubsystem, coralizerSubsystem));
         new Trigger(cXbox::getYButton).whileTrue(new NuzzleUpCommand(distanceSubsystem, swerveSubsystem, cameraSubsystem, new AprilTag(1), () -> false));
 
         //new Trigger(cXbox::getBButtonPressed).onTrue(new MovingHeightCommandGroup(elevatorSubsystem, coralizerSubsystem));
-
         //For testing cuz the button board is being poopy
 //        new Trigger(() -> cJoystick.getRawButtonPressed(12)).onTrue(new L4CommandGroup(elevatorSubsystem, coralizerSubsystem));
 //        new Trigger(() -> cJoystick.getRawButtonPressed(11)).onTrue(new L3CommandGroup(elevatorSubsystem, coralizerSubsystem));
@@ -203,19 +206,24 @@ public class RobotContainer {
 //        new Trigger(() -> cButtonBoard.getButtonPressed(14)).onTrue(new L2CommandGroup(elevatorSubsystem, coralizerSubsystem));
 //        new Trigger(() -> cButtonBoard.getButtonPressed(15)).onTrue(new L1CommandGroup(elevatorSubsystem, coralizerSubsystem));
         //For Buttons 16-18, Starts at top right black button and goes left
-        new Trigger(() -> cButtonBoard.getButtonPressed(16)).onTrue(new DropoffCommandGroup(reefTargeting, elevatorSubsystem, coralizerSubsystem));
+        new Trigger(() -> cButtonBoard.getButtonPressed(16)).onTrue(new DropoffCommandGroup(reefTargeting, elevatorSubsystem, coralizerSubsystem, shooterSubsystem));
         new Trigger(() -> cButtonBoard.getButtonPressed(17)).onTrue(new HomeCommandGroup(elevatorSubsystem, coralizerSubsystem));
-        new Trigger(() -> cButtonBoard.getButtonPressed(18)).onTrue(new SourceCommandGroup(elevatorSubsystem, coralizerSubsystem));
+        new Trigger(() -> cButtonBoard.getButtonPressed(18)).onTrue(new SourceCommandGroup(elevatorSubsystem, coralizerSubsystem, shooterSubsystem));
         //For Buttons 19-21, Starts at middle right red button and goes left
-        new Trigger(() -> cButtonBoard.getButton(19)).whileTrue(new AlignSourceCommandGroup(FieldOrientation.getOrientation().getCoralStationLB(), swerveSubsystem, elevatorSubsystem, coralizerSubsystem)
-                .alongWith(new InstantCommand(() -> reefTargeting.updateSource(FieldOrientation.getOrientation().getCoralStationLB()))));
-        new Trigger(() -> cButtonBoard.getButton(20)).whileTrue(new AlignSourceCommandGroup(FieldOrientation.getOrientation().getCoralStationRB(), swerveSubsystem, elevatorSubsystem, coralizerSubsystem)
-                .alongWith(new InstantCommand(() -> reefTargeting.updateSource(FieldOrientation.getOrientation().getCoralStationRB()))));
-        new Trigger(() -> cButtonBoard.getButton(21)).whileTrue(new CoralizerIntakeCommand(coralizerSubsystem, CoralizerIntakeCommand.IntakeDirection.OUT));
+        //TODO bind align source to xbox buttons and make it so its only the robot angle that gets adjusted
+//        new Trigger(() -> cButtonBoard.getButton(19)).whileTrue(new AlignSourceCommandGroup(FieldOrientation.getOrientation().getCoralStationLB(), swerveSubsystem, elevatorSubsystem, coralizerSubsystem)
+//                .alongWith(new InstantCommand(() -> reefTargeting.updateSource(FieldOrientation.getOrientation().getCoralStationLB()))));
+//        new Trigger(() -> cButtonBoard.getButton(20)).whileTrue(new AlignSourceCommandGroup(FieldOrientation.getOrientation().getCoralStationRB(), swerveSubsystem, elevatorSubsystem, coralizerSubsystem)
+//                .alongWith(new InstantCommand(() -> reefTargeting.updateSource(FieldOrientation.getOrientation().getCoralStationRB()))));
+        new Trigger(() -> cButtonBoard.getButtonPressed(19)).onTrue(new BargeCommandGroup(elevatorSubsystem, coralizerSubsystem, shooterSubsystem));
+        new Trigger(() -> cButtonBoard.getButtonPressed(20)).onTrue(new L1SourceCommandGroup(elevatorSubsystem, coralizerSubsystem, shooterSubsystem));
+        new Trigger(() -> cButtonBoard.getButton(21)).whileTrue(new CoralizerIntakeCommand(shooterSubsystem, CoralizerIntakeCommand.IntakeDirection.ALGAE));
         //For Buttons 22-24, Starts at bottom right white button and goes left
-        new Trigger(() -> cButtonBoard.getButton(22)).whileTrue(new DealgifyL2CommandGroup(elevatorSubsystem, coralizerSubsystem));
-        new Trigger(() -> cButtonBoard.getButton(23)).whileTrue(new DealgifyL3CommandGroup(elevatorSubsystem, coralizerSubsystem));
-        new Trigger(() -> cButtonBoard.getButton(24)).whileTrue(new CoralizerIntakeCommand(coralizerSubsystem, CoralizerIntakeCommand.IntakeDirection.IN));
+        new Trigger(() -> cButtonBoard.getButton(22)).whileTrue(new DealgifyL2CommandGroup(elevatorSubsystem, coralizerSubsystem, shooterSubsystem));
+        new Trigger(() -> cButtonBoard.getButton(23)).whileTrue(new DealgifyL3CommandGroup(elevatorSubsystem, coralizerSubsystem, shooterSubsystem));
+        new Trigger(() -> cButtonBoard.getButtonReleased(22)).onTrue(new HomeAlgaeCommandGroup(elevatorSubsystem, coralizerSubsystem, shooterSubsystem));
+        new Trigger(() -> cButtonBoard.getButtonReleased(23)).onTrue(new HomeAlgaeCommandGroup(elevatorSubsystem, coralizerSubsystem, shooterSubsystem));
+        new Trigger(() -> cButtonBoard.getButton(24)).whileTrue(new CoralizerIntakeCommand(shooterSubsystem, CoralizerIntakeCommand.IntakeDirection.IN));
     }
 
     public void warmupPathFinding() {
@@ -231,9 +239,9 @@ public class RobotContainer {
     private void setupAutoTab(){
         ShuffleboardTab autoTab = Shuffleboard.getTab("Auto");
 
-        autoCommandPicker.addOption("Right", new Right(swerveSubsystem, elevatorSubsystem, coralizerSubsystem, distanceSubsystem, cameraSubsystem));
-        autoCommandPicker.addOption("Left", new Left(swerveSubsystem, elevatorSubsystem, coralizerSubsystem, distanceSubsystem, cameraSubsystem));
-        autoCommandPicker.addOption("Mid", new Mid(swerveSubsystem, elevatorSubsystem, coralizerSubsystem, distanceSubsystem, cameraSubsystem));
+        autoCommandPicker.addOption("Right", new Right(swerveSubsystem, elevatorSubsystem, coralizerSubsystem, distanceSubsystem, cameraSubsystem, shooterSubsystem));
+        autoCommandPicker.addOption("Left", new Left(swerveSubsystem, elevatorSubsystem, coralizerSubsystem, distanceSubsystem, cameraSubsystem, shooterSubsystem));
+        autoCommandPicker.addOption("Mid", new Mid(swerveSubsystem, elevatorSubsystem, coralizerSubsystem, distanceSubsystem, cameraSubsystem,shooterSubsystem));
         autoCommandPicker.setDefaultOption("Dumb", new Dumb(swerveSubsystem));
 
         autoTab.add("Auto", autoCommandPicker)

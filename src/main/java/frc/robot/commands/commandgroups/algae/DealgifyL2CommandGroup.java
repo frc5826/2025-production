@@ -12,18 +12,19 @@ import frc.robot.commands.swerve.pathing.MoveTimeCommand;
 import frc.robot.positioning.ReefPosition;
 import frc.robot.subsystems.CoralizerSubsystem;
 import frc.robot.subsystems.ElevatorSubsystem;
+import frc.robot.subsystems.ShooterSubsystem;
 import frc.robot.subsystems.SwerveSubsystem;
 
 public class DealgifyL2CommandGroup extends SequentialCommandGroup {
 
-    public DealgifyL2CommandGroup(ElevatorSubsystem elevatorSubsystem, CoralizerSubsystem coralizerSubsystem) {
+    public DealgifyL2CommandGroup(ElevatorSubsystem elevatorSubsystem, CoralizerSubsystem coralizerSubsystem, ShooterSubsystem shooterSubsystem) {
 
         addCommands(
                 Commands.parallel(
-                        new ElevatorPositionCommand(elevatorSubsystem, 0.5, ReefPosition.ReefLevel.NONE),
-                        new CoralizerWristCommand(coralizerSubsystem, 15)
+                        new ElevatorPositionCommand(elevatorSubsystem, 0.65, ReefPosition.ReefLevel.NONE),
+                        new CoralizerWristCommand(coralizerSubsystem, -5)
                 ),
-                new DealgCoralizerCommand(coralizerSubsystem)
+                new DealgCoralizerCommand(shooterSubsystem)
 //                new AlgaeIntakeCommand(coralizerSubsystem),
 //                new MoveTimeCommand(1, new ChassisSpeeds(-0.75, 0, 0), true, swerveSubsystem).asProxy(),
 //                new ElevatorPositionCommand(elevatorSubsystem, 0.1, ReefPosition.ReefLevel.NONE)

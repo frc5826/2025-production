@@ -32,7 +32,7 @@ public class Right extends SequentialCommandGroup {
     private PathPlannerPath sourceToCD;
     private PathPlannerPath CDToSource;
 
-    public Right(SwerveSubsystem s, ElevatorSubsystem e, CoralizerSubsystem c, DistanceSubsystem d, CameraSubsystem ca) {
+    public Right(SwerveSubsystem s, ElevatorSubsystem e, CoralizerSubsystem c, DistanceSubsystem d, CameraSubsystem ca, ShooterSubsystem sh) {
 
         PathConstraints alignConstraints = new PathConstraints(1, 1, Math.PI * 1.5, Math.PI * 2);
         PathConstraints fastConstraints = new PathConstraints(4, 4, Math.PI * 2, Math.PI * 3);
@@ -55,7 +55,7 @@ public class Right extends SequentialCommandGroup {
                 ),
                 new PathToCommand(() -> MathHelper.offsetPoseReverse(FieldOrientation.getOrientation().getReefE(), (Constants.BluePositions.cRobotLength / 2) - 0.03), 0.25, alignConstraints, s), //Align to reef
                 new NuzzleUpCommand(d, s, ca, new AprilTag(0), () -> true), //Align to reef
-                new CoralizerIntakeCommand(c, CoralizerIntakeCommand.IntakeDirection.OUT) //Drop
+                new CoralizerIntakeCommand(sh, CoralizerIntakeCommand.IntakeDirection.OUT) //Drop
         );
 
         //Get next coral
@@ -66,7 +66,7 @@ public class Right extends SequentialCommandGroup {
                         new CoralizerWristCommand(c, Constants.Elevator.intakeAngle)
                 ),
                 Commands.deadline(
-                        new CoralizerIntakeCommand(c, CoralizerIntakeCommand.IntakeDirection.IN),
+                        new CoralizerIntakeCommand(sh, CoralizerIntakeCommand.IntakeDirection.IN),
                         new MoveTimeCommand(5, new ChassisSpeeds(0.3, 0, 0), true, s)
                 )
         );
@@ -84,7 +84,7 @@ public class Right extends SequentialCommandGroup {
                 ),
                 new PathToCommand(() -> MathHelper.offsetPoseReverse(FieldOrientation.getOrientation().getReefC(), (Constants.BluePositions.cRobotLength / 2) - 0.03), 0.25, alignConstraints, s),
                 new NuzzleUpCommand(d, s, ca, new AprilTag(0), () -> true), //Align to reef
-                new CoralizerIntakeCommand(c, CoralizerIntakeCommand.IntakeDirection.OUT)
+                new CoralizerIntakeCommand(sh, CoralizerIntakeCommand.IntakeDirection.OUT)
         );
 
         //Get next coral
@@ -94,7 +94,7 @@ public class Right extends SequentialCommandGroup {
                         new ElevatorPositionCommand(e, Constants.Elevator.intakeHeight, ReefPosition.ReefLevel.NONE),
                         Commands.sequence(
                                 new CoralizerWristCommand(c, Constants.Elevator.intakeAngle),
-                                new CoralizerIntakeCommand(c, CoralizerIntakeCommand.IntakeDirection.IN)
+                                new CoralizerIntakeCommand(sh, CoralizerIntakeCommand.IntakeDirection.IN)
                         )
                 )
         );
@@ -110,7 +110,7 @@ public class Right extends SequentialCommandGroup {
                         new ElevatorPositionCommand(e, Constants.Elevator.L4Height, ReefPosition.ReefLevel.L4),
                         new CoralizerWristCommand(c, Constants.Elevator.L4Angle)
                 ),
-                new CoralizerIntakeCommand(c, CoralizerIntakeCommand.IntakeDirection.OUT)
+                new CoralizerIntakeCommand(sh, CoralizerIntakeCommand.IntakeDirection.OUT)
         );
 
         //Get next coral
@@ -120,7 +120,7 @@ public class Right extends SequentialCommandGroup {
                         new ElevatorPositionCommand(e, Constants.Elevator.intakeHeight, ReefPosition.ReefLevel.NONE),
                         Commands.sequence(
                                 new CoralizerWristCommand(c, Constants.Elevator.intakeAngle),
-                                new CoralizerIntakeCommand(c, CoralizerIntakeCommand.IntakeDirection.IN)
+                                new CoralizerIntakeCommand(sh, CoralizerIntakeCommand.IntakeDirection.IN)
                         )
                 )
         );

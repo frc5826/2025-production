@@ -9,6 +9,7 @@ import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.PowerDistribution;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import frc.robot.Constants;
 import frc.robot.math.MathHelper;
 import frc.robot.math.PID;
 
@@ -17,23 +18,31 @@ import static frc.robot.Constants.Coralizer.*;
 
 public class CoralizerSubsystem extends LoggedSubsystem{
 
-    private SparkMax intakeMotor;
     private SparkMax wristMotor;
-    private boolean shouldHold;
     private boolean starting;
 
     private PID pid;
+    private PID normalPID;
+    private PID algaePID;
 
     private double wristTarget;
 
     private Timer wristEnableTimer;
 
-    public CoralizerSubsystem() {
+    private double gConstant;
+
+    private ShooterSubsystem shooterSubsystem;
+
+    public CoralizerSubsystem(ShooterSubsystem shooterSubsystem) {
+        this.shooterSubsystem = shooterSubsystem;
+
         starting = false;
-        shouldHold = false;
-        intakeMotor = new SparkMax(4, SparkLowLevel.MotorType.kBrushless);
         wristMotor = new SparkMax(3, SparkLowLevel.MotorType.kBrushless);
-        pid = new PID(cCoralizerP, cCoralizerI, cCoralizerD, cCoralizerMax, cCoralizerMin, 0, this::getRotation);
+        gConstant = cCoralizerG;
+        normalPID = new PID(cCoralizerP, cCoralizerI, cCoralizerD, cCoralizerMax, cCoralizerMin, 0, this::getRotation);
+        algaePID = new PID(cCoralizerPAlgae, cCoralizerIAlgae, cCoralizerDAlgae, cCoralizerMax, cCoralizerMin, 0, this::getRotation);
+        pid = normalPID;
+        SmartDashboard.putString("coralizer/PIDName", "normal PID");
         wristTarget = 30;
         pid.setGoal(wristTarget);
         SparkMaxConfig config = new SparkMaxConfig();
@@ -57,17 +66,20 @@ public class CoralizerSubsystem extends LoggedSubsystem{
 
     @Override
     public void periodic() {
-        if (shouldHold){
-            if (hasCoral()){
-                setIntakeSpeed(-0.2);
-            }
-            else {
-                setIntakeSpeed(-1);
-            }
+
+        if (shooterSubsystem.hasAlgae() && !shooterSubsystem.hasCoral() && pid == normalPID) {
+            pid = algaePID;
+            pid.setGoal(normalPID.getGoal());
+            gConstant = cCoralizerGAlgae;
+            SmartDashboard.putString("coralizer/PIDName", "algae PID");
+        } else if((!shooterSubsystem.hasAlgae() || shooterSubsystem.hasCoral()) && pid == algaePID) {
+            pid = normalPID;
+            pid.setGoal(algaePID.getGoal());
+            gConstant = cCoralizerG;
+            SmartDashboard.putString("coralizer/PIDName", "normal PID");
         }
 
-
-        double speed = pid.calculate() + cCoralizerG * Math.cos(getRotation() * (Math.PI / 180));
+        double speed = pid.calculate() + gConstant * Math.cos(getRotation() * (Math.PI / 180));
 
         if(starting) {
             if(!DriverStation.isTest()){
@@ -80,12 +92,17 @@ public class CoralizerSubsystem extends LoggedSubsystem{
         SmartDashboard.putNumber("coralizer/Output", speed);
 
         SmartDashboard.putNumber("coralizer/Encoder", getRotation());
-        SmartDashboard.putBoolean("coralizer/HasCoral", hasCoral());
     }
 
-    public void setIntakeSpeed(double speed) {
-        intakeMotor.set(speed);
-    }
+//    public void setALgaePID(boolean algae) {
+//        if (algae) {
+//            gConstant = cCoralizerGAlgae;
+//            pid = algaePID;
+//        } else {
+//            //gConstant = cCoralizerG;
+//            //pid = normalPID;
+//        }
+//    }
 
     public void setWristTarget(double wristTarget) {
         pid.setGoal(MathHelper.clamp(wristTarget, cCoralizerMinRotation, cCoralizerMaxRotation));
@@ -106,18 +123,6 @@ public class CoralizerSubsystem extends LoggedSubsystem{
 
     public void startWristTimer(){
         wristEnableTimer.restart();
-    }
-
-    public boolean hasCoral(){
-        return intakeMotor.getForwardLimitSwitch().isPressed();
-    }
-
-    public boolean isShouldHold() {
-        return shouldHold;
-    }
-
-    public void setShouldHold(boolean shouldHold) {
-        this.shouldHold = shouldHold;
     }
 
     public void setStarting() {

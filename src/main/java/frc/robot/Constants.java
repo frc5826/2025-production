@@ -85,15 +85,17 @@ public final class Constants
         public static final double L4Height = 1.77;
         public static final double L3Height = 1.12;
         public static final double L2Height = 0.7;
-        public static final double L1Height = 0;
+        public static final double L1Height = 0.33;
 
         public static final double L4Angle = -70;
         public static final double L3Angle = -66;
         public static final double L2Angle = -66;
-        public static final double L1Angle = -15;
+        public static final double L1Angle = -10;
 
         public static final double intakeAngle = 28;
+        public static final double L1IntakeAngle = 50;
         public static final double intakeHeight = .23;
+        public static final double L1IntakeHeight = 0.3;
 
         public static class ConversionFactor {
             public static final double cElevatorClicksPerMeter = 17777;
@@ -172,6 +174,11 @@ public final class Constants
         public static final double cCoralizerMin = -0.75;
         public static final double cCoralizerMax = 0.75;
         public static final double cCoralizerDeadband = 5;
+
+        public static final double cCoralizerPAlgae = 0.01;
+        public static final double cCoralizerIAlgae = 0;
+        public static final double cCoralizerDAlgae = 0;
+        public static final double cCoralizerGAlgae = 0.03;
 
         public static final double cCoralizerMinRotation = -90;
         public static final double cCoralizerMaxRotation = 90;

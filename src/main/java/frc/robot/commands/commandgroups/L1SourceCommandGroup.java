@@ -11,16 +11,16 @@ import frc.robot.subsystems.CoralizerSubsystem;
 import frc.robot.subsystems.ElevatorSubsystem;
 import frc.robot.subsystems.ShooterSubsystem;
 
-public class SourceCommandGroup extends SequentialCommandGroup {
+public class L1SourceCommandGroup extends SequentialCommandGroup {
 
-    public SourceCommandGroup(ElevatorSubsystem elevatorSubsystem, CoralizerSubsystem coralizerSubsystem, ShooterSubsystem shooterSubsystem) {
+    public L1SourceCommandGroup(ElevatorSubsystem elevatorSubsystem, CoralizerSubsystem coralizerSubsystem, ShooterSubsystem shooterSubsystem) {
 
         addCommands(
                 Commands.parallel(
-                        new ElevatorPositionCommand(elevatorSubsystem, Constants.Elevator.intakeHeight, ReefPosition.ReefLevel.NONE),
-                        new CoralizerWristCommand(coralizerSubsystem, Constants.Elevator.intakeAngle)
+                        new ElevatorPositionCommand(elevatorSubsystem, Constants.Elevator.L1IntakeHeight, ReefPosition.ReefLevel.NONE),
+                        new CoralizerWristCommand(coralizerSubsystem, Constants.Elevator.L1IntakeAngle)
                 ),
-                new CoralizerIntakeCommand(shooterSubsystem, CoralizerIntakeCommand.IntakeDirection.IN),
+                new CoralizerIntakeCommand(shooterSubsystem, CoralizerIntakeCommand.IntakeDirection.L1INTAKE),
                 new MovingHeightCommandGroup(elevatorSubsystem, coralizerSubsystem)
         );
 

@@ -22,7 +22,7 @@ import static frc.robot.Constants.BluePositions.cRobotLength;
 
 public class ScoreCommandGroup extends SequentialCommandGroup {
 
-    public ScoreCommandGroup(ReefTargeting target, SwerveSubsystem s, ElevatorSubsystem e, CoralizerSubsystem c, DistanceSubsystem d, CameraSubsystem ca) {
+    public ScoreCommandGroup(ReefTargeting target, SwerveSubsystem s, ElevatorSubsystem e, CoralizerSubsystem c, DistanceSubsystem d, CameraSubsystem ca, ShooterSubsystem sh) {
 
         PathConstraints alignConstraints = new PathConstraints(1, 1, Math.PI * 1.5, Math.PI * 2);
         PathConstraints fastConstraints = new PathConstraints(3, 3, Math.PI * 2, Math.PI * 3);
@@ -43,7 +43,7 @@ public class ScoreCommandGroup extends SequentialCommandGroup {
                         new CoralizerWristCommand(c, () -> target.getLevel().get().angle)
                 ),
                 new NuzzleUpCommand(d, s, ca, new AprilTag(0), target.getLeft()),
-                new CoralizerIntakeCommand(c, CoralizerIntakeCommand.IntakeDirection.OUT),
+                new CoralizerIntakeCommand(sh, CoralizerIntakeCommand.IntakeDirection.OUT),
                 Commands.deadline(
                         new MoveTimeCommand(0.35, new ChassisSpeeds(-1, 0, 0), true, s),
                         new HomeCommandGroup(e, c)
