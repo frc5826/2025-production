@@ -137,10 +137,11 @@ public class RobotContainer {
         new Trigger(cXbox::getRightBumperButton).whileTrue(new TurnToCommand(FieldOrientation.getOrientation().getCoralStationRB().getRotation(), swerveSubsystem));
         new Trigger(cXbox::getLeftBumperButton).whileTrue(new TurnToCommand(FieldOrientation.getOrientation().getCoralStationLB().getRotation(), swerveSubsystem));
 
-        new Trigger(cXbox::getAButton).whileTrue(new ScoreCommandGroup(reefTargeting, swerveSubsystem, elevatorSubsystem, coralizerSubsystem, distanceSubsystem, cameraSubsystem, shooterSubsystem));
+        new Trigger(() -> cXbox.getAButton() && !cXbox.getBButton()).whileTrue(new ScoreCommandGroup(reefTargeting, swerveSubsystem, elevatorSubsystem, coralizerSubsystem, distanceSubsystem, cameraSubsystem, shooterSubsystem));
         new Trigger(cXbox::getXButton).whileTrue(new AlignReefCommand(reefTargeting, swerveSubsystem));
-        new Trigger(cXbox::getBButton).onTrue(new ReefCommand(reefTargeting, elevatorSubsystem, coralizerSubsystem));
+        new Trigger(() -> cXbox.getBButton() && !cXbox.getAButton()).onTrue(new ReefCommand(reefTargeting, elevatorSubsystem, coralizerSubsystem));
         new Trigger(cXbox::getYButton).whileTrue(new DealgCommandGroup(reefTargeting, swerveSubsystem, elevatorSubsystem, coralizerSubsystem, shooterSubsystem));
+        new Trigger(() -> cXbox.getAButton() && cXbox.getBButton()).whileTrue();
         //new Trigger(cXbox::getYButton).whileTrue(new NuzzleUpCommand(distanceSubsystem, swerveSubsystem, cameraSubsystem, new AprilTag(1), () -> false));
 
         //new Trigger(cXbox::getBButtonPressed).onTrue(new MovingHeightCommandGroup(elevatorSubsystem, coralizerSubsystem));
