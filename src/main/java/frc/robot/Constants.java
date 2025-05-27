@@ -86,11 +86,15 @@ public final class Constants
         public static final double L3Height = 1.12;
         public static final double L2Height = 0.7;
         public static final double L1Height = 0.33;
+        public static final double AlgL2Height = 0.65;
+        public static final double AlgL3Height = 1.1;
 
         public static final double L4Angle = -70;
         public static final double L3Angle = -66;
         public static final double L2Angle = -66;
         public static final double L1Angle = -10;
+        public static final double AlgL2Angle = -5;
+        public static final double AlgL3Angle = -10;
 
         public static final double intakeAngle = 28;
         public static final double L1IntakeAngle = 50;

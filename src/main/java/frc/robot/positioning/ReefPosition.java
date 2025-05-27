@@ -26,7 +26,9 @@ public class ReefPosition {
         L1(L1Height, L1Angle),
         L2(L2Height, L2Angle),
         L3(L3Height, L3Angle),
-        L4(L4Height, L4Angle);
+        L4(L4Height, L4Angle),
+        ALGL2(AlgL2Height, AlgL2Angle),
+        ALGL3(AlgL3Height, AlgL3Angle);
 
         public final double height;
         public final double angle;

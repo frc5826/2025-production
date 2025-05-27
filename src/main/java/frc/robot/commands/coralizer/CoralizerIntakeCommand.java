@@ -49,6 +49,9 @@ public class CoralizerIntakeCommand extends LoggedCommand {
             return !shooterSubsystem.hasCoral();
             //return false;
         }
+//        else if (direction == IntakeDirection.ALGAE) {
+//            return shooterSubsystem.hasAlgae();
+//        }
         return false;
 
 //        if (expirationTimer.get() >= 7) {return true;}

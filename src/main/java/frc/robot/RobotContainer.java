@@ -140,7 +140,8 @@ public class RobotContainer {
         new Trigger(cXbox::getAButton).whileTrue(new ScoreCommandGroup(reefTargeting, swerveSubsystem, elevatorSubsystem, coralizerSubsystem, distanceSubsystem, cameraSubsystem, shooterSubsystem));
         new Trigger(cXbox::getXButton).whileTrue(new AlignReefCommand(reefTargeting, swerveSubsystem));
         new Trigger(cXbox::getBButton).onTrue(new ReefCommand(reefTargeting, elevatorSubsystem, coralizerSubsystem));
-        new Trigger(cXbox::getYButton).whileTrue(new NuzzleUpCommand(distanceSubsystem, swerveSubsystem, cameraSubsystem, new AprilTag(1), () -> false));
+        new Trigger(cXbox::getYButton).whileTrue(new DealgCommandGroup(reefTargeting, swerveSubsystem, elevatorSubsystem, coralizerSubsystem, shooterSubsystem));
+        //new Trigger(cXbox::getYButton).whileTrue(new NuzzleUpCommand(distanceSubsystem, swerveSubsystem, cameraSubsystem, new AprilTag(1), () -> false));
 
         //new Trigger(cXbox::getBButtonPressed).onTrue(new MovingHeightCommandGroup(elevatorSubsystem, coralizerSubsystem));
         //For testing cuz the button board is being poopy
@@ -197,6 +198,14 @@ public class RobotContainer {
         new Trigger(() -> cButtonBoard.getButtonPressed(11)).onTrue(new InstantCommand(() -> reefTargeting.updatePose(FieldOrientation.getOrientation().getReefI()))
                 .alongWith(new InstantCommand(() -> reefTargeting.setLeft(true))));
 
+        //TODO check if the hitting two buttons thing works
+        new Trigger(() -> cButtonBoard.getButton(0) && cButtonBoard.getButton(1)).onTrue(new InstantCommand(() -> reefTargeting.updatePose(FieldOrientation.getOrientation().getReefSideGH())));
+        new Trigger(() -> cButtonBoard.getButton(2) && cButtonBoard.getButton(3)).onTrue(new InstantCommand(() -> reefTargeting.updatePose(FieldOrientation.getOrientation().getReefSideEF())));
+        new Trigger(() -> cButtonBoard.getButton(4) && cButtonBoard.getButton(5)).onTrue(new InstantCommand(() -> reefTargeting.updatePose(FieldOrientation.getOrientation().getReefSideCD())));
+        new Trigger(() -> cButtonBoard.getButton(6) && cButtonBoard.getButton(7)).onTrue(new InstantCommand(() -> reefTargeting.updatePose(FieldOrientation.getOrientation().getReefSideAB())));
+        new Trigger(() -> cButtonBoard.getButton(8) && cButtonBoard.getButton(9)).onTrue(new InstantCommand(() -> reefTargeting.updatePose(FieldOrientation.getOrientation().getReefSideKL())));
+        new Trigger(() -> cButtonBoard.getButton(10) && cButtonBoard.getButton(11)).onTrue(new InstantCommand(() -> reefTargeting.updatePose(FieldOrientation.getOrientation().getReefSideIJ())));
+
         //testing new align
         //new Trigger(() -> cButtonBoard.getButton(0)).whileTrue(new AlignReefCommand(FieldOrientation.getOrientation().getReefH(), FieldOrientation.getOrientation().getReefSideGH(), swerveSubsystem, elevatorSubsystem, coralizerSubsystem));
         //new Trigger(() -> cButtonBoard.getButton(1)).whileTrue(new AlignReefCommand(FieldOrientation.getOrientation().getReefG(), FieldOrientation.getOrientation().getReefSideGH(), swerveSubsystem, elevatorSubsystem, coralizerSubsystem));
@@ -225,10 +234,15 @@ public class RobotContainer {
         new Trigger(() -> cButtonBoard.getButtonPressed(20)).onTrue(new L1SourceCommandGroup(elevatorSubsystem, coralizerSubsystem, shooterSubsystem));
         new Trigger(() -> cButtonBoard.getButton(21)).whileTrue(new CoralizerIntakeCommand(shooterSubsystem, CoralizerIntakeCommand.IntakeDirection.ALGAE));
         //For Buttons 22-24, Starts at bottom right white button and goes left
-        new Trigger(() -> cButtonBoard.getButton(22)).whileTrue(new DealgifyL2CommandGroup(elevatorSubsystem, coralizerSubsystem, shooterSubsystem));
-        new Trigger(() -> cButtonBoard.getButton(23)).whileTrue(new DealgifyL3CommandGroup(elevatorSubsystem, coralizerSubsystem, shooterSubsystem));
-        new Trigger(() -> cButtonBoard.getButtonReleased(22)).onTrue(new HomeAlgaeCommandGroup(elevatorSubsystem, coralizerSubsystem, shooterSubsystem));
-        new Trigger(() -> cButtonBoard.getButtonReleased(23)).onTrue(new HomeAlgaeCommandGroup(elevatorSubsystem, coralizerSubsystem, shooterSubsystem));
+        //TODO do we want to keep this manual or make it auto
+        //manual
+        //new Trigger(() -> cButtonBoard.getButton(22)).whileTrue(new DealgifyL2CommandGroup(elevatorSubsystem, coralizerSubsystem, shooterSubsystem));
+        //new Trigger(() -> cButtonBoard.getButton(23)).whileTrue(new DealgifyL3CommandGroup(elevatorSubsystem, coralizerSubsystem, shooterSubsystem));
+        //new Trigger(() -> cButtonBoard.getButtonReleased(22)).onTrue(new HomeAlgaeCommandGroup(elevatorSubsystem, coralizerSubsystem, shooterSubsystem));
+        //new Trigger(() -> cButtonBoard.getButtonReleased(23)).onTrue(new HomeAlgaeCommandGroup(elevatorSubsystem, coralizerSubsystem, shooterSubsystem));
+        //auto
+        new Trigger(() -> cButtonBoard.getButtonPressed(22)).onTrue(new InstantCommand(() -> reefTargeting.updateLevel(ReefPosition.ReefLevel.ALGL2)));
+        new Trigger(() -> cButtonBoard.getButtonPressed(23)).onTrue(new InstantCommand(() -> reefTargeting.updateLevel(ReefPosition.ReefLevel.ALGL3)));
         new Trigger(() -> cButtonBoard.getButton(24)).whileTrue(new CoralizerIntakeCommand(shooterSubsystem, CoralizerIntakeCommand.IntakeDirection.IN));
     }
 
