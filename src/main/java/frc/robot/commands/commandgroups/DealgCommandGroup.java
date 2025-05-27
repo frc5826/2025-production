@@ -34,7 +34,7 @@ public class DealgCommandGroup extends SequentialCommandGroup {
                         new InstantCommand(() -> sh.setIntakeSpeed(0.9))
                 ),
                 Commands.parallel(
-                        new MoveTimeCommand(0.75, new ChassisSpeeds(-1, 0, 0), true, s),
+                        new MoveTimeCommand(0.6, new ChassisSpeeds(-1, 0, 0), true, s),
                         new InstantCommand(() -> sh.setIntakeSpeed(0.9))
                 ),
                 Commands.parallel(

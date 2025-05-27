@@ -141,7 +141,7 @@ public class RobotContainer {
         new Trigger(cXbox::getXButton).whileTrue(new AlignReefCommand(reefTargeting, swerveSubsystem));
         new Trigger(() -> cXbox.getBButton() && !cXbox.getAButton()).onTrue(new ReefCommand(reefTargeting, elevatorSubsystem, coralizerSubsystem));
         new Trigger(cXbox::getYButton).whileTrue(new DealgCommandGroup(reefTargeting, swerveSubsystem, elevatorSubsystem, coralizerSubsystem, shooterSubsystem));
-        new Trigger(() -> cXbox.getAButton() && cXbox.getBButton()).whileTrue();
+        new Trigger(() -> cXbox.getAButton() && cXbox.getBButton()).whileTrue(new SuperCycleCommandGroup(reefTargeting, swerveSubsystem, elevatorSubsystem, coralizerSubsystem, shooterSubsystem, cameraSubsystem, distanceSubsystem));
         //new Trigger(cXbox::getYButton).whileTrue(new NuzzleUpCommand(distanceSubsystem, swerveSubsystem, cameraSubsystem, new AprilTag(1), () -> false));
 
         //new Trigger(cXbox::getBButtonPressed).onTrue(new MovingHeightCommandGroup(elevatorSubsystem, coralizerSubsystem));
