@@ -129,8 +129,13 @@ public class RobotContainer {
         new Trigger(() -> cXbox.getPOV() == 180).whileTrue(new CrabWalkCommand(CrabWalkCommand.Direction.BACK, swerveSubsystem));
         new Trigger(() -> cXbox.getPOV() == 270).whileTrue(new CrabWalkCommand(CrabWalkCommand.Direction.LEFT, swerveSubsystem));
 
-        new Trigger(cXbox::getRightBumperButton).whileTrue(new DriveButtonCommand(new ChassisSpeeds(0, 0, -0.7), swerveSubsystem));
-        new Trigger(cXbox::getLeftBumperButton).whileTrue(new DriveButtonCommand(new ChassisSpeeds(0, 0, 0.7), swerveSubsystem));
+        //new Trigger(cXbox::getRightBumperButton).whileTrue(new DriveButtonCommand(new ChassisSpeeds(0, 0, -0.7), swerveSubsystem));
+        //new Trigger(cXbox::getLeftBumperButton).whileTrue(new DriveButtonCommand(new ChassisSpeeds(0, 0, 0.7), swerveSubsystem));
+
+        //TODO bind align source to xbox buttons and make it so its only the robot angle that gets adjusted
+        //TODO test to see if this works
+        new Trigger(cXbox::getRightBumperButton).whileTrue(new TurnToCommand(FieldOrientation.getOrientation().getCoralStationRB().getRotation(), swerveSubsystem));
+        new Trigger(cXbox::getLeftBumperButton).whileTrue(new TurnToCommand(FieldOrientation.getOrientation().getCoralStationLB().getRotation(), swerveSubsystem));
 
         new Trigger(cXbox::getAButton).whileTrue(new ScoreCommandGroup(reefTargeting, swerveSubsystem, elevatorSubsystem, coralizerSubsystem, distanceSubsystem, cameraSubsystem, shooterSubsystem));
         new Trigger(cXbox::getXButton).whileTrue(new AlignReefCommand(reefTargeting, swerveSubsystem));
@@ -210,11 +215,12 @@ public class RobotContainer {
         new Trigger(() -> cButtonBoard.getButtonPressed(17)).onTrue(new HomeCommandGroup(elevatorSubsystem, coralizerSubsystem));
         new Trigger(() -> cButtonBoard.getButtonPressed(18)).onTrue(new SourceCommandGroup(elevatorSubsystem, coralizerSubsystem, shooterSubsystem));
         //For Buttons 19-21, Starts at middle right red button and goes left
-        //TODO bind align source to xbox buttons and make it so its only the robot angle that gets adjusted
+
 //        new Trigger(() -> cButtonBoard.getButton(19)).whileTrue(new AlignSourceCommandGroup(FieldOrientation.getOrientation().getCoralStationLB(), swerveSubsystem, elevatorSubsystem, coralizerSubsystem)
 //                .alongWith(new InstantCommand(() -> reefTargeting.updateSource(FieldOrientation.getOrientation().getCoralStationLB()))));
 //        new Trigger(() -> cButtonBoard.getButton(20)).whileTrue(new AlignSourceCommandGroup(FieldOrientation.getOrientation().getCoralStationRB(), swerveSubsystem, elevatorSubsystem, coralizerSubsystem)
 //                .alongWith(new InstantCommand(() -> reefTargeting.updateSource(FieldOrientation.getOrientation().getCoralStationRB()))));
+
         new Trigger(() -> cButtonBoard.getButtonPressed(19)).onTrue(new BargeCommandGroup(elevatorSubsystem, coralizerSubsystem, shooterSubsystem));
         new Trigger(() -> cButtonBoard.getButtonPressed(20)).onTrue(new L1SourceCommandGroup(elevatorSubsystem, coralizerSubsystem, shooterSubsystem));
         new Trigger(() -> cButtonBoard.getButton(21)).whileTrue(new CoralizerIntakeCommand(shooterSubsystem, CoralizerIntakeCommand.IntakeDirection.ALGAE));
