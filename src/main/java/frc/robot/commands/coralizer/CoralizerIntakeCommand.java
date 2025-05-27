@@ -61,7 +61,7 @@ public class CoralizerIntakeCommand extends LoggedCommand {
     @Override
     public void end(boolean interrupted) {
         super.end(interrupted);
-        shooterSubsystem.setIntakeSpeed(-0.05);
+        shooterSubsystem.setIntakeSpeed(-0.03);
         expirationTimer.reset();
         releaseTimer.reset();
     }

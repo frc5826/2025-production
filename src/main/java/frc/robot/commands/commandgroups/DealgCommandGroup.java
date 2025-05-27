@@ -30,7 +30,7 @@ public class DealgCommandGroup extends SequentialCommandGroup {
                         new CoralizerWristCommand(c, target.getTarget().getLevel().angle)
                 ),
                 Commands.parallel(
-                        new FastAlignReefCommand(target.getAlignmentPose().get(), 1.5, s),
+                        new FastAlignReefCommand(target.getAlignmentPose(), 1.5, s),
                         new InstantCommand(() -> sh.setIntakeSpeed(0.9))
                 ),
                 Commands.parallel(

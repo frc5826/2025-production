@@ -76,8 +76,8 @@ public final class Constants
         public static final double cElevatorVDown = 0.8;
         public static final double cElevatorGDown = 0.07;
         public static final double cElevatorGUp = 0.03;
-        public static final double cElevatorMaxAcceleration = 1.5;
-        public static final double cElevatorMaxVelocity = 1.2;
+        public static final double cElevatorMaxAcceleration = 1.6;
+        public static final double cElevatorMaxVelocity = 1.6;
         public static final double cElevatorHeightMin = 0;
         public static final double cElevatorHeightMax = 1.77;
         public static final double cElevatorDeadband = 0.04;

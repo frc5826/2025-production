@@ -21,6 +21,6 @@ public class DealgCoralizerCommand extends LoggedCommand {
     @Override
     public void end(boolean interrupted) {
         super.end(interrupted);
-        s.setIntakeSpeed(-0.05);
+        s.setIntakeSpeed(-0.03);
     }
 }

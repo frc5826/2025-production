@@ -85,7 +85,7 @@ public class CoralizerSubsystem extends LoggedSubsystem{
             if(!DriverStation.isTest()){
                 starting = false;
             }
-            wristMotor.set(0.05);
+            wristMotor.set(0.03);
         } else {
             wristMotor.set(speed);
         }

@@ -8,23 +8,25 @@ import frc.robot.Constants;
 import frc.robot.math.PID;
 import frc.robot.subsystems.SwerveSubsystem;
 
+import java.util.function.Supplier;
+
 public class FastAlignReefCommand extends Command {
 
     private SwerveSubsystem s;
 
-    private Pose2d goal;
+    private Supplier<Pose2d> goal;
 
     private Timer timer;
     private double timeOut;
 
-    private PID xPID = new PID(2, 0, 0, 2, 0, 0.02, () -> s.getLocalizationPose().getX());
-    private PID yPID = new PID(2, 0, 0, 2, 0, 0.02, () -> s.getLocalizationPose().getY());
-    private PID turnPID = new PID(Constants.Swerve.cTurnPID, 3.1, 0, Math.toRadians(3), this::angleDiff);
+    private PID xPID = new PID(3, 0, 0, 1.5, 0.1, 0.01, () -> s.getLocalizationPose().getX());
+    private PID yPID = new PID(3, 0, 0, 1.5, 0.1, 0.01, () -> s.getLocalizationPose().getY());
+    private PID turnPID = new PID(Constants.Swerve.cTurnPID, 4, 0, Math.toRadians(3), this::angleDiff);
 
     private boolean isFinished;
 
     //TODO test this thang
-    public FastAlignReefCommand(Pose2d goal, double timeOut, SwerveSubsystem swerveSubsystem) {
+    public FastAlignReefCommand(Supplier<Pose2d> goal, double timeOut, SwerveSubsystem swerveSubsystem) {
         this.s = swerveSubsystem;
         this.goal = goal;
         this.timeOut = timeOut;
@@ -40,8 +42,8 @@ public class FastAlignReefCommand extends Command {
     public void initialize() {
         super.initialize();
 
-        xPID.setGoal(goal.getX());
-        yPID.setGoal(goal.getY());
+        xPID.setGoal(goal.get().getX());
+        yPID.setGoal(goal.get().getY());
         turnPID.setGoal(0);
 
         timer.restart();
@@ -63,7 +65,7 @@ public class FastAlignReefCommand extends Command {
     }
 
     private double angleDiff() {
-        return goal.getRotation().minus(s.getLocalizationPose().getRotation()).getRadians();
+        return s.getLocalizationPose().getRotation().minus(goal.get().getRotation()).getRadians();
     }
 
     @Override

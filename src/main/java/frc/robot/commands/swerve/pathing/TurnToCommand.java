@@ -17,7 +17,7 @@ public class TurnToCommand extends Command {
 
     private Rotation2d goal;
 
-    private PID pid = new PID(Constants.Swerve.cTurnPID, 3.1, 0, Math.toRadians(3), this::angleToTurn);
+    private PID pid = new PID(Swerve.cTurnPID, Math.PI, 0, Math.toRadians(3), this::angleToTurn);
 
     public TurnToCommand(Rotation2d goal, SwerveSubsystem swerveSubsystem) {
         this.s = swerveSubsystem;
@@ -52,7 +52,7 @@ public class TurnToCommand extends Command {
     }
 
     private double angleToTurn() {
-        return goal.minus(s.getLocalizationPose().getRotation()).getRadians();
+        return s.getLocalizationPose().getRotation().minus(goal).getRadians();
     }
 
 }
