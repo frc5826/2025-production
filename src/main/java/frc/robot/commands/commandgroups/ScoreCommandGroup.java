@@ -11,6 +11,7 @@ import frc.robot.commands.coralizer.CoralizerIntakeCommand;
 import frc.robot.commands.coralizer.CoralizerWristCommand;
 import frc.robot.commands.elevator.ElevatorPositionCommand;
 import frc.robot.commands.swerve.drivercontrol.TeleopDriveCommand;
+import frc.robot.commands.swerve.pathing.FastAlignReefCommand;
 import frc.robot.commands.swerve.pathing.MoveTimeCommand;
 import frc.robot.commands.swerve.pathing.PathFindCommand;
 import frc.robot.commands.swerve.pathing.PathToCommand;
@@ -29,17 +30,17 @@ public class ScoreCommandGroup extends SequentialCommandGroup {
 
         addCommands(
 
-                new PathFindCommand(target.getFindOffsetPose(), 0.25, fastConstraints, s)
-                        .onlyIf(target.isFarEnoughToPath()), //TODO test
+//                new PathFindCommand(target.getFindOffsetPose(), 0.25, fastConstraints, s)
+//                        .onlyIf(target.isFarEnoughToPath()), //TODO test
                 Commands.deadline(
                         Commands.parallel(
-                                new PathToCommand(target.getAlignmentOffsetPose(), 0, alignConstraints, s),
+                                new PathToCommand(target.getAlignmentOffsetPose(), 0.25, alignConstraints, s),
                                 new ElevatorPositionCommand(e, () -> target.getLevel().get().height, target.getLevel().get())
                         ),
                         new CoralizerWristCommand(c, () -> target.getLevel().get().angle).onlyWhile(() -> e.getPos() > 0.5)
                 ),
                 Commands.parallel(
-                        new PathToCommand(target.getAlignmentPose(), 0.25, alignConstraints, s),
+                        new FastAlignReefCommand(target.getAlignmentPose(), 0.5, s),
                         new CoralizerWristCommand(c, () -> target.getLevel().get().angle)
                 ),
                 new NuzzleUpCommand(d, s, ca, new AprilTag(0), target.getLeft()),

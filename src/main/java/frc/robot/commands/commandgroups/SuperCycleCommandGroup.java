@@ -38,14 +38,14 @@ public class SuperCycleCommandGroup extends SequentialCommandGroup {
 //                        .onlyIf(target.isFarEnoughToPath()),
                 Commands.deadline(
                         Commands.parallel(
-                                new PathToCommand(target.getAlignmentOffsetPose(), 0, alignConstraints, s),
+                                new PathToCommand(target.getAlignmentOffsetPose(), 0.25, alignConstraints, s),
                                 new ElevatorPositionCommand(e, () -> target.getLevel().get().height, target.getLevel().get())
                         ),
                         new CoralizerWristCommand(c, () -> target.getLevel().get().angle).onlyWhile(() -> e.getPos() > 0.5)
                 ),
                 Commands.parallel(
                         //new PathToCommand(target.getAlignmentPose(), 0.25, alignConstraints, s),
-                        new FastAlignReefCommand(target.getAlignmentPose(), 1, s),
+                        new FastAlignReefCommand(target.getAlignmentPose(), 0.5, s),
                         new CoralizerWristCommand(c, () -> target.getLevel().get().angle)
                 ),
                 new NuzzleUpCommand(d, s, ca, new AprilTag(0), target.getLeft()),
@@ -71,7 +71,6 @@ public class SuperCycleCommandGroup extends SequentialCommandGroup {
                         new TeleopDriveCommand(s),
                         new HomeAlgaeCommandGroup(e, c, sh)
                 )
-
 
         );
 

@@ -30,6 +30,12 @@ public class ShooterSubsystem extends SubsystemBase {
             }
         }
 
+//        if (hasAlgae()) {
+//            setIntakeSpeed(0.9);
+//        } else {
+//            setIntakeSpeed(-0.05);
+//        }
+
         SmartDashboard.putBoolean("coralizer/HasCoral", hasCoral());
         SmartDashboard.putBoolean("coralizer/HasAlgae", hasAlgae());
         SmartDashboard.putNumber("coralizer/IntakeSpeed", intakeMotor.getEncoder().getVelocity());

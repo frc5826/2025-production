@@ -23,14 +23,12 @@ import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.commands.NuzzleUpCommand;
 import frc.robot.commands.autos.*;
 import frc.robot.commands.commandgroups.*;
-import frc.robot.commands.commandgroups.algae.BargeCommandGroup;
-import frc.robot.commands.commandgroups.algae.DealgifyL2CommandGroup;
-import frc.robot.commands.commandgroups.algae.DealgifyL3CommandGroup;
+import frc.robot.commands.commandgroups.algae.*;
 import frc.robot.commands.commandgroups.SourceCommandGroup;
-import frc.robot.commands.commandgroups.algae.HomeAlgaeCommandGroup;
 import frc.robot.commands.commandgroups.dropoff.DropoffCommandGroup;
 import frc.robot.commands.commandgroups.reef.*;
 import frc.robot.commands.coralizer.CoralizerIntakeCommand;
+import frc.robot.commands.coralizer.HoldAlgaeCommand;
 import frc.robot.commands.swerve.drivercontrol.CrabWalkCommand;
 import frc.robot.commands.swerve.drivercontrol.DriveButtonCommand;
 import frc.robot.commands.swerve.pathing.*;
@@ -137,16 +135,18 @@ public class RobotContainer {
 
         //TODO bind align source to xbox buttons and make it so its only the robot angle that gets adjusted
         //TODO test to see if this works
-        new Trigger(cXbox::getRightBumperButton).whileTrue(new TurnToCommand(BluePositions.coralStationRB.getRotation().minus(new Rotation2d(Math.PI)), swerveSubsystem));
-        new Trigger(cXbox::getLeftBumperButton).whileTrue(new TurnToCommand(BluePositions.coralStationLB.getRotation().minus(new Rotation2d(Math.PI)), swerveSubsystem));
+        new Trigger(cXbox::getRightBumperButton).whileTrue(new TurnToCommand(FieldOrientation.getOrientation().getCoralStationRB().getRotation(), swerveSubsystem));
+        new Trigger(cXbox::getLeftBumperButton).whileTrue(new TurnToCommand(FieldOrientation.getOrientation().getCoralStationLB().getRotation(), swerveSubsystem));
 
         new Trigger(() -> cXbox.getAButton() && !cXbox.getBButton()).whileTrue(new ScoreCommandGroup(reefTargeting, swerveSubsystem, elevatorSubsystem, coralizerSubsystem, distanceSubsystem, cameraSubsystem, shooterSubsystem));
         new Trigger(cXbox::getXButton).whileTrue(new FastAlignReefCommand(reefTargeting.getAlignmentPose(), 2.5, swerveSubsystem));
         new Trigger(() -> cXbox.getBButton() && !cXbox.getAButton()).onTrue(new ReefCommand(reefTargeting, elevatorSubsystem, coralizerSubsystem));
         new Trigger(cXbox::getYButton).whileTrue(new DealgCommandGroup(reefTargeting, swerveSubsystem, elevatorSubsystem, coralizerSubsystem, shooterSubsystem));
-        new Trigger(() -> cXbox.getAButton() && cXbox.getBButton()).whileTrue(new SuperCycleCommandGroup(reefTargeting, swerveSubsystem, elevatorSubsystem, coralizerSubsystem, shooterSubsystem, cameraSubsystem, distanceSubsystem));
+        new Trigger(cXbox::getYButtonReleased).onTrue(new HoldAlgaeCommand(shooterSubsystem));
+        new Trigger(cXbox::getStartButton).whileTrue(new SuperCycleCommandGroup(reefTargeting, swerveSubsystem, elevatorSubsystem, coralizerSubsystem, shooterSubsystem, cameraSubsystem, distanceSubsystem));
+        new Trigger(cXbox::getStartButtonReleased).onTrue(new HoldAlgaeCommand(shooterSubsystem));
         //new Trigger(cXbox::getXButton).whileTrue(new FastAlignReefCommand(() -> swerveSubsystem.getLocalizationPose().plus(new Transform2d(1, 0, new Rotation2d(0))), 1, swerveSubsystem ));
-        //new Trigger(cXbox::getYButton).whileTrue(new NuzzleUpCommand(distanceSubsystem, swerveSubsystem, cameraSubsystem, new AprilTag(1), () -> false));
+        //new Trigger(cXbox::getYButton).whileTrue(new NuzzleUpCommand(distanceSubsystem, swerveSubsystem, cameraSubsystem, new AprilTag(1), () -> false));\
 
         //new Trigger(cXbox::getBButtonPressed).onTrue(new MovingHeightCommandGroup(elevatorSubsystem, coralizerSubsystem));
         //For testing cuz the button board is being poopy
@@ -241,13 +241,16 @@ public class RobotContainer {
         //For Buttons 22-24, Starts at bottom right white button and goes left
         //TODO do we want to keep this manual or make it auto
         //manual
-        new Trigger(() -> cButtonBoard.getButton(22)).whileTrue(new DealgifyL2CommandGroup(elevatorSubsystem, coralizerSubsystem, shooterSubsystem));
-        new Trigger(() -> cButtonBoard.getButton(23)).whileTrue(new DealgifyL3CommandGroup(elevatorSubsystem, coralizerSubsystem, shooterSubsystem));
-        new Trigger(() -> cButtonBoard.getButtonReleased(22)).onTrue(new HomeAlgaeCommandGroup(elevatorSubsystem, coralizerSubsystem, shooterSubsystem));
-        new Trigger(() -> cButtonBoard.getButtonReleased(23)).onTrue(new HomeAlgaeCommandGroup(elevatorSubsystem, coralizerSubsystem, shooterSubsystem));
+//        new Trigger(() -> cButtonBoard.getButton(22)).whileTrue(new DealgifyL2CommandGroup(elevatorSubsystem, coralizerSubsystem, shooterSubsystem));
+//        new Trigger(() -> cButtonBoard.getButton(23)).whileTrue(new DealgifyL3CommandGroup(elevatorSubsystem, coralizerSubsystem, shooterSubsystem));
+//        new Trigger(() -> cButtonBoard.getButtonReleased(22)).onTrue(new HomeAlgaeCommandGroup(elevatorSubsystem, coralizerSubsystem, shooterSubsystem));
+//        new Trigger(() -> cButtonBoard.getButtonReleased(23)).onTrue(new HomeAlgaeCommandGroup(elevatorSubsystem, coralizerSubsystem, shooterSubsystem));
+
+        new Trigger(() -> cButtonBoard.getButtonPressed(22)).onTrue(new ProcessorCommandGroup(swerveSubsystem, elevatorSubsystem, coralizerSubsystem, shooterSubsystem));
+
         //auto
-        //new Trigger(() -> cButtonBoard.getButtonPressed(22)).onTrue(new InstantCommand(() -> reefTargeting.updateLevel(ReefPosition.ReefLevel.ALGL2)));
-        //new Trigger(() -> cButtonBoard.getButtonPressed(23)).onTrue(new InstantCommand(() -> reefTargeting.updateLevel(ReefPosition.ReefLevel.ALGL3)));
+//        new Trigger(() -> cButtonBoard.getButtonPressed(22)).onTrue(new InstantCommand(() -> reefTargeting.updateLevel(ReefPosition.ReefLevel.ALGL2)));
+//        new Trigger(() -> cButtonBoard.getButtonPressed(23)).onTrue(new InstantCommand(() -> reefTargeting.updateLevel(ReefPosition.ReefLevel.ALGL3)));
         new Trigger(() -> cButtonBoard.getButton(24)).whileTrue(new CoralizerIntakeCommand(shooterSubsystem, CoralizerIntakeCommand.IntakeDirection.IN));
     }
 
