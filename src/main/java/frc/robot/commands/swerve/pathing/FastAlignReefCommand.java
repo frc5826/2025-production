@@ -19,8 +19,8 @@ public class FastAlignReefCommand extends Command {
     private Timer timer;
     private double timeOut;
 
-    private PID xPID = new PID(3, 0, 0, 1.5, 0.1, 0.01, () -> s.getLocalizationPose().getX());
-    private PID yPID = new PID(3, 0, 0, 1.5, 0.1, 0.01, () -> s.getLocalizationPose().getY());
+    private PID xPID = new PID(3, 0, 0, 1.5, 0.1, 0.02, () -> s.getLocalizationPose().getX());
+    private PID yPID = new PID(3, 0, 0, 1.5, 0.1, 0.02, () -> s.getLocalizationPose().getY());
     private PID turnPID = new PID(Constants.Swerve.cTurnPID, 4, 0, Math.toRadians(3), this::angleDiff);
 
     private boolean isFinished;

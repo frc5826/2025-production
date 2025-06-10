@@ -95,4 +95,38 @@ public class ReefTargeting {
         return () -> s.getLocalizationPose().getTranslation().getDistance(getAlignmentOffsetPose().get().getTranslation()) > 1;
     }
 
+    //Sets the target to the dealg version based off the selected pos
+    public void getAlgaeTarget() {
+
+        if (pose == FieldOrientation.getOrientation().getReefA() || pose == FieldOrientation.getOrientation().getReefB()) {
+            pose = FieldOrientation.getOrientation().getReefSideAB();
+            level = ReefPosition.ReefLevel.ALGL2;
+        }
+        else if (pose == FieldOrientation.getOrientation().getReefC() || pose == FieldOrientation.getOrientation().getReefD()) {
+            pose = FieldOrientation.getOrientation().getReefSideCD();
+            level = ReefPosition.ReefLevel.ALGL3;
+        }
+        else if (pose == FieldOrientation.getOrientation().getReefE() || pose == FieldOrientation.getOrientation().getReefF()) {
+            pose = FieldOrientation.getOrientation().getReefSideEF();
+            level = ReefPosition.ReefLevel.ALGL2;
+        }
+        else if (pose == FieldOrientation.getOrientation().getReefG() || pose == FieldOrientation.getOrientation().getReefH()) {
+            pose = FieldOrientation.getOrientation().getReefSideGH();
+            level = ReefPosition.ReefLevel.ALGL3;
+        }
+        else if (pose == FieldOrientation.getOrientation().getReefI() || pose == FieldOrientation.getOrientation().getReefJ()) {
+            pose = FieldOrientation.getOrientation().getReefSideIJ();
+            level = ReefPosition.ReefLevel.ALGL2;
+        }
+        else if (pose == FieldOrientation.getOrientation().getReefK() || pose == FieldOrientation.getOrientation().getReefL()) {
+            pose = FieldOrientation.getOrientation().getReefSideKL();
+            level = ReefPosition.ReefLevel.ALGL3;
+        }
+        else {
+            pose = FieldOrientation.getOrientation().getReefSideAB();
+            level = ReefPosition.ReefLevel.ALGL2;
+        }
+
+    }
+
 }

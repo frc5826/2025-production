@@ -20,6 +20,7 @@ import edu.wpi.first.wpilibj.smartdashboard.Field2d;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.Commands;
 import frc.robot.commands.NuzzleUpCommand;
 import frc.robot.commands.autos.*;
 import frc.robot.commands.commandgroups.*;
@@ -138,13 +139,17 @@ public class RobotContainer {
         new Trigger(cXbox::getRightBumperButton).whileTrue(new TurnToCommand(FieldOrientation.getOrientation().getCoralStationRB().getRotation(), swerveSubsystem));
         new Trigger(cXbox::getLeftBumperButton).whileTrue(new TurnToCommand(FieldOrientation.getOrientation().getCoralStationLB().getRotation(), swerveSubsystem));
 
-        new Trigger(() -> cXbox.getAButton() && !cXbox.getBButton()).whileTrue(new ScoreCommandGroup(reefTargeting, swerveSubsystem, elevatorSubsystem, coralizerSubsystem, distanceSubsystem, cameraSubsystem, shooterSubsystem));
+        new Trigger(cXbox::getAButton).whileTrue(new ScoreCommandGroup(reefTargeting, swerveSubsystem, elevatorSubsystem, coralizerSubsystem, distanceSubsystem, cameraSubsystem, shooterSubsystem));
+        
         new Trigger(cXbox::getXButton).whileTrue(new FastAlignReefCommand(reefTargeting.getAlignmentPose(), 2.5, swerveSubsystem));
-        new Trigger(() -> cXbox.getBButton() && !cXbox.getAButton()).onTrue(new ReefCommand(reefTargeting, elevatorSubsystem, coralizerSubsystem));
+
+        new Trigger(cXbox::getBButton).onTrue(new ReefCommand(reefTargeting, elevatorSubsystem, coralizerSubsystem));
+
         new Trigger(cXbox::getYButton).whileTrue(new DealgCommandGroup(reefTargeting, swerveSubsystem, elevatorSubsystem, coralizerSubsystem, shooterSubsystem));
-        new Trigger(cXbox::getYButtonReleased).onTrue(new HoldAlgaeCommand(shooterSubsystem));
+        new Trigger(cXbox::getYButtonReleased).onTrue(Commands.sequence(new HomeAlgaeCommandGroup(elevatorSubsystem, coralizerSubsystem, shooterSubsystem), new HoldAlgaeCommand(shooterSubsystem)));
+
         new Trigger(cXbox::getStartButton).whileTrue(new SuperCycleCommandGroup(reefTargeting, swerveSubsystem, elevatorSubsystem, coralizerSubsystem, shooterSubsystem, cameraSubsystem, distanceSubsystem));
-        new Trigger(cXbox::getStartButtonReleased).onTrue(new HoldAlgaeCommand(shooterSubsystem));
+        new Trigger(cXbox::getStartButtonReleased).onTrue(Commands.sequence(new HomeAlgaeCommandGroup(elevatorSubsystem, coralizerSubsystem, shooterSubsystem), new HoldAlgaeCommand(shooterSubsystem)));
         //new Trigger(cXbox::getXButton).whileTrue(new FastAlignReefCommand(() -> swerveSubsystem.getLocalizationPose().plus(new Transform2d(1, 0, new Rotation2d(0))), 1, swerveSubsystem ));
         //new Trigger(cXbox::getYButton).whileTrue(new NuzzleUpCommand(distanceSubsystem, swerveSubsystem, cameraSubsystem, new AprilTag(1), () -> false));\
 

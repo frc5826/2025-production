@@ -22,19 +22,17 @@ public class DealgCommandGroup extends SequentialCommandGroup {
 
     public DealgCommandGroup(ReefTargeting target, SwerveSubsystem s, ElevatorSubsystem e, CoralizerSubsystem c, ShooterSubsystem sh) {
 
-        PathConstraints constraints = new PathConstraints(1, 1, Math.PI * 1.5, Math.PI * 2);
-
-        ReefTargeting dealgTarget = getDealgTarget(target.getTarget().getPosition(), s);
+        PathConstraints constraints = new PathConstraints(1.25, 1.25, Math.PI * 1.5, Math.PI * 2);
 
         addCommands(
-
+                new InstantCommand(target::getAlgaeTarget),
                 Commands.parallel(
-                        new PathToCommand(dealgTarget.getAlignmentOffsetPose().get(), 0.05, constraints, s),
-                        new ElevatorPositionCommand(e, dealgTarget.getTarget().getLevel().height, target.getTarget().getLevel()),
-                        new CoralizerWristCommand(c, dealgTarget.getTarget().getLevel().angle)
+                        new PathToCommand(target.getAlignmentOffsetPose().get(), 0.05, constraints, s),
+                        new ElevatorPositionCommand(e, target.getTarget().getLevel().height, target.getTarget().getLevel()),
+                        new CoralizerWristCommand(c, target.getTarget().getLevel().angle)
                 ),
                 Commands.parallel(
-                        new FastAlignReefCommand(dealgTarget.getAlignmentPose(), 1, s),
+                        new FastAlignReefCommand(target.getAlignmentPose(), 1, s),
                         new InstantCommand(() -> sh.setIntakeSpeed(0.9))
                 ),
                 Commands.parallel(
@@ -49,35 +47,6 @@ public class DealgCommandGroup extends SequentialCommandGroup {
 
         );
 
-    }
-
-    private ReefTargeting getDealgTarget(Pose2d coralTarget, SwerveSubsystem swerveSubsystem) {
-        ReefTargeting algTarget = new ReefTargeting(swerveSubsystem);
-
-        if (coralTarget == FieldOrientation.getOrientation().getReefA() || coralTarget == FieldOrientation.getOrientation().getReefB()) {
-            algTarget.updatePose(FieldOrientation.getOrientation().getReefSideAB());
-            algTarget.updateLevel(ReefPosition.ReefLevel.ALGL2);
-        } else if (coralTarget == FieldOrientation.getOrientation().getReefC() || coralTarget == FieldOrientation.getOrientation().getReefD()) {
-            algTarget.updatePose(FieldOrientation.getOrientation().getReefSideCD());
-            algTarget.updateLevel(ReefPosition.ReefLevel.ALGL3);
-        } else if (coralTarget == FieldOrientation.getOrientation().getReefE() || coralTarget == FieldOrientation.getOrientation().getReefF()) {
-            algTarget.updatePose(FieldOrientation.getOrientation().getReefSideEF());
-            algTarget.updateLevel(ReefPosition.ReefLevel.ALGL2);
-        } else if (coralTarget == FieldOrientation.getOrientation().getReefG() || coralTarget == FieldOrientation.getOrientation().getReefH()) {
-            algTarget.updatePose(FieldOrientation.getOrientation().getReefSideGH());
-            algTarget.updateLevel(ReefPosition.ReefLevel.ALGL3);
-        } else if (coralTarget == FieldOrientation.getOrientation().getReefI() || coralTarget == FieldOrientation.getOrientation().getReefJ()) {
-            algTarget.updatePose(FieldOrientation.getOrientation().getReefSideIJ());
-            algTarget.updateLevel(ReefPosition.ReefLevel.ALGL2);
-        } else if (coralTarget == FieldOrientation.getOrientation().getReefK() || coralTarget == FieldOrientation.getOrientation().getReefL()) {
-            algTarget.updatePose(FieldOrientation.getOrientation().getReefSideKL());
-            algTarget.updateLevel(ReefPosition.ReefLevel.ALGL3);
-        } else {
-            algTarget.updatePose(FieldOrientation.getOrientation().getReefSideAB());
-            algTarget.updateLevel(ReefPosition.ReefLevel.ALGL2);
-        }
-
-        return algTarget;
     }
 
 }
