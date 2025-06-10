@@ -30,6 +30,7 @@ import frc.robot.commands.commandgroups.dropoff.DropoffCommandGroup;
 import frc.robot.commands.commandgroups.reef.*;
 import frc.robot.commands.coralizer.CoralizerIntakeCommand;
 import frc.robot.commands.coralizer.HoldAlgaeCommand;
+import frc.robot.commands.elevator.ElevatorPositionCommand;
 import frc.robot.commands.swerve.drivercontrol.CrabWalkCommand;
 import frc.robot.commands.swerve.drivercontrol.DriveButtonCommand;
 import frc.robot.commands.swerve.pathing.*;
@@ -207,12 +208,12 @@ public class RobotContainer {
                 .alongWith(new InstantCommand(() -> reefTargeting.setLeft(true))));
 
         //TODO check if the hitting two buttons thing works
-        new Trigger(() -> cButtonBoard.getButton(0) && cButtonBoard.getButton(1)).onTrue(new InstantCommand(() -> reefTargeting.updatePose(FieldOrientation.getOrientation().getReefSideGH())));
-        new Trigger(() -> cButtonBoard.getButton(2) && cButtonBoard.getButton(3)).onTrue(new InstantCommand(() -> reefTargeting.updatePose(FieldOrientation.getOrientation().getReefSideEF())));
-        new Trigger(() -> cButtonBoard.getButton(4) && cButtonBoard.getButton(5)).onTrue(new InstantCommand(() -> reefTargeting.updatePose(FieldOrientation.getOrientation().getReefSideCD())));
-        new Trigger(() -> cButtonBoard.getButton(6) && cButtonBoard.getButton(7)).onTrue(new InstantCommand(() -> reefTargeting.updatePose(FieldOrientation.getOrientation().getReefSideAB())));
-        new Trigger(() -> cButtonBoard.getButton(8) && cButtonBoard.getButton(9)).onTrue(new InstantCommand(() -> reefTargeting.updatePose(FieldOrientation.getOrientation().getReefSideKL())));
-        new Trigger(() -> cButtonBoard.getButton(10) && cButtonBoard.getButton(11)).onTrue(new InstantCommand(() -> reefTargeting.updatePose(FieldOrientation.getOrientation().getReefSideIJ())));
+//        new Trigger(() -> cButtonBoard.getButton(0) && cButtonBoard.getButton(1)).onTrue(new InstantCommand(() -> reefTargeting.updatePose(FieldOrientation.getOrientation().getReefSideGH())));
+//        new Trigger(() -> cButtonBoard.getButton(2) && cButtonBoard.getButton(3)).onTrue(new InstantCommand(() -> reefTargeting.updatePose(FieldOrientation.getOrientation().getReefSideEF())));
+//        new Trigger(() -> cButtonBoard.getButton(4) && cButtonBoard.getButton(5)).onTrue(new InstantCommand(() -> reefTargeting.updatePose(FieldOrientation.getOrientation().getReefSideCD())));
+//        new Trigger(() -> cButtonBoard.getButton(6) && cButtonBoard.getButton(7)).onTrue(new InstantCommand(() -> reefTargeting.updatePose(FieldOrientation.getOrientation().getReefSideAB())));
+//        new Trigger(() -> cButtonBoard.getButton(8) && cButtonBoard.getButton(9)).onTrue(new InstantCommand(() -> reefTargeting.updatePose(FieldOrientation.getOrientation().getReefSideKL())));
+//        new Trigger(() -> cButtonBoard.getButton(10) && cButtonBoard.getButton(11)).onTrue(new InstantCommand(() -> reefTargeting.updatePose(FieldOrientation.getOrientation().getReefSideIJ())));
 
         //testing new align
         //new Trigger(() -> cButtonBoard.getButton(0)).whileTrue(new AlignReefCommand(FieldOrientation.getOrientation().getReefH(), FieldOrientation.getOrientation().getReefSideGH(), swerveSubsystem, elevatorSubsystem, coralizerSubsystem));
@@ -250,6 +251,7 @@ public class RobotContainer {
 //        new Trigger(() -> cButtonBoard.getButtonReleased(23)).onTrue(new HomeAlgaeCommandGroup(elevatorSubsystem, coralizerSubsystem, shooterSubsystem));
 
         new Trigger(() -> cButtonBoard.getButtonPressed(22)).onTrue(new ProcessorCommandGroup(swerveSubsystem, elevatorSubsystem, coralizerSubsystem, shooterSubsystem));
+        new Trigger(() -> cButtonBoard.getButtonPressed(23)).onTrue(new MovingHeightCommandGroup(elevatorSubsystem, coralizerSubsystem));
 
         //auto
 //        new Trigger(() -> cButtonBoard.getButtonPressed(22)).onTrue(new InstantCommand(() -> reefTargeting.updateLevel(ReefPosition.ReefLevel.ALGL2)));

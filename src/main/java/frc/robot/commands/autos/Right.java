@@ -55,7 +55,7 @@ public class Right extends SequentialCommandGroup {
                         new CoralizerWristCommand(c, Constants.Elevator.L4Angle)
                 ),
                 //new PathToCommand(() -> MathHelper.offsetPoseReverse(FieldOrientation.getOrientation().getReefE(), (Constants.BluePositions.cRobotLength / 2) - 0.03), 0.25, alignConstraints, s), //Align to reef
-                new FastAlignReefCommand(() -> MathHelper.offsetPoseReverse(FieldOrientation.getOrientation().getReefE(), Constants.BluePositions.cRobotLength / 2), 1, s),
+                new FastAlignReefCommand(() -> MathHelper.offsetPoseReverse(FieldOrientation.getOrientation().getReefE(), Constants.BluePositions.cRobotLength / 2), 1, s), //TODO see if we need to add the -0.03 to this
                 new NuzzleUpCommand(d, s, ca, new AprilTag(0), () -> true), //Align to reef
                 new CoralizerIntakeCommand(sh, CoralizerIntakeCommand.IntakeDirection.OUT) //Drop
         );
