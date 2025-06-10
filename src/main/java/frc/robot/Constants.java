@@ -5,6 +5,7 @@
 
 package frc.robot;
 
+import com.pathplanner.lib.path.PathConstraints;
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.Joystick;
 import com.pathplanner.lib.config.PIDConstants;
@@ -12,7 +13,10 @@ import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj.XboxController;
 import frc.robot.math.MathHelper;
+import frc.robot.math.PID;
 import frc.robot.subsystems.ButtonBoard;
+
+import java.nio.file.Path;
 
 /**
  * The Constants class provides a convenient place for teams to hold robot-wide numerical or boolean
@@ -122,11 +126,13 @@ public final class Constants
 
     public static class  Swerve {
         //public static final double cMaxVelocity = 5.05968; //DON'T CHANGE!!!!!!!!!!!!!!!!!!!!!!!
-        public static final double cMaxVelocity = 4.5;
+        public static final double cMaxVelocity = 4.5; //bruh we changed it
         public static final double cMaxAngularVelocity = 5;
 
         public static final PIDConstants cDrivePID = new PIDConstants(0.8, 0, 0);
         public static final PIDConstants cTurnPID = new PIDConstants(4, 0, 0);
+
+        public static final PathConstraints cAlignConstraints = new PathConstraints(1.25, 1.25, Math.PI * 1.5, Math.PI * 2);
 
         public static final double cHighSpeedMultiplier = 1;
         public static final double cLowSpeedMultiplier = 0.6;

@@ -134,13 +134,11 @@ public class RobotContainer {
         //new Trigger(cXbox::getRightBumperButton).whileTrue(new DriveButtonCommand(new ChassisSpeeds(0, 0, -0.7), swerveSubsystem));
         //new Trigger(cXbox::getLeftBumperButton).whileTrue(new DriveButtonCommand(new ChassisSpeeds(0, 0, 0.7), swerveSubsystem));
 
-        //TODO bind align source to xbox buttons and make it so its only the robot angle that gets adjusted
-        //TODO test to see if this works
         new Trigger(cXbox::getRightBumperButton).whileTrue(new TurnToCommand(FieldOrientation.getOrientation().getCoralStationRB().getRotation(), swerveSubsystem));
         new Trigger(cXbox::getLeftBumperButton).whileTrue(new TurnToCommand(FieldOrientation.getOrientation().getCoralStationLB().getRotation(), swerveSubsystem));
 
         new Trigger(cXbox::getAButton).whileTrue(new ScoreCommandGroup(reefTargeting, swerveSubsystem, elevatorSubsystem, coralizerSubsystem, distanceSubsystem, cameraSubsystem, shooterSubsystem));
-        
+
         new Trigger(cXbox::getXButton).whileTrue(new FastAlignReefCommand(reefTargeting.getAlignmentPose(), 2.5, swerveSubsystem));
 
         new Trigger(cXbox::getBButton).onTrue(new ReefCommand(reefTargeting, elevatorSubsystem, coralizerSubsystem));

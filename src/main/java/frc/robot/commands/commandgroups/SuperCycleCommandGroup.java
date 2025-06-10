@@ -27,7 +27,7 @@ public class SuperCycleCommandGroup extends SequentialCommandGroup {
 
     public SuperCycleCommandGroup(ReefTargeting target, SwerveSubsystem s, ElevatorSubsystem e, CoralizerSubsystem c, ShooterSubsystem sh, CameraSubsystem ca, DistanceSubsystem d) {
 
-        PathConstraints alignConstraints = new PathConstraints(1.25, 1.25, Math.PI * 1.5, Math.PI * 2);
+        PathConstraints alignConstraints = Constants.Swerve.cAlignConstraints;
         PathConstraints fastConstraints = new PathConstraints(3, 3, Math.PI * 2, Math.PI * 3);
 
         addCommands(

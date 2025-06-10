@@ -5,6 +5,7 @@ import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
+import frc.robot.Constants;
 import frc.robot.commands.NuzzleUpCommand;
 import frc.robot.commands.commandgroups.reef.ReefCommand;
 import frc.robot.commands.coralizer.CoralizerIntakeCommand;
@@ -25,7 +26,7 @@ public class ScoreCommandGroup extends SequentialCommandGroup {
 
     public ScoreCommandGroup(ReefTargeting target, SwerveSubsystem s, ElevatorSubsystem e, CoralizerSubsystem c, DistanceSubsystem d, CameraSubsystem ca, ShooterSubsystem sh) {
 
-        PathConstraints alignConstraints = new PathConstraints(1.25, 1.25, Math.PI * 1.5, Math.PI * 2);
+        PathConstraints alignConstraints = Constants.Swerve.cAlignConstraints;
         PathConstraints fastConstraints = new PathConstraints(3, 3, Math.PI * 2, Math.PI * 3);
 
         addCommands(

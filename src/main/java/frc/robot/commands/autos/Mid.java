@@ -24,7 +24,7 @@ public class Mid extends SequentialCommandGroup {
 
     public Mid(SwerveSubsystem s, ElevatorSubsystem e, CoralizerSubsystem c, DistanceSubsystem d, CameraSubsystem ca, ShooterSubsystem sh) {
 
-        PathConstraints alignConstraints = new PathConstraints(1.5, 1.5, Math.PI * 1.5, Math.PI * 2);
+        PathConstraints alignConstraints = Constants.Swerve.cAlignConstraints;
 
         addCommands(
 

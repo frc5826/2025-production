@@ -6,6 +6,7 @@ import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
+import frc.robot.Constants;
 import frc.robot.commands.commandgroups.algae.HomeAlgaeCommandGroup;
 import frc.robot.commands.coralizer.CoralizerIntakeCommand;
 import frc.robot.commands.coralizer.CoralizerWristCommand;
@@ -22,7 +23,7 @@ public class DealgCommandGroup extends SequentialCommandGroup {
 
     public DealgCommandGroup(ReefTargeting target, SwerveSubsystem s, ElevatorSubsystem e, CoralizerSubsystem c, ShooterSubsystem sh) {
 
-        PathConstraints constraints = new PathConstraints(1.25, 1.25, Math.PI * 1.5, Math.PI * 2);
+        PathConstraints constraints = Constants.Swerve.cAlignConstraints;
 
         addCommands(
                 new InstantCommand(target::getAlgaeTarget),
