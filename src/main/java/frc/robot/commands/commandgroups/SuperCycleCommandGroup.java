@@ -40,7 +40,7 @@ public class SuperCycleCommandGroup extends SequentialCommandGroup {
                 ),
                 Commands.parallel(
                         //new PathToCommand(target.getAlignmentPose(), 0.25, alignConstraints, s),
-                        new FastAlignReefCommand(target.getAlignmentPose(), 1, s), //TODO is this finishing or timing out?
+                        new FastAlignReefCommand(() -> target.getAlignmentPose().get(), 1, s), //TODO is this finishing or timing out?
                         new CoralizerWristCommand(c, () -> target.getLevel().get().angle)
                 ),
                 new NuzzleUpCommand(d, s, ca, new AprilTag(0), target.getLeft()),
@@ -48,15 +48,15 @@ public class SuperCycleCommandGroup extends SequentialCommandGroup {
                 new InstantCommand(target::getAlgaeTarget),
                 Commands.deadline(
                         new MoveTimeCommand(0.35, new ChassisSpeeds(-1, 0, 0), true, s),
-                        new ElevatorPositionCommand(e, target.getTarget().getLevel().height, target.getTarget().getLevel())
+                        new ElevatorPositionCommand(e, () -> target.getTarget().getLevel().height, target.getTarget().getLevel())
                 ),
                 Commands.parallel(
-                        new FastAlignReefCommand(target.getAlignmentOffsetPose(), 1.5, s),
-                        new ElevatorPositionCommand(e, target.getTarget().getLevel().height, target.getTarget().getLevel()),
-                        new CoralizerWristCommand(c, target.getTarget().getLevel().angle)
+                        new FastAlignReefCommand(() -> target.getAlignmentOffsetPose().get(), 1.5, s),
+                        new ElevatorPositionCommand(e, () -> target.getTarget().getLevel().height, target.getTarget().getLevel()),
+                        new CoralizerWristCommand(c, () -> target.getTarget().getLevel().angle)
                 ),
                 Commands.deadline(
-                        new FastAlignReefCommand(target.getAlignmentPose(), 1.5, s),
+                        new FastAlignReefCommand(() -> target.getAlignmentPose().get(), 1.5, s),
                         new InstantCommand(() -> sh.setIntakeSpeed(0.9))
                 ),
                 Commands.deadline(

@@ -292,23 +292,23 @@ public class RobotContainer {
     }
 
     private void setupFieldTab() {
-        ShuffleboardTab tab = Shuffleboard.getTab("field");
-
-        tab.add("PDH", new PowerDistribution(1, PowerDistribution.ModuleType.kRev));
-
-        field = new Field2d();
-        tab.add(field)
-                .withPosition(4,0)
-                .withSize(4,3);
-
-        //Filtered position
-        ShuffleboardLayout position = tab.getLayout("Filtered position", BuiltInLayouts.kList)
-                .withPosition(2,0)
-                .withSize(2,3);
-
-        position.addDouble("Robot X", ()-> localization.getPose().getX());
-        position.addDouble("Robot Y", ()-> localization.getPose().getY());
-        position.addDouble("Robot rotation", ()-> localization.getPose().getRotation().getDegrees());
+//        ShuffleboardTab tab = Shuffleboard.getTab("field");
+//
+//        tab.add("PDH", new PowerDistribution(1, PowerDistribution.ModuleType.kRev));
+//
+//        field = new Field2d();
+//        tab.add(field)
+//                .withPosition(4,0)
+//                .withSize(4,3);
+//
+//        //Filtered position
+//        ShuffleboardLayout position = tab.getLayout("Filtered position", BuiltInLayouts.kList)
+//                .withPosition(2,0)
+//                .withSize(2,3);
+//
+//        position.addDouble("Robot X", ()-> localization.getPose().getX());
+//        position.addDouble("Robot Y", ()-> localization.getPose().getY());
+//        position.addDouble("Robot rotation", ()-> localization.getPose().getRotation().getDegrees());
     }
 
     public void testInit() {

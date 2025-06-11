@@ -98,34 +98,47 @@ public class ReefTargeting {
     //Sets the target to the dealg version based off the selected pos
     public void getAlgaeTarget() {
 
-        if (pose == FieldOrientation.getOrientation().getReefA() || pose == FieldOrientation.getOrientation().getReefB()) {
+        System.out.println("setting to dealg pos's");
+
+        if (pose.equals(FieldOrientation.getOrientation().getReefA()) || pose.equals(FieldOrientation.getOrientation().getReefB())) {
             pose = FieldOrientation.getOrientation().getReefSideAB();
-            level = ReefPosition.ReefLevel.ALGL2;
+            level = ReefPosition.ReefLevel.ALGL3;
+            target = new ReefPosition(this.pose, this.level);
         }
-        else if (pose == FieldOrientation.getOrientation().getReefC() || pose == FieldOrientation.getOrientation().getReefD()) {
+        else if (pose.equals(FieldOrientation.getOrientation().getReefC()) || pose.equals(FieldOrientation.getOrientation().getReefD())) {
             pose = FieldOrientation.getOrientation().getReefSideCD();
-            level = ReefPosition.ReefLevel.ALGL3;
+            level = ReefPosition.ReefLevel.ALGL2;
+            target = new ReefPosition(this.pose, this.level);
         }
-        else if (pose == FieldOrientation.getOrientation().getReefE() || pose == FieldOrientation.getOrientation().getReefF()) {
+        else if (pose.equals(FieldOrientation.getOrientation().getReefE()) || pose.equals(FieldOrientation.getOrientation().getReefF())) {
             pose = FieldOrientation.getOrientation().getReefSideEF();
-            level = ReefPosition.ReefLevel.ALGL2;
+            level = ReefPosition.ReefLevel.ALGL3;
+            target = new ReefPosition(this.pose, this.level);
         }
-        else if (pose == FieldOrientation.getOrientation().getReefG() || pose == FieldOrientation.getOrientation().getReefH()) {
+        else if (pose.equals(FieldOrientation.getOrientation().getReefG()) || pose.equals(FieldOrientation.getOrientation().getReefH())) {
             pose = FieldOrientation.getOrientation().getReefSideGH();
-            level = ReefPosition.ReefLevel.ALGL3;
-        }
-        else if (pose == FieldOrientation.getOrientation().getReefI() || pose == FieldOrientation.getOrientation().getReefJ()) {
-            pose = FieldOrientation.getOrientation().getReefSideIJ();
             level = ReefPosition.ReefLevel.ALGL2;
+            target = new ReefPosition(this.pose, this.level);
         }
-        else if (pose == FieldOrientation.getOrientation().getReefK() || pose == FieldOrientation.getOrientation().getReefL()) {
-            pose = FieldOrientation.getOrientation().getReefSideKL();
+        else if (pose.equals(FieldOrientation.getOrientation().getReefI()) || pose.equals(FieldOrientation.getOrientation().getReefJ())) {
+            pose = FieldOrientation.getOrientation().getReefSideIJ();
             level = ReefPosition.ReefLevel.ALGL3;
+            target = new ReefPosition(this.pose, this.level);
+        }
+        else if (pose.equals(FieldOrientation.getOrientation().getReefK()) || pose.equals(FieldOrientation.getOrientation().getReefL())) {
+            pose = FieldOrientation.getOrientation().getReefSideKL();
+            level = ReefPosition.ReefLevel.ALGL2;
+            target = new ReefPosition(this.pose, this.level);
         }
         else {
             pose = FieldOrientation.getOrientation().getReefSideAB();
-            level = ReefPosition.ReefLevel.ALGL2;
+            level = ReefPosition.ReefLevel.ALGL3;
+            target = new ReefPosition(this.pose, this.level);
+            System.out.println("GOT TO ELSE :(");
         }
+
+        System.out.println("Level: " + level);
+        System.out.println("Pose: " + pose);
 
     }
 

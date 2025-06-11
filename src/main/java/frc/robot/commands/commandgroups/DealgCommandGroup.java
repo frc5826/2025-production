@@ -28,12 +28,12 @@ public class DealgCommandGroup extends SequentialCommandGroup {
         addCommands(
                 new InstantCommand(target::getAlgaeTarget),
                 Commands.parallel(
-                        new PathToCommand(target.getAlignmentOffsetPose().get(), 0.05, constraints, s),
-                        new ElevatorPositionCommand(e, target.getTarget().getLevel().height, target.getTarget().getLevel()),
-                        new CoralizerWristCommand(c, target.getTarget().getLevel().angle)
+                        new PathToCommand(() -> target.getAlignmentOffsetPose().get(), 0.2, constraints, s),
+                        new ElevatorPositionCommand(e, () -> target.getTarget().getLevel().height, target.getTarget().getLevel()),
+                        new CoralizerWristCommand(c, () -> target.getTarget().getLevel().angle)
                 ),
                 Commands.parallel(
-                        new FastAlignReefCommand(target.getAlignmentPose(), 1, s),
+                        new FastAlignReefCommand(() -> target.getAlignmentPose().get(), 1, s),
                         new InstantCommand(() -> sh.setIntakeSpeed(0.9))
                 ),
                 Commands.parallel(

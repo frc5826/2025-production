@@ -3,14 +3,16 @@ package frc.robot.commands.swerve.pathing;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.wpilibj.Timer;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.Constants;
+import frc.robot.commands.LoggedCommand;
 import frc.robot.math.PID;
 import frc.robot.subsystems.SwerveSubsystem;
 
 import java.util.function.Supplier;
 
-public class FastAlignReefCommand extends Command {
+public class FastAlignReefCommand extends LoggedCommand {
 
     private SwerveSubsystem s;
 
@@ -19,8 +21,8 @@ public class FastAlignReefCommand extends Command {
     private Timer timer;
     private double timeOut;
 
-    private PID xPID = new PID(3, 0, 0, 1.5, 0.1, 0.02, () -> s.getLocalizationPose().getX());
-    private PID yPID = new PID(3, 0, 0, 1.5, 0.1, 0.02, () -> s.getLocalizationPose().getY());
+    private PID xPID = new PID(3, 0, 0, 1.5, 0.2, 0.03, () -> s.getLocalizationPose().getX());
+    private PID yPID = new PID(3, 0, 0, 1.5, 0.2, 0.03, () -> s.getLocalizationPose().getY());
     private PID turnPID = new PID(Constants.Swerve.cTurnPID, 4, 0, Math.toRadians(3), this::angleDiff);
 
     private boolean isFinished;
@@ -47,6 +49,9 @@ public class FastAlignReefCommand extends Command {
         turnPID.setGoal(0);
 
         timer.restart();
+
+//        SmartDashboard.putData("PID/x",xPID);
+//        SmartDashboard.putData("PID/y",yPID);
     }
 
     @Override
@@ -59,8 +64,18 @@ public class FastAlignReefCommand extends Command {
 
         s.driveFieldOriented(new ChassisSpeeds(xPID.getOutput(), yPID.getOutput(), turnPID.getOutput()));
 
-        if ((xPID.getOutput() == 0 && yPID.getOutput() == 0 && turnPID.getOutput() == 0) || timer.get() > timeOut) {
+//        if ((Math.abs(xPID.getOutput()) < 0.05 && Math.abs(yPID.getOutput()) < 0.05 && Math.abs(turnPID.getOutput()) < 0.05) || timer.get() > timeOut) {
+//            isFinished = true;
+//        }
+
+        if (xPID.getDeadband() > Math.abs(xPID.getError()) && yPID.getDeadband() > Math.abs(yPID.getError())) {
             isFinished = true;
+            System.out.println("Fast align ended at target");
+        }
+
+        if (timer.get() > timeOut) {
+            isFinished = true;
+            System.out.println("Fast align timed out");
         }
     }
 

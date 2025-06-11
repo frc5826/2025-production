@@ -54,8 +54,8 @@ public class Left extends SequentialCommandGroup {
                         new ElevatorPositionCommand(e, Constants.Elevator.L4Height, ReefPosition.ReefLevel.L4),
                         new CoralizerWristCommand(c, Constants.Elevator.L4Angle)
                 ),
-                //new PathToCommand(() -> MathHelper.offsetPoseReverse(FieldOrientation.getOrientation().getReefJ(), Constants.BluePositions.cRobotLength / 2), 0.25, alignConstraints, s), //Align to reef,
-                new FastAlignReefCommand(() -> MathHelper.offsetPoseReverse(FieldOrientation.getOrientation().getReefJ(), Constants.BluePositions.cRobotLength / 2), 1, s),
+                new PathToCommand(() -> MathHelper.offsetPoseReverse(FieldOrientation.getOrientation().getReefJ(), (Constants.BluePositions.cRobotLength / 2) - 0.03), 0.25, alignConstraints, s), //Align to reef,
+                //new FastAlignReefCommand(() -> MathHelper.offsetPoseReverse(FieldOrientation.getOrientation().getReefJ(), Constants.BluePositions.cRobotLength / 2), 1, s),
                 new NuzzleUpCommand(d, s, ca, new AprilTag(0), () -> false), //Align to reef
                 new CoralizerIntakeCommand(sh, CoralizerIntakeCommand.IntakeDirection.OUT) //Drop
         );
@@ -86,8 +86,8 @@ public class Left extends SequentialCommandGroup {
                         ),
                         new PathToCommand(() -> MathHelper.offsetPoseReverse(FieldOrientation.getOrientation().getReefL(), (Constants.BluePositions.cRobotLength / 2) + 0.35), 0.25, alignConstraints, s)
                 ),
-                //new PathToCommand(() -> MathHelper.offsetPoseReverse(FieldOrientation.getOrientation().getReefL(), (Constants.BluePositions.cRobotLength / 2) - 0.03), 0.25, alignConstraints, s),
-                new FastAlignReefCommand(() -> MathHelper.offsetPoseReverse(FieldOrientation.getOrientation().getReefL(), Constants.BluePositions.cRobotLength / 2), 1, s),
+                new PathToCommand(() -> MathHelper.offsetPoseReverse(FieldOrientation.getOrientation().getReefL(), (Constants.BluePositions.cRobotLength / 2) - 0.03), 0.25, alignConstraints, s),
+                //new FastAlignReefCommand(() -> MathHelper.offsetPoseReverse(FieldOrientation.getOrientation().getReefL(), Constants.BluePositions.cRobotLength / 2), 1, s),
                 new NuzzleUpCommand(d, s, ca, new AprilTag(0), () -> false), //Align to reef
                 new CoralizerIntakeCommand(sh, CoralizerIntakeCommand.IntakeDirection.OUT)
         );
