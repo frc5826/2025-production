@@ -35,20 +35,21 @@ public class DealgCommandGroup extends SequentialCommandGroup {
                 ),
                 Commands.parallel(
                         new FastAlignReefCommand(() -> target.getAlignmentPose().get(), 1, s),
-                        new HoldAlgaeCommand(sh)
-                        //new InstantCommand(() -> sh.setIntakeSpeed(0.9))
+                        //new HoldAlgaeCommand(sh)
+                        new InstantCommand(() -> sh.setIntakeSpeed(0.9))
                 ),
                 Commands.parallel(
                         new MoveTimeCommand(0.6, new ChassisSpeeds(-1, 0, 0), true, s),
-                        new HoldAlgaeCommand(sh)
-                        //new InstantCommand(() -> sh.setIntakeSpeed(0.9))
+                        //new HoldAlgaeCommand(sh)
+                        new InstantCommand(() -> sh.setIntakeSpeed(0.9))
                 ),
                 Commands.parallel(
                         new TeleopDriveCommand(s),
-                        new HomeAlgaeCommandGroup(e, c, sh)
-                ),
-                new InstantCommand(() -> sh.setIntakeSpeed(0.9))
-
+                        new HoldAlgaeCommand(sh)
+                        //new HomeAlgaeCommandGroup(e, c, sh)
+                )
+//                new InstantCommand(() -> sh.setIntakeSpeed(0.9))
+                //new HoldAlgaeCommand(sh)
         );
 
     }

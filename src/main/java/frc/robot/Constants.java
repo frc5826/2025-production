@@ -30,7 +30,7 @@ public final class Constants
 {
 
     public static class Nuzzle {
-        public static final double cXVelo = 0.5;
+        public static final double cXVelo = 0.6;
         public static final double cYVelo = 0.8;
         public static final double cZVelo = 0.5*Math.PI;
         public static final double cZVeloDeadband = 0;
@@ -80,13 +80,13 @@ public final class Constants
         public static final double cElevatorVDown = 0.8;
         public static final double cElevatorGDown = 0.07;
         public static final double cElevatorGUp = 0.03;
-        public static final double cElevatorMaxAcceleration = 1.6;
+        public static final double cElevatorMaxAcceleration = 1.5;
         public static final double cElevatorMaxVelocity = 1.6;
         public static final double cElevatorHeightMin = 0;
-        public static final double cElevatorHeightMax = 1.77;
+        public static final double cElevatorHeightMax = 1.775;
         public static final double cElevatorDeadband = 0.04;
 
-        public static final double L4Height = 1.77;
+        public static final double L4Height = 1.775;
         public static final double L3Height = 1.12;
         public static final double L2Height = 0.7;
         public static final double L1Height = 0.33;
@@ -102,7 +102,7 @@ public final class Constants
 
         public static final double intakeAngle = 28;
         public static final double L1IntakeAngle = 50;
-        public static final double intakeHeight = .23;
+        public static final double intakeHeight = .24;
         public static final double L1IntakeHeight = 0.3;
 
         public static class ConversionFactor {

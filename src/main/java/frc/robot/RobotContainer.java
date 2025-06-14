@@ -89,7 +89,7 @@ public class RobotContainer {
 //                event -> entry.append(event.logMessage.filename + ":" + event.logMessage.line + ":" + event.logMessage.message));
         CommandScheduler.getInstance().setDefaultCommand(swerveSubsystem, new TeleopDriveCommand(swerveSubsystem));
 
-        new DriverCamera();
+        //new DriverCamera();
 
         // Setup button bindings
         bindXbox();

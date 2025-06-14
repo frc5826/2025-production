@@ -18,11 +18,11 @@ public class DriverCamera {
         thread = new Thread(()->{
             int WIDTH = 320/3;
             int HEIGHT = 240/3;
-            UsbCamera camera = CameraServer.startAutomaticCapture();
-            camera.setResolution(WIDTH, HEIGHT);
-            camera.setFPS(5);
-            camera.setBrightness(1);
-            camera.setExposureManual(10);
+            //UsbCamera camera = CameraServer.startAutomaticCapture();
+//            camera.setResolution(WIDTH, HEIGHT);
+//            camera.setFPS(5);
+//            camera.setBrightness(1);
+//            camera.setExposureManual(10);
 
             CvSink sink = CameraServer.getVideo();
             CvSource source = CameraServer.putVideo("Driver", WIDTH, HEIGHT);

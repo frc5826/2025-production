@@ -12,7 +12,7 @@ public class MovingHeightCommandGroup extends SequentialCommandGroup {
     public MovingHeightCommandGroup(ElevatorSubsystem e, CoralizerSubsystem c) {
 
         addCommands(
-                new ElevatorPositionCommand(e, 0.65, ReefPosition.ReefLevel.NONE),
+                new ElevatorPositionCommand(e, 0.55, ReefPosition.ReefLevel.NONE),
                 new CoralizerWristCommand(c, 30)
         );
 
