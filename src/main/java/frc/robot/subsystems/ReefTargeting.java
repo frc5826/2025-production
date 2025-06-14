@@ -100,32 +100,32 @@ public class ReefTargeting {
 
         System.out.println("setting to dealg pos's");
 
-        if (pose.equals(FieldOrientation.getOrientation().getReefA()) || pose.equals(FieldOrientation.getOrientation().getReefB())) {
+        if (pose.equals(FieldOrientation.getOrientation().getReefA()) || pose.equals(FieldOrientation.getOrientation().getReefB()) || pose.equals(FieldOrientation.getOrientation().getReefSideAB())) {
             pose = FieldOrientation.getOrientation().getReefSideAB();
             level = ReefPosition.ReefLevel.ALGL3;
             target = new ReefPosition(this.pose, this.level);
         }
-        else if (pose.equals(FieldOrientation.getOrientation().getReefC()) || pose.equals(FieldOrientation.getOrientation().getReefD())) {
+        else if (pose.equals(FieldOrientation.getOrientation().getReefC()) || pose.equals(FieldOrientation.getOrientation().getReefD()) || pose.equals(FieldOrientation.getOrientation().getReefSideCD())) {
             pose = FieldOrientation.getOrientation().getReefSideCD();
             level = ReefPosition.ReefLevel.ALGL2;
             target = new ReefPosition(this.pose, this.level);
         }
-        else if (pose.equals(FieldOrientation.getOrientation().getReefE()) || pose.equals(FieldOrientation.getOrientation().getReefF())) {
+        else if (pose.equals(FieldOrientation.getOrientation().getReefE()) || pose.equals(FieldOrientation.getOrientation().getReefF()) || pose.equals(FieldOrientation.getOrientation().getReefSideEF())) {
             pose = FieldOrientation.getOrientation().getReefSideEF();
             level = ReefPosition.ReefLevel.ALGL3;
             target = new ReefPosition(this.pose, this.level);
         }
-        else if (pose.equals(FieldOrientation.getOrientation().getReefG()) || pose.equals(FieldOrientation.getOrientation().getReefH())) {
+        else if (pose.equals(FieldOrientation.getOrientation().getReefG()) || pose.equals(FieldOrientation.getOrientation().getReefH()) || pose.equals(FieldOrientation.getOrientation().getReefSideGH())) {
             pose = FieldOrientation.getOrientation().getReefSideGH();
             level = ReefPosition.ReefLevel.ALGL2;
             target = new ReefPosition(this.pose, this.level);
         }
-        else if (pose.equals(FieldOrientation.getOrientation().getReefI()) || pose.equals(FieldOrientation.getOrientation().getReefJ())) {
+        else if (pose.equals(FieldOrientation.getOrientation().getReefI()) || pose.equals(FieldOrientation.getOrientation().getReefJ()) || pose.equals(FieldOrientation.getOrientation().getReefSideIJ())) {
             pose = FieldOrientation.getOrientation().getReefSideIJ();
             level = ReefPosition.ReefLevel.ALGL3;
             target = new ReefPosition(this.pose, this.level);
         }
-        else if (pose.equals(FieldOrientation.getOrientation().getReefK()) || pose.equals(FieldOrientation.getOrientation().getReefL())) {
+        else if (pose.equals(FieldOrientation.getOrientation().getReefK()) || pose.equals(FieldOrientation.getOrientation().getReefL())|| pose.equals(FieldOrientation.getOrientation().getReefSideKL())) {
             pose = FieldOrientation.getOrientation().getReefSideKL();
             level = ReefPosition.ReefLevel.ALGL2;
             target = new ReefPosition(this.pose, this.level);

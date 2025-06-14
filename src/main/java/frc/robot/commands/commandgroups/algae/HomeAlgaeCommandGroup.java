@@ -5,6 +5,7 @@ import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import frc.robot.commands.coralizer.CoralizerIntakeCommand;
 import frc.robot.commands.coralizer.CoralizerWristCommand;
+import frc.robot.commands.coralizer.HoldAlgaeCommand;
 import frc.robot.commands.elevator.ElevatorPositionCommand;
 import frc.robot.positioning.ReefPosition;
 import frc.robot.subsystems.CoralizerSubsystem;
@@ -22,7 +23,7 @@ public class HomeAlgaeCommandGroup extends SequentialCommandGroup {
                                 new ElevatorPositionCommand(e, 0, ReefPosition.ReefLevel.NONE),
                                 new CoralizerWristCommand(c, 30)
                                 ),
-                        new CoralizerIntakeCommand(sh, CoralizerIntakeCommand.IntakeDirection.ALGAE)
+                        new HoldAlgaeCommand(sh)
                 )
 
         );

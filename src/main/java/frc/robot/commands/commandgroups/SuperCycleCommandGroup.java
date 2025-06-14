@@ -11,6 +11,7 @@ import frc.robot.commands.NuzzleUpCommand;
 import frc.robot.commands.commandgroups.algae.HomeAlgaeCommandGroup;
 import frc.robot.commands.coralizer.CoralizerIntakeCommand;
 import frc.robot.commands.coralizer.CoralizerWristCommand;
+import frc.robot.commands.coralizer.HoldAlgaeCommand;
 import frc.robot.commands.elevator.ElevatorPositionCommand;
 import frc.robot.commands.swerve.drivercontrol.TeleopDriveCommand;
 import frc.robot.commands.swerve.pathing.FastAlignReefCommand;
@@ -57,11 +58,13 @@ public class SuperCycleCommandGroup extends SequentialCommandGroup {
                 ),
                 Commands.deadline(
                         new FastAlignReefCommand(() -> target.getAlignmentPose().get(), 1.5, s),
-                        new InstantCommand(() -> sh.setIntakeSpeed(0.9))
+                        new HoldAlgaeCommand(sh)
+                        //new InstantCommand(() -> sh.setIntakeSpeed(0.9))
                 ),
                 Commands.deadline(
                         new MoveTimeCommand(0.6, new ChassisSpeeds(-1, 0, 0), true, s),
-                        new InstantCommand(() -> sh.setIntakeSpeed(0.9))
+                        new HoldAlgaeCommand(sh)
+                        //new InstantCommand(() -> sh.setIntakeSpeed(0.9))
                 ),
                 Commands.parallel(
                         new TeleopDriveCommand(s),
